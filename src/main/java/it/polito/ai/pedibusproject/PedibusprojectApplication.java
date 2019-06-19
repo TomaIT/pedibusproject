@@ -15,10 +15,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringBootApplication
 public class PedibusprojectApplication implements CommandLineRunner {
     private static final Logger LOG = LoggerFactory.getLogger(PedibusprojectApplication.class);
+    private MongoTemplate mongoTemplate;
+    private LoaderLine loaderLine;
+
     @Autowired
-    MongoTemplate mongoTemplate;
-    @Autowired
-    LoaderLine loaderLine;
+    public PedibusprojectApplication(MongoTemplate mongoTemplate,LoaderLine loaderLine){
+        this.loaderLine=loaderLine;
+        this.mongoTemplate=mongoTemplate;
+    }
 
     //Delete ALL into MongoDB
     private void cleanAllDB() {
@@ -39,7 +43,7 @@ public class PedibusprojectApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        cleanAllDB();
+        //cleanAllDB();
         this.loaderLine.updateLines();
     }
 }
