@@ -17,7 +17,7 @@ public class SpringFoxConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .useDefaultResponseMessages(false)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("it.polito.ai.pedibusproject.controller"))
+                .apis(RequestHandlerSelectors.basePackage("it.polito.ai.pedibusproject.controller.rest"))
                 .paths(PathSelectors.any())
                 .build();
     }

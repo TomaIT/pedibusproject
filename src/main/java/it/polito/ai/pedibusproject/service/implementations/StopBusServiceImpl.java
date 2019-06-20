@@ -7,6 +7,10 @@ import it.polito.ai.pedibusproject.service.interfaces.StopBusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 public class StopBusServiceImpl implements StopBusService {
     private StopBusRepository stopBusRepository;
@@ -24,5 +28,10 @@ public class StopBusServiceImpl implements StopBusService {
     @Override
     public StopBus findById(String id) {
         return this.stopBusRepository.findById(id).orElseThrow(()->new NotFoundException("StopBus"));
+    }
+
+    @Override
+    public Set<StopBus> findAll() {
+        return new HashSet<>(this.stopBusRepository.findAll());
     }
 }

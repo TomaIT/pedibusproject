@@ -1,4 +1,4 @@
-package it.polito.ai.pedibusproject.controller;
+package it.polito.ai.pedibusproject.controller.rest;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

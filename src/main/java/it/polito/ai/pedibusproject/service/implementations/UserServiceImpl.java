@@ -6,7 +6,9 @@ import it.polito.ai.pedibusproject.database.model.User;
 import it.polito.ai.pedibusproject.database.repository.UserRepository;
 import it.polito.ai.pedibusproject.exceptions.DuplicateKeyException;
 import it.polito.ai.pedibusproject.exceptions.NotFoundException;
+import it.polito.ai.pedibusproject.service.interfaces.ConfirmationTokenService;
 import it.polito.ai.pedibusproject.service.interfaces.UserService;
+import it.polito.ai.pedibusproject.utility.EmailSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,10 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -27,14 +32,17 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
     private MongoTemplate mongoTemplate;
+    private ConfirmationTokenService confirmationTokenService;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            PasswordEncoder passwordEncoder,
-                           MongoTemplate mongoTemplate) {
+                           MongoTemplate mongoTemplate,
+                           ConfirmationTokenService confirmationTokenService) {
         this.userRepository = userRepository;
         this.passwordEncoder=passwordEncoder;
         this.mongoTemplate=mongoTemplate;
+        this.confirmationTokenService=confirmationTokenService;
     }
 
     private UpdateResult myUpdateFunctionFirst(String id,Update update){
@@ -46,18 +54,36 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User registerNewUserAccount(String username, String password, List<Role> roles) {
+    public User create(String username, Set<Role> roles) {
         User user = new User();
 
         user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(password));
         user.setRoles(roles);
 
         try {
             return userRepository.insert(user);
         }catch (org.springframework.dao.DuplicateKeyException e){
-            throw new DuplicateKeyException("User <registerNewUserAccount>");
+            throw new DuplicateKeyException("User <create>");
         }
+    }
+
+    @Override
+    public User confirmRegistration(UUID uuid, String email, String password, String firstname,
+                                    String surname, Date birth, String street, String phoneNumber) {
+        Update update = new Update();
+        update.set("password", passwordEncoder.encode(password));
+        update.set("firstname", firstname);
+        update.set("surname", surname);
+        update.set("birth", birth);
+        update.set("street", street);
+        update.set("phoneNumber", phoneNumber);
+        update.set("isEnabled", true);
+        UpdateResult updateResult=myUpdateFunctionFirst(email,update);
+        if(updateResult.getMatchedCount()==0)
+            throw new NotFoundException("User <confirmRegistration>");
+        this.confirmationTokenService.deleteByUuid(uuid);
+        return this.userRepository.findById(email)
+                .orElseThrow(()->new NotFoundException("User <confirmRegistration>"));
     }
 
     @Override

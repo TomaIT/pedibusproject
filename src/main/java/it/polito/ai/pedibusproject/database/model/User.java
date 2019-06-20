@@ -10,10 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Data
@@ -26,7 +23,7 @@ public class User implements UserDetails {
     private String username; // Email
     private String password;
     @Builder.Default
-    private List<Role> roles = new ArrayList<>();
+    private Set<Role> roles = new HashSet<>();
     @Builder.Default
     private List<String> idChildren = new ArrayList<>();
     @Builder.Default
@@ -44,11 +41,12 @@ public class User implements UserDetails {
     private String firstname;
     private String surname;
     private Date birth;
-    private String country;
-    private String province;
-    private String city;
+    //private String country;
+    //private String province;
+    //private String city;
     private String street;
-    private String cap;
+    //private String cap;
+    private String phoneNumber;
 
 
     @Override

@@ -71,8 +71,7 @@ public class LoaderLine {
                     if(line.isPresent()){
                         if(!line.get().getCreationTime().equals(file.lastModified())) {//Update
                             this.lineService.deleteById(line.get().getId());
-                            createLine(inputDataLine, file.lastModified());
-                            LOG.info("Update Line " + inputDataLine.getName());
+                            LOG.info("Update Line " + createLine(inputDataLine, file.lastModified()).getName());
                         }
                     }else{//Create
                         createLine(inputDataLine,file.lastModified());

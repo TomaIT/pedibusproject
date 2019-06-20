@@ -1,5 +1,6 @@
 package it.polito.ai.pedibusproject;
 
+import it.polito.ai.pedibusproject.utility.EmailSender;
 import it.polito.ai.pedibusproject.utility.LoaderLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,11 +18,14 @@ public class PedibusprojectApplication implements CommandLineRunner {
     private static final Logger LOG = LoggerFactory.getLogger(PedibusprojectApplication.class);
     private MongoTemplate mongoTemplate;
     private LoaderLine loaderLine;
+    private EmailSender emailSender;
 
     @Autowired
-    public PedibusprojectApplication(MongoTemplate mongoTemplate,LoaderLine loaderLine){
+    public PedibusprojectApplication(MongoTemplate mongoTemplate,LoaderLine loaderLine,
+                                     EmailSender emailSender){
         this.loaderLine=loaderLine;
         this.mongoTemplate=mongoTemplate;
+        this.emailSender=emailSender;
     }
 
     //Delete ALL into MongoDB
@@ -43,7 +47,7 @@ public class PedibusprojectApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        //cleanAllDB();
+        cleanAllDB();
         this.loaderLine.updateLines();
     }
 }

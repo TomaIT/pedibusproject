@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -20,4 +21,10 @@ public class ConfirmationToken {
     private Long creationTime; //Epoch time
     @Indexed
     private UUID uuid;
+
+    public ConfirmationToken(User user){
+        this.user=user;
+        this.creationTime=System.currentTimeMillis();
+        this.uuid= UUID.randomUUID();
+    }
 }
