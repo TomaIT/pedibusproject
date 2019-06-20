@@ -1,6 +1,6 @@
 {
   "name": "Coccinelle_spaventate",
-  "emailAdmin": "admin@gmail.com",
+  "emailAdmin": "pedibus.application@gmail.com",
   "outwardLine": [
 	{"description": "VERCELLI Via Thaon de Revel/Giov. Bosco", "lat": "45.305506", "lon": "8.444725", "time": "480"},
     {"description": "VERCELLI V. Thaon di Revel/Lamporo", "lat": "45.305784", "lon": "8.444369", "time": "482"},

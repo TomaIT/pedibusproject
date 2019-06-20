@@ -1,9 +1,7 @@
 package it.polito.ai.pedibusproject.service.implementations;
 
 import com.mongodb.client.result.UpdateResult;
-import it.polito.ai.pedibusproject.PedibusprojectApplication;
 import it.polito.ai.pedibusproject.database.model.Line;
-import it.polito.ai.pedibusproject.database.model.User;
 import it.polito.ai.pedibusproject.database.repository.LineRepository;
 import it.polito.ai.pedibusproject.exceptions.DuplicateKeyException;
 import it.polito.ai.pedibusproject.exceptions.NotFoundException;
@@ -17,9 +15,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
-import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 

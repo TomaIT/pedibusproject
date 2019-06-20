@@ -9,5 +9,5 @@ import java.util.UUID;
 public interface ConfirmationTokenRepository extends MongoRepository<ConfirmationToken,String> {
     Optional<ConfirmationToken> findByUuid(UUID uuid);
     void deleteByUuid(UUID uuid);
-    boolean existsByUuidAndUser_Username(UUID uuid,String username);
+    Optional<ConfirmationToken> findByEmail(String email);
 }

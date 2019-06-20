@@ -1,6 +1,5 @@
 package it.polito.ai.pedibusproject.utility;
 
-import it.polito.ai.pedibusproject.PedibusprojectApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

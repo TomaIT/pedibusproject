@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -35,6 +34,8 @@ public interface UserService extends UserDetailsService {
 
     boolean isAdminOfLine(String username, String idLine);
 
+    //Aggiunge idLine e ROLE_ADMIN come set
+    //(quindi duplicati non possono esistere)!!
     void addLine(String username, String idLine);
 
     void removeLine(String username, String idLine);

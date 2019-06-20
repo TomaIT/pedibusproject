@@ -1,7 +1,6 @@
 package it.polito.ai.pedibusproject.controller.model;
 
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.Valid;
@@ -10,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Date;
-import java.util.UUID;
 
 @Data
 public class ConfirmUserView {

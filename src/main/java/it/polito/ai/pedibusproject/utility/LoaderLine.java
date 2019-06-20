@@ -1,22 +1,19 @@
 package it.polito.ai.pedibusproject.utility;
 
-import it.polito.ai.pedibusproject.PedibusprojectApplication;
-import it.polito.ai.pedibusproject.database.model.Line;
-import it.polito.ai.pedibusproject.database.model.StopBus;
-import it.polito.ai.pedibusproject.database.model.StopBusType;
+import it.polito.ai.pedibusproject.database.model.*;
+import it.polito.ai.pedibusproject.exceptions.NotFoundException;
+import it.polito.ai.pedibusproject.service.interfaces.ConfirmationTokenService;
 import it.polito.ai.pedibusproject.service.interfaces.LineService;
 import it.polito.ai.pedibusproject.service.interfaces.StopBusService;
-import lombok.Data;
+import it.polito.ai.pedibusproject.service.interfaces.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.*;
 
 @Component
@@ -26,11 +23,17 @@ public class LoaderLine {
     private StopBusService stopBusService;
     @Value("${lines.folder.path}")
     private String folderLines;
+    private UserService userService;
+    private ConfirmationTokenService confirmationTokenService;
+
 
     @Autowired
-    public LoaderLine(LineService lineService,StopBusService stopBusService){
+    public LoaderLine(LineService lineService,StopBusService stopBusService,
+                      ConfirmationTokenService confirmationTokenService,UserService userService) {
         this.lineService=lineService;
         this.stopBusService=stopBusService;
+        this.userService=userService;
+        this.confirmationTokenService=confirmationTokenService;
     }
 
 
@@ -48,15 +51,42 @@ public class LoaderLine {
         return ret;
     }
 
+
+    private void updateUserState(String email,String idLine){
+        User user;
+        try{
+            user=this.userService.loadUserByUsername(email);
+        }catch (NotFoundException e){
+            Set<Role> temp = new HashSet<>();
+            temp.add(Role.ROLE_ADMIN);
+            user=this.userService.create(email,temp);
+            this.userService.addLine(email,idLine);
+            this.confirmationTokenService.create(email);
+            return;
+        }
+        if(!user.getIdLines().contains(idLine)){
+            this.userService.addLine(email,idLine);
+        }
+        //Check registration uuid is not expired
+        if(!user.isEnabled()){
+            Optional<ConfirmationToken> temp=this.confirmationTokenService
+                    .findByEmail(email);
+            if(!temp.isPresent()||this.confirmationTokenService.isExpired(temp.get())){
+                this.confirmationTokenService.create(email);
+            }
+        }
+    }
+
     public Line createLine(InputDataLine inputDataLine,Long creationTime){
         Line temp=new Line();
         temp.setCreationTime(creationTime);
-        //TODO Send email ??
         temp.setEmailAdmin(inputDataLine.getEmailAdmin());
         temp.setName(inputDataLine.getName());
         temp.setIdOutStopBuses(createStopBuses(inputDataLine.getOutwardLine(),StopBusType.Outward));
         temp.setIdRetStopBuses(createStopBuses(inputDataLine.getReturnLine(),StopBusType.Return));
-        return this.lineService.create(temp);
+        temp=this.lineService.create(temp);
+        updateUserState(inputDataLine.getEmailAdmin(),temp.getId());
+        return temp;
     }
 
     public void updateLines(){
@@ -71,11 +101,12 @@ public class LoaderLine {
                     if(line.isPresent()){
                         if(!line.get().getCreationTime().equals(file.lastModified())) {//Update
                             this.lineService.deleteById(line.get().getId());
-                            LOG.info("Update Line " + createLine(inputDataLine, file.lastModified()).getName());
+                            LOG.info("Update Line " +
+                                    createLine(inputDataLine, file.lastModified()).getName());
                         }
                     }else{//Create
-                        createLine(inputDataLine,file.lastModified());
-                        LOG.info("Create Line " + inputDataLine.getName());
+                        LOG.info("Create Line " +
+                                createLine(inputDataLine,file.lastModified()).getName());
                     }
                 }catch (IOException e){
                     LOG.error("File "+file.getName(),e);

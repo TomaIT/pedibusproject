@@ -1,4 +1,4 @@
-package it.polito.ai.pedibusproject.controller;
+package it.polito.ai.pedibusproject.controller.view;
 
 import it.polito.ai.pedibusproject.controller.model.ConfirmUserView;
 import it.polito.ai.pedibusproject.database.model.ConfirmationToken;
@@ -17,13 +17,13 @@ import java.util.UUID;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Controller
 @RequestMapping("/confirmation")
-public class ConfirmationController {
+public class ConfirmRegController {
     private ConfirmationTokenService confirmationTokenService;
     private UserService userService;
 
     @Autowired
-    public ConfirmationController(ConfirmationTokenService confirmationTokenService,
-                                  UserService userService){
+    public ConfirmRegController(ConfirmationTokenService confirmationTokenService,
+                                UserService userService){
         this.confirmationTokenService=confirmationTokenService;
         this.userService=userService;
     }
@@ -35,7 +35,7 @@ public class ConfirmationController {
         //Check is expired
         if(this.confirmationTokenService.isExpired(temp))
             return "uuidExpired";
-        confirmUserView.setEmail(temp.getUser().getUsername());
+        confirmUserView.setEmail(temp.getEmail());
         return "confirmUser";
     }
 
@@ -52,7 +52,7 @@ public class ConfirmationController {
         ConfirmationToken temp = this.confirmationTokenService.findByUuid(uuid);
         if(this.confirmationTokenService.isExpired(temp))
             return "uuidExpired";
-        if(!temp.getUser().getUsername().equals(confirmUserView.getEmail())){
+        if(!temp.getEmail().equals(confirmUserView.getEmail())){
             throw new BadRequestException("User-UUID not exist");
         }
 

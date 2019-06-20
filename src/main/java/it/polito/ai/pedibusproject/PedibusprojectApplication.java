@@ -1,6 +1,5 @@
 package it.polito.ai.pedibusproject;
 
-import it.polito.ai.pedibusproject.utility.EmailSender;
 import it.polito.ai.pedibusproject.utility.LoaderLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,17 +15,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringBootApplication
 public class PedibusprojectApplication implements CommandLineRunner {
     private static final Logger LOG = LoggerFactory.getLogger(PedibusprojectApplication.class);
-    private MongoTemplate mongoTemplate;
-    private LoaderLine loaderLine;
-    private EmailSender emailSender;
-
+    //Autowired Injection no, because CYCLE BEAN
     @Autowired
-    public PedibusprojectApplication(MongoTemplate mongoTemplate,LoaderLine loaderLine,
-                                     EmailSender emailSender){
-        this.loaderLine=loaderLine;
-        this.mongoTemplate=mongoTemplate;
-        this.emailSender=emailSender;
-    }
+    private MongoTemplate mongoTemplate;
+    @Autowired
+    private LoaderLine loaderLine;
 
     //Delete ALL into MongoDB
     private void cleanAllDB() {

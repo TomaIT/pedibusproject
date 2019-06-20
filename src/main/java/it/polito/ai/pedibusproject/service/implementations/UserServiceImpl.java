@@ -8,7 +8,6 @@ import it.polito.ai.pedibusproject.exceptions.DuplicateKeyException;
 import it.polito.ai.pedibusproject.exceptions.NotFoundException;
 import it.polito.ai.pedibusproject.service.interfaces.ConfirmationTokenService;
 import it.polito.ai.pedibusproject.service.interfaces.UserService;
-import it.polito.ai.pedibusproject.utility.EmailSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 

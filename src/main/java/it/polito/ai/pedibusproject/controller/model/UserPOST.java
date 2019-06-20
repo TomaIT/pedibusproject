@@ -2,7 +2,6 @@ package it.polito.ai.pedibusproject.controller.model;
 
 import it.polito.ai.pedibusproject.database.model.Role;
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;

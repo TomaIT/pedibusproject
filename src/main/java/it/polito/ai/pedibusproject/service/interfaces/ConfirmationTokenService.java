@@ -1,19 +1,20 @@
 package it.polito.ai.pedibusproject.service.interfaces;
 
 import it.polito.ai.pedibusproject.database.model.ConfirmationToken;
-import it.polito.ai.pedibusproject.database.model.User;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ConfirmationTokenService {
 
-    ConfirmationToken create(User user);
+    //Create token and sendEmail
+    ConfirmationToken create(String email);
 
     ConfirmationToken findByUuid(UUID uuid);
 
     void deleteByUuid(UUID uuid);
 
-    boolean existsByUuidAndUser_Username(UUID uuid,String username);
+    Optional<ConfirmationToken> findByEmail(String email);
 
     //If isExpired delete the confirmationToken
     boolean isExpired(ConfirmationToken confirmationToken);
