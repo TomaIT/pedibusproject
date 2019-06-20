@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,6 +27,8 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     private EmailSender emailSender;
     @Value("${uuid.token.validitytime.seconds}")
     private long expiredTimeout;
+    @Value("${pedibus.uri}")
+    private String uriContext;
 
     @Autowired
     public ConfirmationTokenServiceImpl(ConfirmationTokenRepository confirmationTokenRepository,
@@ -40,14 +40,18 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     private String getLinkConfirmRegistration(UUID uuid){
         String link;
         try {
-            //TODO non funziona se la richiesta non arriva da un Context Uri
-            // (quindi da http)
             link= linkTo(ConfirmRegController.class,
                     ConfirmRegController.class.getMethod("getConfirmView",
                             Model.class, ConfirmUserView.class, UUID.class),
                     uuid)
                     .toUriComponentsBuilder()
                     .build().toUriString();
+
+            //TODO non funziona se la richiesta non arriva da un Context Uri
+            // (quindi da http)
+            //Risoluzione parziale (fa schifo)
+            if(link.toCharArray()[0]=='/'){ link=this.uriContext+link; }
+
         }catch (Exception e){
             LOG.error("Creation Link Confirm Registration",e);
             throw new InternalServerErrorException("Create Link to Confirm Registration");
