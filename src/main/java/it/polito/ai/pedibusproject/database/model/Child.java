@@ -15,6 +15,7 @@ import java.util.Date;
 public class Child {
     @Id
     private String id;
+    private String idUser; //Parent (creator)
     private String firstname;
     private String surname;
     private Date birth;

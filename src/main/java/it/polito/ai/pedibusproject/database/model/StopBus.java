@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "stopbuses")
-public class StopBus {
+public class StopBus implements Comparable<StopBus> {
     @Id
     private String id;
     private StopBusType stopBusType;
@@ -21,5 +21,12 @@ public class StopBus {
 
     public void setLocation(Double longitude,Double latitude){
         location = new GeoJsonPoint(longitude,latitude);
+    }
+
+    @Override
+    public int compareTo(StopBus o) {
+        if(this.hours.equals(o.hours))
+            return this.id.compareTo(o.id);
+        return this.hours.compareTo(o.hours);
     }
 }

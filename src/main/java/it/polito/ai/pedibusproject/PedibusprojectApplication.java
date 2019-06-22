@@ -40,7 +40,7 @@ public class PedibusprojectApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        //cleanAllDB();
+        cleanAllDB();
         this.loaderLine.updateLines();
     }
 }

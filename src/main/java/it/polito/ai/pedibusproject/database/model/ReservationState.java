@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReservationState {
+    private String idStopBus;
     private Long epochTime;
     private String idUser; //Escort
 }

@@ -26,7 +26,7 @@ public class EmailSender {
         try {
             this.javaMailSender.send(simpleMailMessage);
         }catch (Exception e){
-            LOG.error("sendEmail <"+simpleMailMessage.toString()+">",e);
+            LOG.error("sendEmail <"+simpleMailMessage.toString()+">\n"+e.getMessage());
         }
     }
 

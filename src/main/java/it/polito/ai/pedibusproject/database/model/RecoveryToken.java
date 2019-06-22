@@ -16,7 +16,7 @@ import java.util.UUID;
 public class RecoveryToken {
     @Id
     private String id;
-    private User user;
+    private String email;
     private Long creationTime; //Epoch time
     @Indexed
     private UUID uuid;

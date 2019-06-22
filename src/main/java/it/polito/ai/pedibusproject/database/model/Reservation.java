@@ -13,13 +13,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Reservation {
     @Id
     private String id;
-    private Integer year;
-    private Integer month;
-    private Integer day;
+    private String idBusRide;
     private String idChild;
-    private StopBusType stopBusType;
     private String idStopBus;
-    private String idLine;
     private String idUser;
     private ReservationState getIn;
     private ReservationState getOut;

@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
-
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/rest/stopbuses")
@@ -22,17 +20,17 @@ public class StopBusController {
         this.stopBusService=stopBusService;
     }
 
-    @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Get All StopBus")
+    /*@GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Ritorna tutti gli StopBus")
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public Set<StopBus> getLines() {
         return this.stopBusService.findAll();
-    }
+    }*/
 
     @GetMapping(value = "/{idStopBus}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Get StopBus By ID")
+    @ApiOperation(value = "Ritorna idStopBus")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")

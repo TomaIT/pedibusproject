@@ -2,10 +2,15 @@ package it.polito.ai.pedibusproject.service.implementations;
 
 import com.mongodb.client.result.UpdateResult;
 import it.polito.ai.pedibusproject.database.model.Line;
+import it.polito.ai.pedibusproject.database.model.StopBus;
+import it.polito.ai.pedibusproject.database.model.StopBusType;
 import it.polito.ai.pedibusproject.database.repository.LineRepository;
+import it.polito.ai.pedibusproject.exceptions.BadRequestException;
 import it.polito.ai.pedibusproject.exceptions.DuplicateKeyException;
 import it.polito.ai.pedibusproject.exceptions.NotFoundException;
 import it.polito.ai.pedibusproject.service.interfaces.LineService;
+import it.polito.ai.pedibusproject.service.interfaces.StopBusService;
+import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,26 +20,32 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.TreeSet;
 
 @Service
 public class LineServiceImpl implements LineService {
     private static final Logger LOG = LoggerFactory.getLogger(LineServiceImpl.class);
     private LineRepository lineRepository;
     private MongoTemplate mongoTemplate;
+    private StopBusService stopBusService;
 
     @Autowired
     public LineServiceImpl(LineRepository lineRepository,
-                           MongoTemplate mongoTemplate){
+                           MongoTemplate mongoTemplate,
+                           StopBusService stopBusService){
         this.lineRepository=lineRepository;
+        this.stopBusService=stopBusService;
         this.mongoTemplate=mongoTemplate;
     }
 
     @Override
-    public Set<String> aggregateNames() {
-        return this.lineRepository.findByIsDeleted(false).stream()
-                .map(Line::getName).collect(Collectors.toSet());
+    public Set<Pair<String,String>> aggregateNames() {
+        Set<Pair<String,String>> temp= new HashSet<>();
+        this.lineRepository.findByIsDeleted(false)
+                .forEach(x->temp.add(new Pair<>(x.getId(),x.getName())));
+        return temp;
     }
 
     @Override
@@ -47,6 +58,12 @@ public class LineServiceImpl implements LineService {
             throw new DuplicateKeyException("Line <create>");
         }
         return this.lineRepository.insert(line);
+    }
+
+    @Override
+    public Line findByName(String name) {
+        return this.lineRepository.findByNameAndIsDeleted(name,false)
+                .orElseThrow(()->new NotFoundException("Line <findByName>"));
     }
 
     private UpdateResult myUpdateFunctionFirst(String id, Update update){
@@ -75,6 +92,23 @@ public class LineServiceImpl implements LineService {
     @Override
     public Line findById(String id) {
         return this.lineRepository.findById(id).orElseThrow(()->new NotFoundException("Line"));
+    }
+
+    @Override
+    public TreeSet<StopBus> findByIdAndStopBusType(String id, StopBusType stopBusType) {
+        Line line=this.lineRepository.findById(id).orElseThrow(()->new NotFoundException("Line <findStopBuses>"));
+        TreeSet<StopBus> temp=new TreeSet<>();
+        switch (stopBusType){
+            case Outward:
+                line.getIdOutStopBuses().forEach(x-> temp.add(this.stopBusService.findById(x)));
+                break;
+            case Return:
+                line.getIdRetStopBuses().forEach(x-> temp.add(this.stopBusService.findById(x)));
+                break;
+            default:
+                throw new BadRequestException("Line <findStopBuses>");
+        }
+        return temp;
     }
 
 

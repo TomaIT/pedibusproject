@@ -13,11 +13,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Availability {
     @Id
     private String id;
-    private String idLine;
-    private StopBusType stopBusType;
-    private Integer year;
-    private Integer month;
-    private Integer day;
+    private String idBusRide;
+    private String idStopBus;
     private String idUser; //Escort
     private AvailabilityState state;
 }

@@ -2,10 +2,7 @@ package it.polito.ai.pedibusproject.utility;
 
 import it.polito.ai.pedibusproject.database.model.*;
 import it.polito.ai.pedibusproject.exceptions.NotFoundException;
-import it.polito.ai.pedibusproject.service.interfaces.ConfirmationTokenService;
-import it.polito.ai.pedibusproject.service.interfaces.LineService;
-import it.polito.ai.pedibusproject.service.interfaces.StopBusService;
-import it.polito.ai.pedibusproject.service.interfaces.UserService;
+import it.polito.ai.pedibusproject.service.interfaces.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,17 +22,27 @@ public class LoaderLine {
     private String folderLines;
     private UserService userService;
     private ConfirmationTokenService confirmationTokenService;
+    @Value("${calendar.busride.start.year}")
+    private Integer startYear;
+    @Value("${calendar.busride.start.month}")
+    private Integer startMonth;
+    @Value("${calendar.busride.start.day}")
+    private Integer startDay;
+    @Value("${calendar.busride.start.intervalDays}")
+    private int intervalDays;
+    private BusRideService busRideService;
 
 
     @Autowired
     public LoaderLine(LineService lineService,StopBusService stopBusService,
-                      ConfirmationTokenService confirmationTokenService,UserService userService) {
+                      ConfirmationTokenService confirmationTokenService,UserService userService,
+                      BusRideService busRideService) {
         this.lineService=lineService;
         this.stopBusService=stopBusService;
         this.userService=userService;
         this.confirmationTokenService=confirmationTokenService;
+        this.busRideService=busRideService;
     }
-
 
     public List<String> createStopBuses(List<InputDataStopBus> stopBuses, StopBusType stopBusType) {
         List<String> ret = new ArrayList<>();
@@ -50,7 +57,6 @@ public class LoaderLine {
         }
         return ret;
     }
-
 
     private void updateUserState(String email,String idLine){
         User user;
@@ -86,6 +92,9 @@ public class LoaderLine {
         temp.setIdRetStopBuses(createStopBuses(inputDataLine.getReturnLine(),StopBusType.Return));
         temp=this.lineService.create(temp);
         updateUserState(inputDataLine.getEmailAdmin(),temp.getId());
+        this.busRideService.createToIntervalDate(temp.getId(),StopBusType.Return,startYear,startMonth,startDay,intervalDays);
+        this.busRideService.createToIntervalDate(temp.getId(),StopBusType.Outward,startYear,startMonth,startDay,intervalDays);
+        LOG.info("Created BusRides for Line <"+temp.getName()+">");
         return temp;
     }
 
@@ -101,12 +110,12 @@ public class LoaderLine {
                     if(line.isPresent()){
                         if(!line.get().getCreationTime().equals(file.lastModified())) {//Update
                             this.lineService.deleteById(line.get().getId());
-                            LOG.info("Update Line " +
-                                    createLine(inputDataLine, file.lastModified()).getName());
+                            Line temp =createLine(inputDataLine, file.lastModified());
+                            LOG.info("Update Line " + temp.getName());
                         }
                     }else{//Create
-                        LOG.info("Create Line " +
-                                createLine(inputDataLine,file.lastModified()).getName());
+                        Line temp =createLine(inputDataLine, file.lastModified());
+                        LOG.info("Create Line " + temp.getName());
                     }
                 }catch (IOException e){
                     LOG.error("File "+file.getName(),e);

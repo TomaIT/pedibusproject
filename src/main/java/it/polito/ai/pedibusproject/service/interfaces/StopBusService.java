@@ -7,5 +7,6 @@ import java.util.Set;
 public interface StopBusService {
     StopBus insert(StopBus stopBus);
     StopBus findById(String id);
+
     Set<StopBus> findAll();
 }
