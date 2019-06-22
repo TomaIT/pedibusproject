@@ -1,16 +1,16 @@
 package it.polito.ai.pedibusproject.service.interfaces;
 
+import it.polito.ai.pedibusproject.controller.model.LineEnum;
 import it.polito.ai.pedibusproject.database.model.Line;
 import it.polito.ai.pedibusproject.database.model.StopBus;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
-import javafx.util.Pair;
 
 import java.util.Set;
 import java.util.TreeSet;
 
 public interface LineService {
     //Pair key is id and value is name
-    Set<Pair<String,String>> aggregateNames();
+    Set<LineEnum> aggregateNames();
 
     Line create(Line line);
 

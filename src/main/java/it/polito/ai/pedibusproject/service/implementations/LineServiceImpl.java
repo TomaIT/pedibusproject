@@ -1,6 +1,7 @@
 package it.polito.ai.pedibusproject.service.implementations;
 
 import com.mongodb.client.result.UpdateResult;
+import it.polito.ai.pedibusproject.controller.model.LineEnum;
 import it.polito.ai.pedibusproject.database.model.Line;
 import it.polito.ai.pedibusproject.database.model.StopBus;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
@@ -10,7 +11,6 @@ import it.polito.ai.pedibusproject.exceptions.DuplicateKeyException;
 import it.polito.ai.pedibusproject.exceptions.NotFoundException;
 import it.polito.ai.pedibusproject.service.interfaces.LineService;
 import it.polito.ai.pedibusproject.service.interfaces.StopBusService;
-import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +41,10 @@ public class LineServiceImpl implements LineService {
     }
 
     @Override
-    public Set<Pair<String,String>> aggregateNames() {
-        Set<Pair<String,String>> temp= new HashSet<>();
+    public Set<LineEnum> aggregateNames() {
+        Set<LineEnum> temp= new HashSet<>();
         this.lineRepository.findByIsDeleted(false)
-                .forEach(x->temp.add(new Pair<>(x.getId(),x.getName())));
+                .forEach(x->temp.add(new LineEnum(x.getId(),x.getName())));
         return temp;
     }
 

@@ -30,9 +30,7 @@ public class LineController {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public Set<LineEnum> getLineNames() {
-        Set<LineEnum> temp=new HashSet<>();
-        this.lineService.aggregateNames().forEach(x->temp.add(new LineEnum(x.getKey(),x.getValue())));
-        return temp;
+        return this.lineService.aggregateNames();
     }
 
     @GetMapping(value = "/{idLine}", produces = MediaType.APPLICATION_JSON_VALUE)

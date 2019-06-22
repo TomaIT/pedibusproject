@@ -3,8 +3,6 @@ package it.polito.ai.pedibusproject.service.interfaces;
 import it.polito.ai.pedibusproject.database.model.BusRide;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
 
-import java.util.Optional;
-import java.util.Set;
 import java.util.TreeSet;
 
 public interface BusRideService {
