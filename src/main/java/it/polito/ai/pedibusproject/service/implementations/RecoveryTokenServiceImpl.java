@@ -1,10 +1,7 @@
 package it.polito.ai.pedibusproject.service.implementations;
 
-import it.polito.ai.pedibusproject.controller.model.ConfirmUserView;
 import it.polito.ai.pedibusproject.controller.model.RecoveryUserView;
-import it.polito.ai.pedibusproject.controller.view.ConfirmRegistrationController;
 import it.polito.ai.pedibusproject.controller.view.RecoveryController;
-import it.polito.ai.pedibusproject.database.model.ConfirmationToken;
 import it.polito.ai.pedibusproject.database.model.RecoveryToken;
 import it.polito.ai.pedibusproject.database.repository.RecoveryTokenRepository;
 import it.polito.ai.pedibusproject.exceptions.InternalServerErrorException;

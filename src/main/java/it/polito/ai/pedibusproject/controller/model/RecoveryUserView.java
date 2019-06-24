@@ -2,11 +2,9 @@ package it.polito.ai.pedibusproject.controller.model;
 
 import lombok.Data;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.UUID;
 
 @Data
 public class RecoveryUserView {

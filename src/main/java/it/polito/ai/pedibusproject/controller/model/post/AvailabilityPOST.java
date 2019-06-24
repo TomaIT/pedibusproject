@@ -2,7 +2,6 @@ package it.polito.ai.pedibusproject.controller.model.post;
 
 import it.polito.ai.pedibusproject.database.model.AvailabilityState;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

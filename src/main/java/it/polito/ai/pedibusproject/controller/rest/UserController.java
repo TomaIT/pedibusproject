@@ -3,12 +3,13 @@ package it.polito.ai.pedibusproject.controller.rest;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import it.polito.ai.pedibusproject.controller.model.post.LoginPOST;
-import it.polito.ai.pedibusproject.controller.model.post.RecoverPOST;
 import it.polito.ai.pedibusproject.controller.model.post.UserPOST;
 import it.polito.ai.pedibusproject.controller.model.put.UserPUT;
 import it.polito.ai.pedibusproject.controller.model.put.UserRolePUT;
-import it.polito.ai.pedibusproject.database.model.*;
+import it.polito.ai.pedibusproject.database.model.Availability;
+import it.polito.ai.pedibusproject.database.model.Child;
+import it.polito.ai.pedibusproject.database.model.Reservation;
+import it.polito.ai.pedibusproject.database.model.User;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
 import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
 import it.polito.ai.pedibusproject.service.interfaces.ConfirmationTokenService;
@@ -19,17 +20,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
-
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController

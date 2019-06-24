@@ -20,5 +20,7 @@ public interface BusRideService {
     BusRide findByIdLineAndStopBusTypeAndYearAndMonthAndDay(String idLine, StopBusType stopBusType,
                                                             Integer year, Integer month, Integer day);
 
+    BusRide updateLastStopBus(String id,Long timestampLastStopBus,String idLastStopBus);
+
     TreeSet<BusRide> findAll();
 }

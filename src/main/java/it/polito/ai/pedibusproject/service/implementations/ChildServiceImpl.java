@@ -9,7 +9,6 @@ import it.polito.ai.pedibusproject.database.repository.UserRepository;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
 import it.polito.ai.pedibusproject.exceptions.NotFoundException;
 import it.polito.ai.pedibusproject.service.interfaces.ChildService;
-import it.polito.ai.pedibusproject.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;

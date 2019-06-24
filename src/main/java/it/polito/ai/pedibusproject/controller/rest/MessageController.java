@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiResponses;
 import it.polito.ai.pedibusproject.controller.model.post.MessagePOST;
 import it.polito.ai.pedibusproject.controller.model.put.MessagePUT;
 import it.polito.ai.pedibusproject.database.model.Message;
-import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
 import it.polito.ai.pedibusproject.service.interfaces.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

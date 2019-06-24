@@ -1,17 +1,21 @@
 package it.polito.ai.pedibusproject.service.implementations;
 
-import it.polito.ai.pedibusproject.database.model.BusRide;
-import it.polito.ai.pedibusproject.database.model.Line;
-import it.polito.ai.pedibusproject.database.model.StopBus;
-import it.polito.ai.pedibusproject.database.model.StopBusType;
+import com.mongodb.client.result.UpdateResult;
+import it.polito.ai.pedibusproject.database.model.*;
 import it.polito.ai.pedibusproject.database.repository.BusRideRepository;
+import it.polito.ai.pedibusproject.exceptions.BadRequestException;
 import it.polito.ai.pedibusproject.exceptions.DuplicateKeyException;
+import it.polito.ai.pedibusproject.exceptions.InternalServerErrorException;
 import it.polito.ai.pedibusproject.exceptions.NotFoundException;
 import it.polito.ai.pedibusproject.service.interfaces.BusRideService;
 import it.polito.ai.pedibusproject.service.interfaces.LineService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -22,11 +26,14 @@ public class BusRideServiceImpl implements BusRideService {
     private static final Logger LOG = LoggerFactory.getLogger(BusRideServiceImpl.class);
     private BusRideRepository busRideRepository;
     private LineService lineService;
+    private MongoTemplate mongoTemplate;
 
     @Autowired
-    public BusRideServiceImpl(BusRideRepository busRideRepository, LineService lineService) {
+    public BusRideServiceImpl(BusRideRepository busRideRepository, LineService lineService,
+                              MongoTemplate mongoTemplate) {
         this.busRideRepository = busRideRepository;
         this.lineService = lineService;
+        this.mongoTemplate=mongoTemplate;
     }
 
     private BusRide mySave(BusRide busRide){
@@ -36,6 +43,14 @@ public class BusRideServiceImpl implements BusRideService {
                 busRide.getMonth(),busRide.getDay()).isPresent())
             throw new DuplicateKeyException("BusRide <save>");
         return this.busRideRepository.insert(busRide);
+    }
+
+    private UpdateResult myUpdateFunctionFirst(String id, Update update){
+        Criteria criteria=new Criteria().andOperator(
+                Criteria.where("_id").is(id)
+        );
+        Query query = new Query(criteria);
+        return mongoTemplate.updateFirst(query, update, User.class);
     }
 
     @Override
@@ -82,6 +97,34 @@ public class BusRideServiceImpl implements BusRideService {
                                                                    Integer day) {
         return this.busRideRepository.findByIdLineAndStopBusTypeAndYearAndMonthAndDay(
                 idLine,stopBusType,year,month,day).orElseThrow(()->new NotFoundException("BusRide <findBy'id'>"));
+    }
+
+    @Override
+    public BusRide updateLastStopBus(String id,Long timestampLastStopBus, String idLastStopBus) {
+        //Check
+        BusRide temp=this.busRideRepository.findById(id).orElseThrow(()->new NotFoundException("BusRide"));
+        Line line=this.lineService.findById(temp.getIdLine());
+        switch (temp.getStopBusType()){
+            case Return:
+                if(!line.getIdRetStopBuses().contains(idLastStopBus))
+                    throw new BadRequestException("BusRide <updateLastStopBus> stop bus not exist in busride");
+                break;
+            case Outward:
+                if(!line.getIdOutStopBuses().contains(idLastStopBus))
+                    throw new BadRequestException("BusRide <updateLastStopBus> stop bus not exist in busride");
+                break;
+            default:
+                throw new InternalServerErrorException("BusRide <updateLastStopBus> inconsistent state");
+        }
+        //End check
+        Update update = new Update();
+        update.set("timestampLastStopBus", timestampLastStopBus);
+        update.set("idLastStopBus", idLastStopBus);
+        UpdateResult updateResult=myUpdateFunctionFirst(id,update);
+        if(updateResult.getMatchedCount()==0)
+            throw new NotFoundException("BusRide <updateLastStopBus>");
+        return this.busRideRepository.findById(id)
+                .orElseThrow(()->new NotFoundException("BusRide <updateLastStopBus>"));
     }
 
     @Override

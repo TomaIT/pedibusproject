@@ -1,8 +1,6 @@
 package it.polito.ai.pedibusproject.controller.view;
 
-import it.polito.ai.pedibusproject.controller.model.ConfirmUserView;
 import it.polito.ai.pedibusproject.controller.model.RecoveryUserView;
-import it.polito.ai.pedibusproject.database.model.ConfirmationToken;
 import it.polito.ai.pedibusproject.database.model.RecoveryToken;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
 import it.polito.ai.pedibusproject.service.interfaces.RecoveryTokenService;

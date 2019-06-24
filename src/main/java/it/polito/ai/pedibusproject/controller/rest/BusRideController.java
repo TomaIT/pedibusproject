@@ -110,9 +110,9 @@ public class BusRideController {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public BusRide putBusRide(@RequestHeader (name="Authorization") String jwtToken,
+                              @PathVariable("idBusRide")String idBusRide,
                               @RequestBody @Valid BusRidePUT busRidePUT) {
-        //TODO
-        throw new NotImplementedException();
+        return this.busRideService.updateLastStopBus(idBusRide,busRidePUT.getTimestampLastStopBus(),busRidePUT.getIdLastStopBus());
     }
 
     @DeleteMapping(value = "/{idBusRide}",consumes = MediaType.APPLICATION_JSON_VALUE,
