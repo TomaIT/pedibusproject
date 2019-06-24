@@ -7,5 +7,5 @@ import javax.validation.constraints.NotNull;
 @Data
 public class MessagePUT {
     @NotNull
-    Boolean readConfirm;
+    Long readConfirm; //Epoch Time or null
 }

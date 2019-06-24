@@ -16,7 +16,16 @@ public class Message {
     private String idUserFrom;
     private String idUserTo;
     private String subject;
-    private Long readConfirm; //Epoch Time
+    private Long readConfirm = null; //Epoch Time
     private String message;
     private Long creationTime; //Epoch Time
+
+    public Message(String idUserFrom,String idUserTo,String subject,String message,Long creationTime){
+        this.idUserFrom=idUserFrom;
+        this.idUserTo=idUserTo;
+        this.subject=subject;
+        this.message=message;
+        this.creationTime=creationTime;
+    }
+
 }

@@ -1,5 +1,6 @@
 package it.polito.ai.pedibusproject.controller.rest;
 
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import it.polito.ai.pedibusproject.controller.model.get.LoginGET;
@@ -46,6 +47,7 @@ public class AuthenticationController {
 
     @PostMapping(value = "/login",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Crea jwtToken per autenticarsi")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value={
             @ApiResponse(code = 401,message = "Unauthorized"),
@@ -66,6 +68,7 @@ public class AuthenticationController {
     }
 
     @PostMapping(value = "/recover",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Creai recoveryToken e invia il link all'interno dell'email")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value={
             @ApiResponse(code = 404,message = "Not Found User"),
