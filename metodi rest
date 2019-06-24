@@ -1,0 +1,552 @@
+METODI REST
+
+//creazione da parte di un SysAdmin di un nuovo utente
+
+POST /users
+
+Body:
+	- email
+	- roles //array<String>
+
+Response:
+	- 201 - created
+
+NOTA: nel momento in cui l'utente inserisce un'email nell'apposito campo, il frontend effettuerà una get sull'utente
+indicato richeidendo solo l'header (nello specifico il response code), se La GET ritornerà 200 vorrà dire che l'utente
+esiste e quindi verrà disabilitata la possibilità di creare l'utente, viceversa con un 404 si potrà procedere con la
+creazione.
+
+-----------------------
+
+GET /users/{iduser}
+
+PathParam: - iduser // l'email dell'utente
+Response:
+	200 - OK
+	404 - Not Found
+
+Response Body:
+	oggetto utente
+
+-----------------------
+
+//completamento registrazione da parte di tutti gli utenti
+
+PUT /users/{iduser}
+
+PathParam: - iduser // l'email dell'utente
+Body: //tutte stringhe
+	- password //già hashata
+	- FistName
+	- LastName
+	- Birth
+	- Country
+	- City
+	- Province
+	- Street
+	- CAP
+
+Response:
+	 200 - OK	
+	 400 - Bad Request
+
+NOTE:
+con la put effettuiamo le modifiche relative ai dati generici, dell'utente, valido sia per il completamento della registrazione( in questo caso lato
+backend si dovrà settare il campo isenabled come true), sia per le modifiche successive
+
+-------------------
+
+//LOGIN
+
+POST /login
+
+BODY:
+	- username //email
+	- password // stringa hashata
+
+Response:
+	200 - OK //response with token
+	404 - Not Found //email non trovata
+	401 - Unauthorized //password non corrispondente alla mail
+
+Response Body:
+	Lista dei ruoli ricoperti dall'utente
+
+----------------------
+
+//METODI GENITORE
+
+//ottieni lista figli
+
+GET /users/{iduser}/children
+
+PathParam: iduser //email
+
+Response Body: Hashmap<idchildren, string> // idbambino e nome corrispondente
+
+------------------------
+//dati singolo sgorbio
+
+GET /users/{iduser}/children/{idchild}
+
+PathParam:
+	- iduser //email genitore
+	- idchild //object id del bambino
+
+Response Body: oggetto bambino
+
+--------------------------------
+
+//aggiungi bambino
+
+POST /users/{iduser}/children
+
+PathParam: iduser //email genitore
+
+Body: //tutte stringhe
+	- FirstName
+	- LastName
+	- Birth
+	- Gender
+	- Blob //da gestire
+	- IdStopBusOutDef // string, invieremo l'objectid
+	- IdStopBusRetDef // ""
+
+Response:
+	201 - Created
+
+-------------------------
+
+//Aggiornamento dati bambino
+
+PUT /users/{iduser}/children/{idChild}
+
+PathParam:
+	- iduser //email genitore
+	- idchild //object id del bambino
+
+Body: //uguali al metodo precedente
+
+-------------------------
+
+//ottieni tutte le prenotazioni di tutti i figli del genitore indicato
+
+GET /reservations/{iduser}/{data}
+
+PathParam:
+	- iduser //email
+	- data //formato dd.mm.yyyy
+
+QueryParam:
+	- page //int
+	- size //numero di elementi
+
+Response:
+	- 200 ok
+	- 404 Not found
+
+Response Body: //NOTA - null nel body è accettabile, verrà gestito nel frontend, il 404 è riferito ad un iduser inesistente
+	- Set<Reservation>
+
+NOTA2: il set contiene le prenotazioni di TUTTI i figli di quel genitore, pagina a partire dalla data indicata con un numero di elementi pari a size.
+Il primo deve essere quello "più vicino", cioè se è sera verrà inviato come primo elemento la prima prenotazione del giorno dopo (probabilmente l'OUTWARD).
+Se sono le 11 verrà inviato come primo elemento il RETURN. 
+-------------------------------
+
+//informazioni relative alla singola prenotazione
+
+GET /reservations/{idChild}/{data}
+
+PathParam: idChild //objectid del mantenuto
+QueryParam: 
+	- page //int
+	- size //numero di elementi
+
+Response e descrizione come per la sopracitata richiesta, ma filtrata per quel bambino
+
+-----------------------------------
+
+//Creazione della prenotazione
+
+POST /reservations
+
+Body:
+	- year 			//integer
+	- month 		//integer
+	- day 			//integer
+	- idChild 		//string - idchild
+	- stopbustype 	//string
+	- idstopbus 	//string - id fermata
+	- idline 		//string - id linea
+	- iduser 		//string - email
+
+Response: 201 - Created
+
+----------------------------------------
+
+//modifica prenotazione
+
+PUT /reservations/{reservationID}
+
+Body:
+	- iduser 	//email
+	- idline 	// objectid
+	- idfermata	// objectid
+
+NOTA:
+	è necessario che il backend verifichi che l'iduser coincida con quello del token
+Response:
+	200 - OK
+	404 - Not Found
+	401 - Unauthorized
+
+----------------------------------
+
+//cancellazione
+
+DELETE /reservations/{reservationID}
+
+------------------------------------
+
+
+/* RUOLO: ACCOMPAGNATORE */
+
+// dare la disponibilità
+POST su /availability
+BODY:
+	- iduser;
+	- data; //dd.mm.yyyy
+	- idlinea;
+	- idstopbus;
+	- stobustype;
+	- state; //manderemo sempre Available in questo caso
+
+Response:
+	- 201 Created
+
+---------------------
+
+//reperire tutte le disponibilità di un accompagnatore
+
+GET su /availability/{iduser}
+
+PathParam: iduser //id accompagnatore
+
+Response Body:
+	- lista di oggetti availability di quell'accompagnatore dalla data più vicina in poi
+
+---------------------
+
+
+//reperire disponibilità in base al periodo 
+GET su /availability/{iduser}/{date} 		//data di inizio per la ricerca
+PathParam: iduser //id accompagnatore
+			date //dd.mm.yyyy
+
+QueryParam: size 	//int indicante il numero di giorni per cui voglio ritornate le disponbilità a partire dalla data indicata
+
+Response Body:
+	- lista di disponibilità effettuate in quel periodo
+
+---------------------
+//ottenere quella specifica disponibilità
+GET /availability/{idavailability}
+PathParam: idavailability //id della disponibilità data
+
+Response Body:
+	oggetto disponibilità
+	
+--------------------------
+/*aggiornare una disponibilità: 
+ 	- prima che l'admin dia la conferma o ne prenda visione è possibile modificare lo stopbus (il resto rimane invariato);
+ 	- se l'operazione è eseguita dall'admin potrà cambiare lo stato in checked (viene passato comunque nel body il campo);
+ 	- se l'operazione è eseguita dall'accompagnatore in seguito alla conferma dell'admin, lo stato passerà in confirmed;
+
+ 	queste operazioni sono mutuamente esclusive, a seguito della seconda e della terza operazione il sistema di messaggistica manderà una notifica all'altra parte
+ */
+PUT su /availability/{idavailability}
+PathParam: idavailability //id della disponibilità data
+
+Body:
+	- idstopbus; //invariato nel caso di op 2 e 3
+	- state; //invariato di operazione 1; checked per op2 e confirmed per op3
+
+Response:
+	- 200 OK
+
+----------------
+
+// rimozione della disponibilità:
+DELETE su /availability/{idavailability}
+PathParam: idavailability //id della disponibilità data
+
+Response:
+	- 200 OK
+
+NOTA:
+se lo stato NON è Available e l'operazione viene eseguita dall'accompagnatore, allora è necessario mandare una notifica all'admin/agli admin della linea;
+viceversa se è l'admin a farlo, mandare la notifica all'accompagnatore
+
+---------------
+
+//prende la lista dei bambini prenotati sulla singola fermata
+GET /reservations/{idline}/{idstopbus}/{data}
+PathParam: 
+	- idline - id della linea;
+	- idstopbus - id della fermata
+	- data
+
+ResponseBody: contiene una lista di coppie (idreservation, nome cognome)
+
+---------------
+
+//prende la lista dei bambini non prenotati (in tutto il sistema per quel giorno), la cui fermata di default è quella indicata nel path
+GET /reservation/children/{idstopbus}/{data}
+PathParam:
+	- idstopbus - id della fermata
+	- data
+
+Response body:
+	lista di oggetti formati da: idchild, iduser, nome cognome (del bambino)// ci serve per la creazione della reservation in tempo reale
+
+---------------
+
+//aggiornare lo stato di una prenotazione (bambino preso/lasciato)
+
+PUT /reservation/{idreservation}/{inout}		//è per indicare che il bambino è preso/lasciato
+
+PathParam:
+	- idreservation - id della prenotazione
+	- inout // enum indicante il campo da aggiornare (getin/getout)
+
+Body: //oggetto reservationstate
+	- iduser  // (accompagnatore) eventualmente il dato può essere preso dal token
+	- timestamp // epoch time
+
+------------------------
+
+//creazione dell'entità che si occupa del monitoraggio della corsa
+
+POST /busride
+
+Body:
+	- iduser
+	- creationTime //epoch
+	- idline
+	- timestampLastStopbus //epoch
+	- idlaststopbus
+
+Response:
+	201 created
+Response Body: idbusride //su cui faremo le altre richeiste
+
+------------------------------
+
+//aggiorna il campo timestampStobus e idLastStopbus
+
+PUT /busride/{idbusride}
+
+PathParam: idbusride
+
+Body:
+	- timestamplaststopbus //epoch
+	- idlaststopbus
+
+Response:
+	200 ok
+
+-----------------------------
+
+//cancellazione
+
+DELETE /busride/{idbusride}
+
+PathParam: idbusride
+Response:
+	200 ok
+
+-----------------------------
+
+GET /busride/{idline}
+
+PathParam: idline
+
+ResponseBody:
+
+	oggetto busride di quel giorno su quella linea, può anche essere null se non presente
+---------------------------
+
+GENERICHE
+
+GET /lines
+
+Response body
+	lista linee
+
+----
+
+GET /lines/{idline}
+
+PathParam: idline
+
+Response body
+	dati linea
+
+------
+//prende il nome della linea
+
+GET /lines/{idline}/name
+
+ResponseBody: nome linea - string
+
+------
+
+//restituisce il nome della fermata
+
+GET /stopBuses/{idStopBus}/name
+
+ResponseBody: nome fermata - string
+
+-----
+
+METODI ADMIN
+
+//ricerca degli accompagnatori
+
+GET /users/roles
+
+QueryParam: role - ruolo su cui effettuare la ricerca
+
+Response Body:
+	lista di users
+
+------------
+
+//ricerca per parametri vari
+
+GET /users/find
+
+Body:
+	- nome
+	- cognome
+	- data di nascita
+	- indirizzo
+
+Response body:
+	. lista dei possibili iduser 
+
+NOTE:
+	a seconda dei parametri di ricerca inseriti dall'utente alcuni campi potrebbero essere null
+
+-----------
+
+//aggiornamento ruolo utente
+
+PUT /users/{iduser}/role
+
+Body:
+	- ruolo (enum)
+	- idlinea
+
+Response:
+	200 ok
+
+NOTA: se ruolo è admin la linea va aggiunta; se ruolo è escort la linea va eliminata; se è admin di più linee, non viene declassato ma viene eliminata la linea indicata dalla lista
+--------
+
+//ottieni le disponibilità per la linea e data
+
+GET /availability/{idline}/{date}
+
+PathParam:
+	- idline
+	- date //dd.mm.yyyy
+
+Response body:
+	ritorna la lista delle disponbilità per la data indicata
+
+-------
+
+SERVIZI COMUNI
+
+//aggiornamento dati utente
+PUT /users/{iduser}
+
+PathParam:
+	- iduser
+
+Body:
+	- i campi dell'user escluso lista ruoli, linee, bambini e isenabled
+
+Response:
+	200 OK
+--------
+
+MESSAGGI
+
+//ricezione nuovi messaggi
+GET /messages/{iduser}
+PathParam: 
+	-iduser
+QueryParam: 
+	- page - int; 
+	- type string ; //sarà un enum indicante se from/to
+
+NOTA: l'iduser riceverà i messaggi in base al campo type indicato (from iduser o to iduser) - verranno inviati 10 messaggi alla volta
+
+-----------
+
+GET /messages/{iduser}/pending
+PathParam:
+	- iduser (vedi nota precedente)
+
+ResponseBody:
+	- count - int //corrisponde al numero di messaggi il cui campo readConfirm è null
+
+--------
+
+//ottiene il singolo messaggio
+GET /messages/{idMessage}
+
+ResponseBody:
+	- oggetto messaggio
+
+-------
+
+DELETE /messages/{idmessage}
+
+--------
+//invio messaggi diretti
+POST /messages
+
+BODY:
+	- from: {iduser}
+	- to: {iduser}
+	- readConfirm: NULL
+	- subject : string //fare check max 100 caratteri
+	- message : string //max 500 caratteri
+	- creationTime: epoch
+
+Response:
+	201 - Sent
+
+
+--------
+
+NOTE PER I MESSAGGI
+
+I messaggi devono essere generati lato backend in seguito alle seguenti operazioni con i seguenti subject //per dare una priorità ai messaggi
+subjects: 
+	- "Disponibilità Approvata" //OPERAZIONE: l'amministratore ha approvato la disponibilità di un accompagnatore
+								// PUT su /availability/{idavailability} - CASO 2
+
+	- "Disponibilità Confermata" //come sopra, ma CASO 3
+	
+	- "Disponibilità Cancellata" //in seguito a DELETE su /availability/{idavailability}
+	
+	- "Corsa Cancellata : {name linea} - {date}" // mandata da NOREPLY (o nome migliore da decidere) ai genitori dei bambini prenotati per quella linea e per quella data e agli accompagnatori che avevano dato disponibilità
+
+	- "Bambino Preso: {nome bambino}" //mandato da parte del NOREPLY, mettendo nel body il timestamp e l'accomapgnatore che ha aggiornato il campo
+
+	- "Bambino Lasciato: {nome bambino}" //come sopra
+

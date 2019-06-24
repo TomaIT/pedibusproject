@@ -1,0 +1,50 @@
+POST /users
+GET /users/{idUser}
+//valutare DELETE
+GET /users/{idUser}/children
+GET /users/{idUser}/children/{idChild}
+POST /users/{idUser}/children
+PUT /users/{idUser}/children/{idChild}
+//valutare inserimento DELETE
+GET /users/roles
+GET /users/find
+PUT /users/{idUser}/role
+PUT /users/{idUser}
+
+POST /login
+
+GET /reservations/{idUser}/{data}
+GET /reservations/{idChild}/{data}
+POST /reservations
+PUT /reservations/{reservationid}
+DELETE /reservation/{reservationid}
+GET /reservations/{idline}/{idstopbus}/{data}
+GET /reservation/children/{idstopbus}/{data}
+PUT /reservation/{idreservation}/{inout}
+
+POST /availability
+GET /availability/{idavailability}
+GET /availability/{idUser}
+GET /availability/{idUser}/{date} 
+PUT /availability/{idavailability}
+DELETE /availability/{idavailability}
+GET /availability/{idLine}/{date}
+
+
+POST /busride
+PUT /busride/{idBusRide}
+DELETE /busride/{idBusRide}
+GET /busride/{idLine}
+
+GET /lines
+GET /lines/{idLine}
+GET /lines/{idLine}/name
+
+GET /stopBuses/{idStopBus}/name
+
+
+GET /messages/{idMessage}
+GET /messages/{idUser}
+GET /messages/{idUser}/pending
+DELETE /messages/{idMessage}
+POST /messages

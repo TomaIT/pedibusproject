@@ -7,6 +7,7 @@ import it.polito.ai.pedibusproject.controller.model.LineEnum;
 import it.polito.ai.pedibusproject.database.model.Line;
 import it.polito.ai.pedibusproject.service.interfaces.LineService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,7 @@ public class LineController {
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna tutte le linee (id e nome)")
+    @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
@@ -35,6 +37,7 @@ public class LineController {
 
     @GetMapping(value = "/{idLine}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna idLine")
+    @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")

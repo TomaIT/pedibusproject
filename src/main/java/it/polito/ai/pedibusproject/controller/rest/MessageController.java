@@ -3,9 +3,10 @@ package it.polito.ai.pedibusproject.controller.rest;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import it.polito.ai.pedibusproject.controller.model.ReservationPOST;
-import it.polito.ai.pedibusproject.controller.model.ReservationPUT;
-import it.polito.ai.pedibusproject.database.model.Reservation;
+import it.polito.ai.pedibusproject.controller.model.LineEnum;
+import it.polito.ai.pedibusproject.controller.model.MessagePOST;
+import it.polito.ai.pedibusproject.controller.model.MessagePUT;
+import it.polito.ai.pedibusproject.database.model.Message;
 import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,58 +17,59 @@ import java.util.Set;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping("/rest/reservations")
-public class ReservationController {
+@RequestMapping("/rest/messages")
+public class MessageController {
 
-    @GetMapping(value = "/{idReservation}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Ritorna tale prenotazione")
+    @GetMapping(value = "/{idMessage}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Ritorna tale message")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Set<Reservation> getReservationById(@PathVariable("idReservation")String idReservation) {
+    public Message getMessageById() {
         //TODO
         throw new NotImplementedException();
     }
 
     @PostMapping(value = "",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Crea nuova prenotazione")
+    @ApiOperation(value = "Crea nuovo messaggio")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Reservation postReservation(@RequestBody @Valid ReservationPOST reservationPOST) {
+    public Message postMessage(@RequestBody @Valid MessagePOST messagePOST) {
         //TODO
         throw new NotImplementedException();
     }
 
-    @PutMapping(value = "/{idReservation}",consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PutMapping(value = "/{idMessage}",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Aggiorna stato della prenotazione idReservation")
-    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Aggiorna messaggio per la conferma di lettura")
+    @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Reservation putReservationById(@PathVariable("idReservation")String idReservation,
-                                          @RequestBody @Valid ReservationPUT reservationPUT) {
+    public Message putMessage(@RequestBody @Valid MessagePUT messagePUT) {
         //TODO
         throw new NotImplementedException();
     }
 
-    @DeleteMapping(value = "/{idReservation}")
-    @ApiOperation(value = "Cancella prenotazione idReservation")
+    @DeleteMapping(value = "/{idMessage}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Cancella tale messaggio")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public void deleteReservationById(@PathVariable("idReservation")String idReservation) {
+    public void deleteMessageById() {
         //TODO
         throw new NotImplementedException();
     }
+
+
 }

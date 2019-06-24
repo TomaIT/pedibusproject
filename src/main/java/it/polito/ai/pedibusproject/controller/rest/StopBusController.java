@@ -4,10 +4,16 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import it.polito.ai.pedibusproject.database.model.StopBus;
+import it.polito.ai.pedibusproject.database.model.StopBusType;
 import it.polito.ai.pedibusproject.service.interfaces.StopBusService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -20,22 +26,24 @@ public class StopBusController {
         this.stopBusService=stopBusService;
     }
 
-    /*@GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Ritorna tutti gli StopBus")
-    @ApiResponses(value = {
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
-    public Set<StopBus> getLines() {
-        return this.stopBusService.findAll();
-    }*/
-
     @GetMapping(value = "/{idStopBus}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna idStopBus")
+    @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public StopBus getLine(@PathVariable("idStopBus") String idStopBus) {
         return this.stopBusService.findById(idStopBus);
+    }
+
+    @GetMapping(value = "/types", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Ritorna i possibili valori di StopBusType (Return/Outward)")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public Set<String> getStopBusTypes() {
+        return Arrays.stream(StopBusType.values()).map(Enum::name).collect(Collectors.toSet());
     }
 }
