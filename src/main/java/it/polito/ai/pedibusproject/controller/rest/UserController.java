@@ -3,25 +3,33 @@ package it.polito.ai.pedibusproject.controller.rest;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import it.polito.ai.pedibusproject.controller.model.UserPOST;
-import it.polito.ai.pedibusproject.controller.model.UserPUT;
-import it.polito.ai.pedibusproject.controller.model.UserRolePUT;
+import it.polito.ai.pedibusproject.controller.model.post.LoginPOST;
+import it.polito.ai.pedibusproject.controller.model.post.RecoverPOST;
+import it.polito.ai.pedibusproject.controller.model.post.UserPOST;
+import it.polito.ai.pedibusproject.controller.model.put.UserPUT;
+import it.polito.ai.pedibusproject.controller.model.put.UserRolePUT;
 import it.polito.ai.pedibusproject.database.model.*;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
 import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
 import it.polito.ai.pedibusproject.service.interfaces.ConfirmationTokenService;
+import it.polito.ai.pedibusproject.service.interfaces.RecoveryTokenService;
 import it.polito.ai.pedibusproject.service.interfaces.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -30,12 +38,15 @@ public class UserController {
     private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
     private UserService userService;
     private ConfirmationTokenService confirmationTokenService;
+    private RecoveryTokenService recoveryTokenService;
 
     @Autowired
     public UserController(UserService userService,
-                          ConfirmationTokenService confirmationTokenService){
+                          ConfirmationTokenService confirmationTokenService,
+                          RecoveryTokenService recoveryTokenService){
         this.userService=userService;
         this.confirmationTokenService=confirmationTokenService;
+        this.recoveryTokenService=recoveryTokenService;
     }
 
     private static User obscure(User user){
@@ -52,7 +63,8 @@ public class UserController {
             @ApiResponse(code = 409, message = "Conflict"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public User postUser(@RequestBody @Valid UserPOST userPOST) {
+    public User postUser(@RequestHeader (name="Authorization") String jwtToken,
+                         @RequestBody @Valid UserPOST userPOST) {
         User temp= this.userService.create(userPOST.getEmail(),userPOST.getRoles());
         this.confirmationTokenService.create(temp.getUsername());
         return obscure(temp);
@@ -68,7 +80,8 @@ public class UserController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public User refreshUuid(@PathVariable("idUser")String idUser) {
+    public User refreshUuid(@RequestHeader (name="Authorization") String jwtToken,
+                            @PathVariable("idUser")String idUser) {
         User temp=this.userService.loadUserByUsername(idUser);
         if(temp.isEnabled()) throw new BadRequestException("User <refreshUuid> user is already active.");
         this.confirmationTokenService.create(temp.getUsername());
@@ -82,7 +95,8 @@ public class UserController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public User getUserById(@PathVariable("idUser")String idUser) {
+    public User getUserById(@RequestHeader (name="Authorization") String jwtToken,
+                            @PathVariable("idUser")String idUser) {
         User temp=this.userService.loadUserByUsername(idUser);
         return obscure(temp);
     }
@@ -96,7 +110,8 @@ public class UserController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public User putUserRoleById(@PathVariable("idUser")String idUser,
+    public User putUserRoleById(@RequestHeader (name="Authorization") String jwtToken,
+                                @PathVariable("idUser")String idUser,
                                 @RequestBody @Valid UserRolePUT userRolePUT) {
         //TODO
         throw new NotImplementedException();
@@ -111,7 +126,8 @@ public class UserController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public User putUserById(@PathVariable("idUser")String idUser,
+    public User putUserById(@RequestHeader (name="Authorization") String jwtToken,
+                            @PathVariable("idUser")String idUser,
                             @RequestBody @Valid UserPUT userPUT) {
         //TODO
         throw new NotImplementedException();
@@ -124,7 +140,8 @@ public class UserController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Set<Child> getChildrenById(@PathVariable("idUser")String idUser) {
+    public Set<Child> getChildrenById(@RequestHeader (name="Authorization") String jwtToken,
+                                      @PathVariable("idUser")String idUser) {
         //TODO
         throw new NotImplementedException();
     }
@@ -136,7 +153,8 @@ public class UserController {
             @ApiResponse(code = 404, message = "Not Found User"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Set<Reservation> getReservationByUser(@PathVariable("idUser")String idUser) {
+    public Set<Reservation> getReservationByUser(@RequestHeader (name="Authorization") String jwtToken,
+                                                 @PathVariable("idUser")String idUser) {
         //TODO
         throw new NotImplementedException();
     }
@@ -148,8 +166,11 @@ public class UserController {
             @ApiResponse(code = 404, message = "Not Found User"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Set<Availability> getAvailabilitiesByUser(@PathVariable("idUser")String idUser) {
+    public Set<Availability> getAvailabilitiesByUser(@RequestHeader (name="Authorization") String jwtToken,
+                                                     @PathVariable("idUser")String idUser) {
         //TODO
         throw new NotImplementedException();
     }
+
+
 }

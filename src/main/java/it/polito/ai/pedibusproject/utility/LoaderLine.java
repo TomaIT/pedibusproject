@@ -91,6 +91,7 @@ public class LoaderLine {
         temp.setIdOutStopBuses(createStopBuses(inputDataLine.getOutwardLine(),StopBusType.Outward));
         temp.setIdRetStopBuses(createStopBuses(inputDataLine.getReturnLine(),StopBusType.Return));
         temp=this.lineService.create(temp);
+        LOG.info("Create Line " + temp.getName());
         updateUserState(inputDataLine.getEmailAdmin(),temp.getId());
         this.busRideService.createToIntervalDate(temp.getId(),StopBusType.Return,startYear,startMonth,startDay,intervalDays);
         this.busRideService.createToIntervalDate(temp.getId(),StopBusType.Outward,startYear,startMonth,startDay,intervalDays);
@@ -110,12 +111,11 @@ public class LoaderLine {
                     if(line.isPresent()){
                         if(!line.get().getCreationTime().equals(file.lastModified())) {//Update
                             this.lineService.deleteById(line.get().getId());
-                            Line temp =createLine(inputDataLine, file.lastModified());
-                            LOG.info("Update Line " + temp.getName());
+                            LOG.info("Delete Line <" + line.get().getId()+", "+line.get().getName()+">");
+                            createLine(inputDataLine, file.lastModified());
                         }
                     }else{//Create
-                        Line temp =createLine(inputDataLine, file.lastModified());
-                        LOG.info("Create Line " + temp.getName());
+                        createLine(inputDataLine, file.lastModified());
                     }
                 }catch (IOException e){
                     LOG.error("File "+file.getName(),e);

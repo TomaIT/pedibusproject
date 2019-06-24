@@ -1,7 +1,7 @@
 package it.polito.ai.pedibusproject.service.implementations;
 
 import com.mongodb.client.result.UpdateResult;
-import it.polito.ai.pedibusproject.controller.model.LineEnum;
+import it.polito.ai.pedibusproject.controller.model.get.LineEnumGET;
 import it.polito.ai.pedibusproject.database.model.Line;
 import it.polito.ai.pedibusproject.database.model.StopBus;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
@@ -41,10 +41,10 @@ public class LineServiceImpl implements LineService {
     }
 
     @Override
-    public Set<LineEnum> aggregateNames() {
-        Set<LineEnum> temp= new HashSet<>();
+    public Set<LineEnumGET> aggregateNames() {
+        Set<LineEnumGET> temp= new HashSet<>();
         this.lineRepository.findByIsDeleted(false)
-                .forEach(x->temp.add(new LineEnum(x.getId(),x.getName())));
+                .forEach(x->temp.add(new LineEnumGET(x.getId(),x.getName())));
         return temp;
     }
 

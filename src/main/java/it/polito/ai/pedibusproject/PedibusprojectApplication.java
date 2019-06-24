@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringBootApplication
 public class PedibusprojectApplication implements CommandLineRunner {
     private static final Logger LOG = LoggerFactory.getLogger(PedibusprojectApplication.class);
-    //Autowired Injection no, because CYCLE BEAN
+    //Autowired Injection in constructor no, because CYCLE BEAN
     @Autowired
     private MongoTemplate mongoTemplate;
     @Autowired

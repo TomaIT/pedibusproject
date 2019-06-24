@@ -3,11 +3,13 @@ package it.polito.ai.pedibusproject.controller.rest;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import it.polito.ai.pedibusproject.controller.model.ChildPOST;
+import it.polito.ai.pedibusproject.controller.model.post.ChildPOST;
 import it.polito.ai.pedibusproject.database.model.Child;
 import it.polito.ai.pedibusproject.database.model.Gender;
 import it.polito.ai.pedibusproject.database.model.Reservation;
 import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
+import it.polito.ai.pedibusproject.service.interfaces.ChildService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/rest/children")
 public class ChildController {
+    private ChildService childService;
+
+    @Autowired
+    public ChildController(ChildService childService){
+        this.childService=childService;
+    }
 
     @GetMapping(value = "/genders",produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna i possibili valori di Gender")
@@ -32,31 +40,33 @@ public class ChildController {
         return Arrays.stream(Gender.values()).map(Enum::name).collect(Collectors.toSet());
     }
 
-    @GetMapping(value = "{idChild}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{idChild}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna il bambino idChild")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Child getChildById(@PathVariable("idChild")String idChild) {
-        //TODO
-        throw new NotImplementedException();
+    public Child getChildById(@RequestHeader (name="Authorization") String jwtToken,
+                              @PathVariable("idChild")String idChild) {
+        return this.childService.findById(idChild);
     }
 
+    //TODO idUser from JWT
     @PostMapping(value = "/{idUser}",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Crea e aggiunge bambino all'utente idUser")
+    @ApiOperation(value = "Crea bambino")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Child postChildrenById(@PathVariable("idUser")String idUser,
-                                       @RequestBody @Valid ChildPOST childPOST) {
-        //TODO
-        throw new NotImplementedException();
+    public Child postChildrenById(@RequestHeader (name="Authorization") String jwtToken,
+                                  @PathVariable("idUser")String idUser,
+                                  @RequestBody @Valid ChildPOST childPOST) {
+        return this.childService.create(idUser,childPOST.getFirstname(),childPOST.getSurname(),childPOST.getBirth(),
+                childPOST.getGender(),childPOST.getBlobBase64(),childPOST.getIdStopBusOutDef(),childPOST.getIdStopBusRetDef());
     }
 
     @PutMapping(value = "/{idChild}",consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -68,10 +78,24 @@ public class ChildController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Child putChildById(@PathVariable("idChild")String idChild,
+    public Child putChildById(@RequestHeader (name="Authorization") String jwtToken,
+                              @PathVariable("idChild")String idChild,
                               @RequestBody @Valid ChildPOST childPOST) {
-        //TODO
-        throw new NotImplementedException();
+        return this.childService.update(idChild,childPOST.getFirstname(),childPOST.getSurname(),childPOST.getBirth(),
+                childPOST.getGender(),childPOST.getBlobBase64(),childPOST.getIdStopBusOutDef(),childPOST.getIdStopBusRetDef());
+    }
+
+    @DeleteMapping(value = "/{idChild}",consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Cancella bambino idChild")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public void deleteChildById(@RequestHeader (name="Authorization") String jwtToken,
+                                @PathVariable("idChild")String idChild) {
+        this.childService.deleteById(idChild);
     }
 
     @GetMapping(value = "/{idChild}/reservations", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -81,7 +105,8 @@ public class ChildController {
             @ApiResponse(code = 404, message = "Not Found Child"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Set<Reservation> getReservationByChild(@PathVariable("idChild")String idChild) {
+    public Set<Reservation> getReservationByChild(@RequestHeader (name="Authorization") String jwtToken,
+                                                  @PathVariable("idChild")String idChild) {
         //TODO
         throw new NotImplementedException();
     }

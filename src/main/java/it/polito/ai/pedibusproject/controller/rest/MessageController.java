@@ -3,9 +3,8 @@ package it.polito.ai.pedibusproject.controller.rest;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import it.polito.ai.pedibusproject.controller.model.LineEnum;
-import it.polito.ai.pedibusproject.controller.model.MessagePOST;
-import it.polito.ai.pedibusproject.controller.model.MessagePUT;
+import it.polito.ai.pedibusproject.controller.model.post.MessagePOST;
+import it.polito.ai.pedibusproject.controller.model.put.MessagePUT;
 import it.polito.ai.pedibusproject.database.model.Message;
 import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
 import org.springframework.http.HttpStatus;
@@ -13,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Set;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -27,7 +25,7 @@ public class MessageController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Message getMessageById() {
+    public Message getMessageById(@RequestHeader (name="Authorization") String jwtToken) {
         //TODO
         throw new NotImplementedException();
     }
@@ -40,7 +38,8 @@ public class MessageController {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Message postMessage(@RequestBody @Valid MessagePOST messagePOST) {
+    public Message postMessage(@RequestHeader (name="Authorization") String jwtToken,
+                               @RequestBody @Valid MessagePOST messagePOST) {
         //TODO
         throw new NotImplementedException();
     }
@@ -54,7 +53,8 @@ public class MessageController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Message putMessage(@RequestBody @Valid MessagePUT messagePUT) {
+    public Message putMessage(@RequestHeader (name="Authorization") String jwtToken,
+                              @RequestBody @Valid MessagePUT messagePUT) {
         //TODO
         throw new NotImplementedException();
     }
@@ -66,7 +66,7 @@ public class MessageController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public void deleteMessageById() {
+    public void deleteMessageById(@RequestHeader (name="Authorization") String jwtToken) {
         //TODO
         throw new NotImplementedException();
     }

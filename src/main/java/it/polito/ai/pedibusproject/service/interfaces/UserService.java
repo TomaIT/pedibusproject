@@ -19,6 +19,7 @@ public interface UserService extends UserDetailsService {
     User confirmRegistration(UUID uuid,String email, String password, String firstname,
                              String surname, Date birth, String street, String phoneNumber);
 
+
     @Override
     User loadUserByUsername(String username);
 

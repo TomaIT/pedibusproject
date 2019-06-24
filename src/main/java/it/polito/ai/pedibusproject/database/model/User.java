@@ -24,10 +24,11 @@ public class User implements UserDetails {
     private String password;
     @Builder.Default
     private Set<Role> roles = new HashSet<>();
+
+    // @Builder.Default private Set<String> idChildren = new HashSet<>();
+
     @Builder.Default
-    private List<String> idChildren = new ArrayList<>();
-    @Builder.Default
-    private List<String> idLines = new ArrayList<>();
+    private Set<String> idLines = new HashSet<>();
 
     @Builder.Default
     private boolean isAccountNonExpired = true;

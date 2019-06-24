@@ -17,13 +17,13 @@ import java.util.UUID;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Controller
 @RequestMapping("/confirmation")
-public class ConfirmRegController {
+public class ConfirmRegistrationController {
     private ConfirmationTokenService confirmationTokenService;
     private UserService userService;
 
     @Autowired
-    public ConfirmRegController(ConfirmationTokenService confirmationTokenService,
-                                UserService userService){
+    public ConfirmRegistrationController(ConfirmationTokenService confirmationTokenService,
+                                         UserService userService){
         this.confirmationTokenService=confirmationTokenService;
         this.userService=userService;
     }
@@ -40,7 +40,7 @@ public class ConfirmRegController {
     }
 
     @PostMapping("/{uuid}")
-    public String postRecoverUUID(Model m,@Valid @ModelAttribute("confirmUserView") ConfirmUserView confirmUserView,
+    public String postConfirmUUID(Model m,@Valid @ModelAttribute("confirmUserView") ConfirmUserView confirmUserView,
                                   BindingResult br,@PathVariable("uuid") UUID uuid){
         if(br.hasErrors()){
             return "confirmUser";

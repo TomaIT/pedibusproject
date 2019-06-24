@@ -1,7 +1,7 @@
 package it.polito.ai.pedibusproject.service.implementations;
 
 import it.polito.ai.pedibusproject.controller.model.ConfirmUserView;
-import it.polito.ai.pedibusproject.controller.view.ConfirmRegController;
+import it.polito.ai.pedibusproject.controller.view.ConfirmRegistrationController;
 import it.polito.ai.pedibusproject.database.model.ConfirmationToken;
 import it.polito.ai.pedibusproject.database.repository.ConfirmationTokenRepository;
 import it.polito.ai.pedibusproject.exceptions.InternalServerErrorException;
@@ -25,7 +25,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     private static final Logger LOG = LoggerFactory.getLogger(ConfirmationTokenServiceImpl.class);
     private ConfirmationTokenRepository confirmationTokenRepository;
     private EmailSender emailSender;
-    @Value("${uuid.token.validitytime.seconds}")
+    @Value("${uuid.confirmtoken.validitytime.seconds}")
     private long expiredTimeout;
     @Value("${pedibus.uri}")
     private String uriContext;
@@ -40,8 +40,8 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     private String getLinkConfirmRegistration(UUID uuid){
         String link;
         try {
-            link= linkTo(ConfirmRegController.class,
-                    ConfirmRegController.class.getMethod("getConfirmView",
+            link= linkTo(ConfirmRegistrationController.class,
+                    ConfirmRegistrationController.class.getMethod("getConfirmView",
                             Model.class, ConfirmUserView.class, UUID.class),
                     uuid)
                     .toUriComponentsBuilder()

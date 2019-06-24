@@ -43,7 +43,7 @@ public class StopBusController {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Set<String> getStopBusTypes() {
+    public Set<String> getStopBusTypes(@RequestHeader (name="Authorization") String jwtToken) {
         return Arrays.stream(StopBusType.values()).map(Enum::name).collect(Collectors.toSet());
     }
 }

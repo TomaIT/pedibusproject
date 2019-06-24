@@ -1,6 +1,7 @@
 package it.polito.ai.pedibusproject.database.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -23,4 +24,15 @@ public class Child {
     private String blobBase64; //Photo ??
     private String idStopBusOutDef;
     private String idStopBusRetDef;
+
+    public Child(String idUser, String firstname, String surname, Date birth, Gender gender, String blobBase64, String idStopBusOutDef, String idStopBusRetDef){
+        this.idUser=idUser;
+        this.firstname=firstname;
+        this.surname=surname;
+        this.birth=birth;
+        this.gender=gender;
+        this.blobBase64=blobBase64;
+        this.idStopBusOutDef=idStopBusOutDef;
+        this.idStopBusRetDef=idStopBusRetDef;
+    }
 }

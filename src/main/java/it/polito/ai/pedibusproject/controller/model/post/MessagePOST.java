@@ -1,4 +1,4 @@
-package it.polito.ai.pedibusproject.controller.model;
+package it.polito.ai.pedibusproject.controller.model.post;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

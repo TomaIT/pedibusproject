@@ -1,4 +1,4 @@
-package it.polito.ai.pedibusproject.controller.model;
+package it.polito.ai.pedibusproject.controller.model.post;
 
 import it.polito.ai.pedibusproject.database.model.Role;
 import lombok.Data;

@@ -3,7 +3,7 @@ package it.polito.ai.pedibusproject.controller.rest;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import it.polito.ai.pedibusproject.controller.model.LineEnum;
+import it.polito.ai.pedibusproject.controller.model.get.LineEnumGET;
 import it.polito.ai.pedibusproject.database.model.Line;
 import it.polito.ai.pedibusproject.service.interfaces.LineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -31,7 +30,7 @@ public class LineController {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Set<LineEnum> getLineNames() {
+    public Set<LineEnumGET> getLineNames(@RequestHeader (name="Authorization") String jwtToken) {
         return this.lineService.aggregateNames();
     }
 
@@ -42,7 +41,8 @@ public class LineController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Line getLine(@PathVariable("idLine") String idLine) {
+    public Line getLine(@RequestHeader (name="Authorization") String jwtToken,
+                        @PathVariable("idLine") String idLine) {
         return this.lineService.findById(idLine);
     }
 

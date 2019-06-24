@@ -3,8 +3,8 @@ package it.polito.ai.pedibusproject.controller.rest;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import it.polito.ai.pedibusproject.controller.model.ReservationPOST;
-import it.polito.ai.pedibusproject.controller.model.ReservationPUT;
+import it.polito.ai.pedibusproject.controller.model.post.ReservationPOST;
+import it.polito.ai.pedibusproject.controller.model.put.ReservationPUT;
 import it.polito.ai.pedibusproject.database.model.Reservation;
 import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
 import org.springframework.http.HttpStatus;
@@ -26,7 +26,8 @@ public class ReservationController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Set<Reservation> getReservationById(@PathVariable("idReservation")String idReservation) {
+    public Set<Reservation> getReservationById(@RequestHeader (name="Authorization") String jwtToken,
+                                               @PathVariable("idReservation")String idReservation) {
         //TODO
         throw new NotImplementedException();
     }
@@ -39,7 +40,8 @@ public class ReservationController {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Reservation postReservation(@RequestBody @Valid ReservationPOST reservationPOST) {
+    public Reservation postReservation(@RequestHeader (name="Authorization") String jwtToken,
+                                       @RequestBody @Valid ReservationPOST reservationPOST) {
         //TODO
         throw new NotImplementedException();
     }
@@ -53,7 +55,8 @@ public class ReservationController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Reservation putReservationById(@PathVariable("idReservation")String idReservation,
+    public Reservation putReservationById(@RequestHeader (name="Authorization") String jwtToken,
+                                          @PathVariable("idReservation")String idReservation,
                                           @RequestBody @Valid ReservationPUT reservationPUT) {
         //TODO
         throw new NotImplementedException();
@@ -66,7 +69,8 @@ public class ReservationController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public void deleteReservationById(@PathVariable("idReservation")String idReservation) {
+    public void deleteReservationById(@RequestHeader (name="Authorization") String jwtToken,
+                                      @PathVariable("idReservation")String idReservation) {
         //TODO
         throw new NotImplementedException();
     }

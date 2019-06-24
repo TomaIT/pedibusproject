@@ -3,10 +3,9 @@ package it.polito.ai.pedibusproject.controller.rest;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import it.polito.ai.pedibusproject.controller.model.BusRidePOST;
-import it.polito.ai.pedibusproject.controller.model.BusRidePUT;
+import it.polito.ai.pedibusproject.controller.model.post.BusRidePOST;
+import it.polito.ai.pedibusproject.controller.model.put.BusRidePUT;
 import it.polito.ai.pedibusproject.database.model.BusRide;
-import it.polito.ai.pedibusproject.database.model.Reservation;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
 import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
 import it.polito.ai.pedibusproject.service.interfaces.BusRideService;
@@ -16,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Set;
 import java.util.TreeSet;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -47,7 +45,8 @@ public class BusRideController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public BusRide getBusRide(@PathVariable("idBusRide")String idBusRide) {
+    public BusRide getBusRide(@RequestHeader (name="Authorization") String jwtToken,
+                              @PathVariable("idBusRide")String idBusRide) {
         return this.busRideService.findById(idBusRide);
     }
 
@@ -58,7 +57,8 @@ public class BusRideController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public BusRide getAvailabilities(@PathVariable("idBusRide")String idBusRide) {
+    public BusRide getAvailabilities(@RequestHeader (name="Authorization") String jwtToken,
+                                     @PathVariable("idBusRide")String idBusRide) {
         //TODO
         throw new NotImplementedException();
     }
@@ -69,11 +69,12 @@ public class BusRideController {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public BusRide getBusRideByDateAndIdLine(@PathVariable("idLine")String idLine,
-                                                  @PathVariable("stopBusType") StopBusType stopBusType,
-                                                  @PathVariable("year")Integer year,
-                                                  @PathVariable("month")Integer month,
-                                                  @PathVariable("day")Integer day) {
+    public BusRide getBusRideByDateAndIdLine(@RequestHeader (name="Authorization") String jwtToken,
+                                             @PathVariable("idLine")String idLine,
+                                             @PathVariable("stopBusType") StopBusType stopBusType,
+                                             @PathVariable("year")Integer year,
+                                             @PathVariable("month")Integer month,
+                                             @PathVariable("day")Integer day) {
         BusRide busRide=this.busRideService.findByIdLineAndStopBusTypeAndYearAndMonthAndDay(idLine,stopBusType,
                 year,month,day);
         System.out.println(busRide.getStartTime());
@@ -93,7 +94,8 @@ public class BusRideController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public BusRide postBusRide(@RequestBody @Valid BusRidePOST busRidePOST) {
+    public BusRide postBusRide(@RequestHeader (name="Authorization") String jwtToken,
+                               @RequestBody @Valid BusRidePOST busRidePOST) {
         return this.busRideService.create(busRidePOST.getIdLine(),busRidePOST.getStopBusType(),
                 busRidePOST.getYear(),busRidePOST.getMonth(),busRidePOST.getDay());
     }
@@ -107,7 +109,8 @@ public class BusRideController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public BusRide putBusRide(@RequestBody @Valid BusRidePUT busRidePUT) {
+    public BusRide putBusRide(@RequestHeader (name="Authorization") String jwtToken,
+                              @RequestBody @Valid BusRidePUT busRidePUT) {
         //TODO
         throw new NotImplementedException();
     }
@@ -120,7 +123,7 @@ public class BusRideController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public BusRide deleteBusRide() {
+    public BusRide deleteBusRide(@RequestHeader (name="Authorization") String jwtToken) {
         //TODO
         throw new NotImplementedException();
     }

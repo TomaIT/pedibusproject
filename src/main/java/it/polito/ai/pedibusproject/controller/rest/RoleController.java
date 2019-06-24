@@ -25,7 +25,7 @@ public class RoleController {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Set<String> getRoleValues() {
+    public Set<String> getRoleValues(@RequestHeader (name="Authorization") String jwtToken) {
         return Arrays.stream(Role.values()).map(Enum::name).collect(Collectors.toSet());
     }
 
@@ -36,7 +36,8 @@ public class RoleController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public StopBus getLine(@PathVariable("role") Role role) {
+    public StopBus getLine(@RequestHeader (name="Authorization") String jwtToken,
+                           @PathVariable("role") Role role) {
         //TODO
         throw new NotImplementedException();
     }
