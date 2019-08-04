@@ -57,7 +57,7 @@ public class AuthenticationController {
             String token = jwtTokenProvider.createToken(email,
                     userService.loadUserByUsername(email).getRoles().stream().map(Enum::name).collect(Collectors.toList()));
 
-            return new LoginGET(email,token);
+            return new LoginGET(email,token,jwtTokenProvider.getExpiration(token).getTime());
         } catch (AuthenticationException e) {
             throw new UnauthorizedException("Username or Password invalid");
         }

@@ -9,9 +9,9 @@ public class LoginGET {
     private String jwtToken;
     private Long expiredEpochTime;
 
-    public LoginGET(String username,String jwtToken){
+    public LoginGET(String username,String jwtToken,Long expiredEpochTime){
         this.username=username;
         this.jwtToken=jwtToken;
-        //TODO set expired epoch time from JWT
+        this.expiredEpochTime=expiredEpochTime;
     }
 }

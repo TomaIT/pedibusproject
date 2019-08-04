@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.crypto.Data;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -54,6 +55,12 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = this.userService.loadUserByUsername(getUsername(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
+
+    public Date getExpiration(String token){
+        return Jwts.parser().setSigningKey(secretKey)
+                .parseClaimsJws(token.replace(TOKEN_PREFIX,""))
+                .getBody().getExpiration();
     }
 
     public String getUsername(String token) {
