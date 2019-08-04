@@ -5,7 +5,6 @@ import it.polito.ai.pedibusproject.database.model.StopBus;
 import it.polito.ai.pedibusproject.exceptions.InternalServerErrorException;
 import lombok.Data;
 
-import java.util.List;
 import java.util.TreeSet;
 
 @Data

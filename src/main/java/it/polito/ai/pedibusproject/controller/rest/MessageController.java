@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiResponses;
 import it.polito.ai.pedibusproject.controller.model.get.MessageGET;
 import it.polito.ai.pedibusproject.controller.model.post.MessagePOST;
 import it.polito.ai.pedibusproject.controller.model.put.MessagePUT;
-import it.polito.ai.pedibusproject.database.model.Message;
+import it.polito.ai.pedibusproject.security.JwtTokenProvider;
 import it.polito.ai.pedibusproject.service.interfaces.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,10 +20,12 @@ import javax.validation.Valid;
 @RequestMapping("/rest/messages")
 public class MessageController {
     private MessageService messageService;
+    private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public MessageController(MessageService messageService){
+    public MessageController(MessageService messageService,JwtTokenProvider jwtTokenProvider){
         this.messageService=messageService;
+        this.jwtTokenProvider=jwtTokenProvider;
     }
 
     @GetMapping(value = "/{idMessage}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -50,9 +52,8 @@ public class MessageController {
     })
     public MessageGET postMessage(@RequestHeader (name="Authorization") String jwtToken,
                                @RequestBody @Valid MessagePOST messagePOST) {
-        //TODO userFrom authentication token
         return new MessageGET(
-                this.messageService.create("TODO@GMAIL.COM",messagePOST.getIdUserTo(),
+                this.messageService.create(jwtTokenProvider.getUsername(jwtToken),messagePOST.getIdUserTo(),
                 messagePOST.getSubject(),messagePOST.getMessage(),messagePOST.getCreationTime())
         );
     }

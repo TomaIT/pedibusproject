@@ -53,7 +53,6 @@ public class BusRideController {
         return new BusRideGET(this.busRideService.findById(idBusRide));
     }
 
-    //TODO ALL
     @GetMapping(value = "/{idBusRide}/availabilities",produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna tutte le availabilities per una data corsa (idBusRide)")
     @ResponseStatus(HttpStatus.OK)

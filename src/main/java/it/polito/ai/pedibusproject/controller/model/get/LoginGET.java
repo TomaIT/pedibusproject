@@ -1,6 +1,5 @@
 package it.polito.ai.pedibusproject.controller.model.get;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data

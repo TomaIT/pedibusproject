@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import it.polito.ai.pedibusproject.controller.model.get.UserGET;
 import it.polito.ai.pedibusproject.database.model.Role;
-import it.polito.ai.pedibusproject.database.model.StopBus;
 import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

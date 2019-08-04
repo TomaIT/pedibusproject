@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import it.polito.ai.pedibusproject.controller.model.get.StopBusGET;
-import it.polito.ai.pedibusproject.database.model.StopBus;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
 import it.polito.ai.pedibusproject.service.interfaces.StopBusService;
 import org.springframework.beans.factory.annotation.Autowired;

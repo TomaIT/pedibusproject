@@ -6,10 +6,10 @@ import io.swagger.annotations.ApiResponses;
 import it.polito.ai.pedibusproject.controller.model.get.ChildGET;
 import it.polito.ai.pedibusproject.controller.model.get.ReservationGET;
 import it.polito.ai.pedibusproject.controller.model.post.ChildPOST;
-import it.polito.ai.pedibusproject.database.model.Child;
 import it.polito.ai.pedibusproject.database.model.Gender;
-import it.polito.ai.pedibusproject.database.model.Reservation;
+import it.polito.ai.pedibusproject.exceptions.BadRequestException;
 import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
+import it.polito.ai.pedibusproject.security.JwtTokenProvider;
 import it.polito.ai.pedibusproject.service.interfaces.ChildService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,10 +26,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/rest/children")
 public class ChildController {
     private ChildService childService;
+    private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public ChildController(ChildService childService){
+    public ChildController(ChildService childService,JwtTokenProvider jwtTokenProvider){
         this.childService=childService;
+        this.jwtTokenProvider=jwtTokenProvider;
     }
 
     @GetMapping(value = "/genders",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -56,7 +58,7 @@ public class ChildController {
         );
     }
 
-    //TODO idUser from JWT
+
     @PostMapping(value = "/{idUser}",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Crea bambino")
@@ -69,6 +71,9 @@ public class ChildController {
     public ChildGET postChildrenById(@RequestHeader (name="Authorization") String jwtToken,
                                   @PathVariable("idUser")String idUser,
                                   @RequestBody @Valid ChildPOST childPOST) {
+        String username=this.jwtTokenProvider.getUsername(jwtToken);
+        if(!idUser.equals(username))
+            throw new BadRequestException("Authentication Token and IdUser are different.");
         return new ChildGET(
                 this.childService.create(idUser,childPOST.getFirstname(),childPOST.getSurname(),childPOST.getBirth(),
                 childPOST.getGender(),childPOST.getBlobBase64(),childPOST.getIdStopBusOutDef(),childPOST.getIdStopBusRetDef())

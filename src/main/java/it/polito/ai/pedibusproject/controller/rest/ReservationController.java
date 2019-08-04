@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiResponses;
 import it.polito.ai.pedibusproject.controller.model.get.ReservationGET;
 import it.polito.ai.pedibusproject.controller.model.post.ReservationPOST;
 import it.polito.ai.pedibusproject.controller.model.put.ReservationPUT;
-import it.polito.ai.pedibusproject.database.model.Reservation;
 import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

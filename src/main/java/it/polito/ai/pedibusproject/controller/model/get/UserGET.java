@@ -2,7 +2,6 @@ package it.polito.ai.pedibusproject.controller.model.get;
 
 import it.polito.ai.pedibusproject.database.model.Role;
 import it.polito.ai.pedibusproject.database.model.User;
-import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;

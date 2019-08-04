@@ -7,7 +7,6 @@ import io.swagger.annotations.ApiResponses;
 import it.polito.ai.pedibusproject.controller.model.get.AvailabilityGET;
 import it.polito.ai.pedibusproject.controller.model.post.AvailabilityPOST;
 import it.polito.ai.pedibusproject.controller.model.put.AvailabilityPUT;
-import it.polito.ai.pedibusproject.database.model.Availability;
 import it.polito.ai.pedibusproject.database.model.AvailabilityState;
 import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
 import org.springframework.http.HttpStatus;

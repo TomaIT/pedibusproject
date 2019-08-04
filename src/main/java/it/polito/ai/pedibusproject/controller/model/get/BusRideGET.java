@@ -1,7 +1,6 @@
 package it.polito.ai.pedibusproject.controller.model.get;
 
 import it.polito.ai.pedibusproject.database.model.BusRide;
-import it.polito.ai.pedibusproject.database.model.StopBus;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
 import lombok.Data;
 
