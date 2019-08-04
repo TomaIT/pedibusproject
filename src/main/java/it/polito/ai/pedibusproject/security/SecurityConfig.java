@@ -27,6 +27,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        //TODO aggiungere regole di security sui path.
+        // (ULTIMA OPERAZIONE DOPO AVER TESTATO LE FUNZIONALITA)
         //@formatter:off
         http
                 .httpBasic().disable()
