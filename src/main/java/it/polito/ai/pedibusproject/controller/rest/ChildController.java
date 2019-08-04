@@ -3,6 +3,8 @@ package it.polito.ai.pedibusproject.controller.rest;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import it.polito.ai.pedibusproject.controller.model.get.ChildGET;
+import it.polito.ai.pedibusproject.controller.model.get.ReservationGET;
 import it.polito.ai.pedibusproject.controller.model.post.ChildPOST;
 import it.polito.ai.pedibusproject.database.model.Child;
 import it.polito.ai.pedibusproject.database.model.Gender;
@@ -47,9 +49,11 @@ public class ChildController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Child getChildById(@RequestHeader (name="Authorization") String jwtToken,
-                              @PathVariable("idChild")String idChild) {
-        return this.childService.findById(idChild);
+    public ChildGET getChildById(@RequestHeader (name="Authorization") String jwtToken,
+                                 @PathVariable("idChild")String idChild) {
+        return new ChildGET(
+                this.childService.findById(idChild)
+        );
     }
 
     //TODO idUser from JWT
@@ -62,11 +66,13 @@ public class ChildController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Child postChildrenById(@RequestHeader (name="Authorization") String jwtToken,
+    public ChildGET postChildrenById(@RequestHeader (name="Authorization") String jwtToken,
                                   @PathVariable("idUser")String idUser,
                                   @RequestBody @Valid ChildPOST childPOST) {
-        return this.childService.create(idUser,childPOST.getFirstname(),childPOST.getSurname(),childPOST.getBirth(),
-                childPOST.getGender(),childPOST.getBlobBase64(),childPOST.getIdStopBusOutDef(),childPOST.getIdStopBusRetDef());
+        return new ChildGET(
+                this.childService.create(idUser,childPOST.getFirstname(),childPOST.getSurname(),childPOST.getBirth(),
+                childPOST.getGender(),childPOST.getBlobBase64(),childPOST.getIdStopBusOutDef(),childPOST.getIdStopBusRetDef())
+        );
     }
 
     @PutMapping(value = "/{idChild}",consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -78,11 +84,13 @@ public class ChildController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Child putChildById(@RequestHeader (name="Authorization") String jwtToken,
+    public ChildGET putChildById(@RequestHeader (name="Authorization") String jwtToken,
                               @PathVariable("idChild")String idChild,
                               @RequestBody @Valid ChildPOST childPOST) {
-        return this.childService.update(idChild,childPOST.getFirstname(),childPOST.getSurname(),childPOST.getBirth(),
-                childPOST.getGender(),childPOST.getBlobBase64(),childPOST.getIdStopBusOutDef(),childPOST.getIdStopBusRetDef());
+        return new ChildGET(
+                this.childService.update(idChild,childPOST.getFirstname(),childPOST.getSurname(),childPOST.getBirth(),
+                childPOST.getGender(),childPOST.getBlobBase64(),childPOST.getIdStopBusOutDef(),childPOST.getIdStopBusRetDef())
+        );
     }
 
     @DeleteMapping(value = "/{idChild}",consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -105,8 +113,8 @@ public class ChildController {
             @ApiResponse(code = 404, message = "Not Found Child"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Set<Reservation> getReservationByChild(@RequestHeader (name="Authorization") String jwtToken,
-                                                  @PathVariable("idChild")String idChild) {
+    public Set<ReservationGET> getReservationByChild(@RequestHeader (name="Authorization") String jwtToken,
+                                                     @PathVariable("idChild")String idChild) {
         //TODO
         throw new NotImplementedException();
     }

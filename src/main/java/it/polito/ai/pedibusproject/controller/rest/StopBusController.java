@@ -3,6 +3,7 @@ package it.polito.ai.pedibusproject.controller.rest;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import it.polito.ai.pedibusproject.controller.model.get.StopBusGET;
 import it.polito.ai.pedibusproject.database.model.StopBus;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
 import it.polito.ai.pedibusproject.service.interfaces.StopBusService;
@@ -33,8 +34,10 @@ public class StopBusController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public StopBus getLine(@PathVariable("idStopBus") String idStopBus) {
-        return this.stopBusService.findById(idStopBus);
+    public StopBusGET getLine(@PathVariable("idStopBus") String idStopBus) {
+        return new StopBusGET(
+                this.stopBusService.findById(idStopBus)
+        );
     }
 
     @GetMapping(value = "/types", produces = MediaType.APPLICATION_JSON_VALUE)

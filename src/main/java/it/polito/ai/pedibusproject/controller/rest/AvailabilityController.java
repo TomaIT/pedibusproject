@@ -4,6 +4,7 @@ package it.polito.ai.pedibusproject.controller.rest;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import it.polito.ai.pedibusproject.controller.model.get.AvailabilityGET;
 import it.polito.ai.pedibusproject.controller.model.post.AvailabilityPOST;
 import it.polito.ai.pedibusproject.controller.model.put.AvailabilityPUT;
 import it.polito.ai.pedibusproject.database.model.Availability;
@@ -40,8 +41,8 @@ public class AvailabilityController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Set<String> getAvailabilityStates(@RequestHeader (name="Authorization") String jwtToken,
-                                             @PathVariable("idAvailability")String idAvailability) {
+    public AvailabilityGET getAvailability(@RequestHeader (name="Authorization") String jwtToken,
+                                                 @PathVariable("idAvailability")String idAvailability) {
         //TODO
         throw new NotImplementedException();
     }
@@ -55,7 +56,7 @@ public class AvailabilityController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Availability postAvailability(@RequestHeader (name="Authorization") String jwtToken,
+    public AvailabilityGET postAvailability(@RequestHeader (name="Authorization") String jwtToken,
                                          @RequestBody @Valid AvailabilityPOST availabilityPOST) {
         //TODO
         throw new NotImplementedException();
@@ -70,7 +71,7 @@ public class AvailabilityController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Availability putAvailability(@RequestHeader (name="Authorization") String jwtToken,
+    public AvailabilityGET putAvailability(@RequestHeader (name="Authorization") String jwtToken,
                                         @PathVariable("idAvailability")String idAvailability,
                                         @RequestBody @Valid AvailabilityPUT availabilityPUT) {
         //TODO
@@ -84,7 +85,7 @@ public class AvailabilityController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Availability deleteAvailability(@RequestHeader (name="Authorization") String jwtToken,
+    public AvailabilityGET deleteAvailability(@RequestHeader (name="Authorization") String jwtToken,
                                            @PathVariable("idAvailability")String idAvailability) {
         //TODO
         throw new NotImplementedException();

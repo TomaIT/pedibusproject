@@ -3,6 +3,7 @@ package it.polito.ai.pedibusproject.controller.rest;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import it.polito.ai.pedibusproject.controller.model.get.ReservationGET;
 import it.polito.ai.pedibusproject.controller.model.post.ReservationPOST;
 import it.polito.ai.pedibusproject.controller.model.put.ReservationPUT;
 import it.polito.ai.pedibusproject.database.model.Reservation;
@@ -26,8 +27,8 @@ public class ReservationController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Set<Reservation> getReservationById(@RequestHeader (name="Authorization") String jwtToken,
-                                               @PathVariable("idReservation")String idReservation) {
+    public Set<ReservationGET> getReservationById(@RequestHeader (name="Authorization") String jwtToken,
+                                                  @PathVariable("idReservation")String idReservation) {
         //TODO
         throw new NotImplementedException();
     }
@@ -40,7 +41,7 @@ public class ReservationController {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Reservation postReservation(@RequestHeader (name="Authorization") String jwtToken,
+    public ReservationGET postReservation(@RequestHeader (name="Authorization") String jwtToken,
                                        @RequestBody @Valid ReservationPOST reservationPOST) {
         //TODO
         throw new NotImplementedException();
@@ -55,7 +56,7 @@ public class ReservationController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Reservation putReservationById(@RequestHeader (name="Authorization") String jwtToken,
+    public ReservationGET putReservationById(@RequestHeader (name="Authorization") String jwtToken,
                                           @PathVariable("idReservation")String idReservation,
                                           @RequestBody @Valid ReservationPUT reservationPUT) {
         //TODO

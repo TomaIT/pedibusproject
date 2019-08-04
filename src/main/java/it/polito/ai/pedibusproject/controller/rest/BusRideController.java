@@ -3,6 +3,8 @@ package it.polito.ai.pedibusproject.controller.rest;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import it.polito.ai.pedibusproject.controller.model.get.AvailabilityGET;
+import it.polito.ai.pedibusproject.controller.model.get.BusRideGET;
 import it.polito.ai.pedibusproject.controller.model.post.BusRidePOST;
 import it.polito.ai.pedibusproject.controller.model.put.BusRidePUT;
 import it.polito.ai.pedibusproject.database.model.BusRide;
@@ -15,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Set;
 import java.util.TreeSet;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -45,20 +48,21 @@ public class BusRideController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public BusRide getBusRide(@RequestHeader (name="Authorization") String jwtToken,
+    public BusRideGET getBusRide(@RequestHeader (name="Authorization") String jwtToken,
                               @PathVariable("idBusRide")String idBusRide) {
-        return this.busRideService.findById(idBusRide);
+        return new BusRideGET(this.busRideService.findById(idBusRide));
     }
 
+    //TODO ALL
     @GetMapping(value = "/{idBusRide}/availabilities",produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Ritorna corsa idBusRide")
+    @ApiOperation(value = "Ritorna tutte le availabilities per una data corsa (idBusRide)")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public BusRide getAvailabilities(@RequestHeader (name="Authorization") String jwtToken,
-                                     @PathVariable("idBusRide")String idBusRide) {
+    public Set<AvailabilityGET> getAvailabilities(@RequestHeader (name="Authorization") String jwtToken,
+                                                  @PathVariable("idBusRide")String idBusRide) {
         //TODO
         throw new NotImplementedException();
     }
@@ -69,16 +73,15 @@ public class BusRideController {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public BusRide getBusRideByDateAndIdLine(@RequestHeader (name="Authorization") String jwtToken,
+    public BusRideGET getBusRideByDateAndIdLine(@RequestHeader (name="Authorization") String jwtToken,
                                              @PathVariable("idLine")String idLine,
                                              @PathVariable("stopBusType") StopBusType stopBusType,
                                              @PathVariable("year")Integer year,
                                              @PathVariable("month")Integer month,
                                              @PathVariable("day")Integer day) {
-        BusRide busRide=this.busRideService.findByIdLineAndStopBusTypeAndYearAndMonthAndDay(idLine,stopBusType,
-                year,month,day);
-        System.out.println(busRide.getStartTime());
-        return busRide;
+        return new BusRideGET(
+                this.busRideService.findByIdLineAndStopBusTypeAndYearAndMonthAndDay(idLine,stopBusType, year,month,day)
+        );
     }
 
 
@@ -94,10 +97,12 @@ public class BusRideController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public BusRide postBusRide(@RequestHeader (name="Authorization") String jwtToken,
+    public BusRideGET postBusRide(@RequestHeader (name="Authorization") String jwtToken,
                                @RequestBody @Valid BusRidePOST busRidePOST) {
-        return this.busRideService.create(busRidePOST.getIdLine(),busRidePOST.getStopBusType(),
-                busRidePOST.getYear(),busRidePOST.getMonth(),busRidePOST.getDay());
+        return new BusRideGET(
+                this.busRideService.create(busRidePOST.getIdLine(),busRidePOST.getStopBusType(),
+                busRidePOST.getYear(),busRidePOST.getMonth(),busRidePOST.getDay())
+        );
     }
 
     @PutMapping(value = "/{idBusRide}",consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -109,10 +114,12 @@ public class BusRideController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public BusRide putBusRide(@RequestHeader (name="Authorization") String jwtToken,
+    public BusRideGET putBusRide(@RequestHeader (name="Authorization") String jwtToken,
                               @PathVariable("idBusRide")String idBusRide,
                               @RequestBody @Valid BusRidePUT busRidePUT) {
-        return this.busRideService.updateLastStopBus(idBusRide,busRidePUT.getTimestampLastStopBus(),busRidePUT.getIdLastStopBus());
+        return new BusRideGET(
+                this.busRideService.updateLastStopBus(idBusRide,busRidePUT.getTimestampLastStopBus(),busRidePUT.getIdLastStopBus())
+        );
     }
 
     @DeleteMapping(value = "/{idBusRide}",consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -123,7 +130,7 @@ public class BusRideController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public BusRide deleteBusRide(@RequestHeader (name="Authorization") String jwtToken) {
+    public BusRideGET deleteBusRide(@RequestHeader (name="Authorization") String jwtToken) {
         //TODO
         throw new NotImplementedException();
     }

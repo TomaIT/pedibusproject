@@ -3,6 +3,7 @@ package it.polito.ai.pedibusproject.controller.rest;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import it.polito.ai.pedibusproject.controller.model.get.UserGET;
 import it.polito.ai.pedibusproject.database.model.Role;
 import it.polito.ai.pedibusproject.database.model.StopBus;
 import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
@@ -30,14 +31,14 @@ public class RoleController {
     }
 
     @GetMapping(value = "/{role}/users", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Ritorna idStopBus")
+    @ApiOperation(value = "Ritorna utenti con ruolo specificato (role)")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public StopBus getLine(@RequestHeader (name="Authorization") String jwtToken,
-                           @PathVariable("role") Role role) {
+    public Set<UserGET> getLine(@RequestHeader (name="Authorization") String jwtToken,
+                                @PathVariable("role") Role role) {
         //TODO
         throw new NotImplementedException();
     }

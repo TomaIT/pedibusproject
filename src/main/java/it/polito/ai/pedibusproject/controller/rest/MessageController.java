@@ -3,6 +3,7 @@ package it.polito.ai.pedibusproject.controller.rest;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import it.polito.ai.pedibusproject.controller.model.get.MessageGET;
 import it.polito.ai.pedibusproject.controller.model.post.MessagePOST;
 import it.polito.ai.pedibusproject.controller.model.put.MessagePUT;
 import it.polito.ai.pedibusproject.database.model.Message;
@@ -32,9 +33,11 @@ public class MessageController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Message getMessageById(@RequestHeader (name="Authorization") String jwtToken,
-                                  @PathVariable("idMessage")String idMessage) {
-        return this.messageService.findById(idMessage);
+    public MessageGET getMessageById(@RequestHeader (name="Authorization") String jwtToken,
+                                     @PathVariable("idMessage")String idMessage) {
+        return new MessageGET(
+                this.messageService.findById(idMessage)
+        );
     }
 
     @PostMapping(value = "",consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -45,11 +48,13 @@ public class MessageController {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Message postMessage(@RequestHeader (name="Authorization") String jwtToken,
+    public MessageGET postMessage(@RequestHeader (name="Authorization") String jwtToken,
                                @RequestBody @Valid MessagePOST messagePOST) {
-        //TODO userFrom
-        return this.messageService.create("TODO@GMAIL.COM",messagePOST.getIdUserTo(),
-                messagePOST.getSubject(),messagePOST.getMessage(),messagePOST.getCreationTime());
+        //TODO userFrom authentication token
+        return new MessageGET(
+                this.messageService.create("TODO@GMAIL.COM",messagePOST.getIdUserTo(),
+                messagePOST.getSubject(),messagePOST.getMessage(),messagePOST.getCreationTime())
+        );
     }
 
     @PutMapping(value = "/{idMessage}",consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -61,10 +66,12 @@ public class MessageController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Message putMessage(@RequestHeader (name="Authorization") String jwtToken,
+    public MessageGET putMessage(@RequestHeader (name="Authorization") String jwtToken,
                               @PathVariable("idMessage")String idMessage,
                               @RequestBody @Valid MessagePUT messagePUT) {
-        return this.messageService.updateReadConfirmById(idMessage,messagePUT.getReadConfirm());
+        return new MessageGET(
+                this.messageService.updateReadConfirmById(idMessage,messagePUT.getReadConfirm())
+        );
     }
 
     @DeleteMapping(value = "/{idMessage}", produces = MediaType.APPLICATION_JSON_VALUE)

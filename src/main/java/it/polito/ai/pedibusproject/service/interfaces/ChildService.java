@@ -11,5 +11,6 @@ public interface ChildService {
     Set<Child> findByIdUser(String idUser);
     Child create(String idUser, String firstname, String surname, Date birth,Gender gender,String blobBase64,String idStopBusOutDef,String idStopBusRetDef);
     Child update(String id,String firstname, String surname, Date birth,Gender gender,String blobBase64,String idStopBusOutDef,String idStopBusRetDef);
+    //TODO delete non vera solo boolean
     void deleteById(String id);
 }

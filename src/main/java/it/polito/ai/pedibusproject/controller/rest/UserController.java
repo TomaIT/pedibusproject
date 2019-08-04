@@ -3,6 +3,7 @@ package it.polito.ai.pedibusproject.controller.rest;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import it.polito.ai.pedibusproject.controller.model.get.*;
 import it.polito.ai.pedibusproject.controller.model.post.UserPOST;
 import it.polito.ai.pedibusproject.controller.model.put.UserPUT;
 import it.polito.ai.pedibusproject.controller.model.put.UserRolePUT;
@@ -43,11 +44,6 @@ public class UserController {
         this.recoveryTokenService=recoveryTokenService;
     }
 
-    private static User obscure(User user){
-        user.setPassword("***");
-        return user;
-    }
-
 
     @PostMapping(value = "",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -57,11 +53,11 @@ public class UserController {
             @ApiResponse(code = 409, message = "Conflict"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public User postUser(@RequestHeader (name="Authorization") String jwtToken,
-                         @RequestBody @Valid UserPOST userPOST) {
+    public UserGET postUser(@RequestHeader (name="Authorization") String jwtToken,
+                            @RequestBody @Valid UserPOST userPOST) {
         User temp= this.userService.create(userPOST.getEmail(),userPOST.getRoles());
         this.confirmationTokenService.create(temp.getUsername());
-        return obscure(temp);
+        return new UserGET(temp);
     }
 
 
@@ -74,12 +70,12 @@ public class UserController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public User refreshUuid(@RequestHeader (name="Authorization") String jwtToken,
+    public UserGET refreshUuid(@RequestHeader (name="Authorization") String jwtToken,
                             @PathVariable("idUser")String idUser) {
         User temp=this.userService.loadUserByUsername(idUser);
         if(temp.isEnabled()) throw new BadRequestException("User <refreshUuid> user is already active.");
         this.confirmationTokenService.create(temp.getUsername());
-        return obscure(temp);
+        return new UserGET(temp);
     }
 
     @GetMapping(value = "/{idUser}",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -89,10 +85,9 @@ public class UserController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public User getUserById(@RequestHeader (name="Authorization") String jwtToken,
+    public UserGET getUserById(@RequestHeader (name="Authorization") String jwtToken,
                             @PathVariable("idUser")String idUser) {
-        User temp=this.userService.loadUserByUsername(idUser);
-        return obscure(temp);
+        return new UserGET(this.userService.loadUserByUsername(idUser));
     }
 
     @PutMapping(value = "/{idUser}/role",consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -104,7 +99,7 @@ public class UserController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public User putUserRoleById(@RequestHeader (name="Authorization") String jwtToken,
+    public UserGET putUserRoleById(@RequestHeader (name="Authorization") String jwtToken,
                                 @PathVariable("idUser")String idUser,
                                 @RequestBody @Valid UserRolePUT userRolePUT) {
         //TODO
@@ -120,7 +115,7 @@ public class UserController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public User putUserById(@RequestHeader (name="Authorization") String jwtToken,
+    public UserGET putUserById(@RequestHeader (name="Authorization") String jwtToken,
                             @PathVariable("idUser")String idUser,
                             @RequestBody @Valid UserPUT userPUT) {
         //TODO
@@ -134,8 +129,8 @@ public class UserController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Set<Child> getChildrenById(@RequestHeader (name="Authorization") String jwtToken,
-                                      @PathVariable("idUser")String idUser) {
+    public Set<ChildGET> getChildrenById(@RequestHeader (name="Authorization") String jwtToken,
+                                         @PathVariable("idUser")String idUser) {
         //TODO
         throw new NotImplementedException();
     }
@@ -147,8 +142,8 @@ public class UserController {
             @ApiResponse(code = 404, message = "Not Found User"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Set<Reservation> getReservationByUser(@RequestHeader (name="Authorization") String jwtToken,
-                                                 @PathVariable("idUser")String idUser) {
+    public Set<ReservationGET> getReservationByUser(@RequestHeader (name="Authorization") String jwtToken,
+                                                    @PathVariable("idUser")String idUser) {
         //TODO
         throw new NotImplementedException();
     }
@@ -160,11 +155,39 @@ public class UserController {
             @ApiResponse(code = 404, message = "Not Found User"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Set<Availability> getAvailabilitiesByUser(@RequestHeader (name="Authorization") String jwtToken,
-                                                     @PathVariable("idUser")String idUser) {
+    public Set<AvailabilityGET> getAvailabilitiesByUser(@RequestHeader (name="Authorization") String jwtToken,
+                                                        @PathVariable("idUser")String idUser) {
         //TODO
         throw new NotImplementedException();
     }
+
+    @GetMapping(value = "/{idUser}/messages", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Ritorna tutti i messagi ricevuti per (idUser)")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "Not Found User"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public Set<MessageGET> getReceivedMessages(@RequestHeader (name="Authorization") String jwtToken,
+                                                   @PathVariable("idUser")String idUser) {
+        //TODO
+        throw new NotImplementedException();
+    }
+
+    @GetMapping(value = "/{idUser}/messages/notReadCounter", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Ritorna il conteggio dei messaggi ricevuti non ancora letti")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "Not Found User"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public Long getReceivedMessagesNotReadCounter(@RequestHeader (name="Authorization") String jwtToken,
+                                               @PathVariable("idUser")String idUser) {
+        //TODO
+        throw new NotImplementedException();
+    }
+
+
 
 
 }
