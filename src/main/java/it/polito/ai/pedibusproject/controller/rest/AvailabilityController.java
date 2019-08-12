@@ -9,6 +9,8 @@ import it.polito.ai.pedibusproject.controller.model.post.AvailabilityPOST;
 import it.polito.ai.pedibusproject.controller.model.put.AvailabilityPUT;
 import it.polito.ai.pedibusproject.database.model.AvailabilityState;
 import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
+import it.polito.ai.pedibusproject.service.interfaces.AvailabilityService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/rest/availabilities")
 public class AvailabilityController {
+    private AvailabilityService availabilityService;
+
+    @Autowired
+    public AvailabilityController(AvailabilityService availabilityService) {
+        this.availabilityService = availabilityService;
+    }
 
     @GetMapping(value = "/states",produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna tutti i possibili stati di availability")
@@ -42,8 +50,7 @@ public class AvailabilityController {
     })
     public AvailabilityGET getAvailability(@RequestHeader (name="Authorization") String jwtToken,
                                                  @PathVariable("idAvailability")String idAvailability) {
-        //TODO
-        throw new NotImplementedException();
+        return new AvailabilityGET(this.availabilityService.findById(idAvailability));
     }
 
     @PostMapping(value = "",consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -57,8 +64,10 @@ public class AvailabilityController {
     })
     public AvailabilityGET postAvailability(@RequestHeader (name="Authorization") String jwtToken,
                                          @RequestBody @Valid AvailabilityPOST availabilityPOST) {
-        //TODO
-        throw new NotImplementedException();
+        return new AvailabilityGET(
+                this.availabilityService.create(availabilityPOST.getIdBusRide(), availabilityPOST.getIdStopBus(),
+                                                availabilityPOST.getIdUser(), availabilityPOST.getState())
+        );
     }
 
     @PutMapping(value = "/{idAvailability}",consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -73,8 +82,10 @@ public class AvailabilityController {
     public AvailabilityGET putAvailability(@RequestHeader (name="Authorization") String jwtToken,
                                         @PathVariable("idAvailability")String idAvailability,
                                         @RequestBody @Valid AvailabilityPUT availabilityPUT) {
-        //TODO
-        throw new NotImplementedException();
+
+        return new AvailabilityGET(
+                this.availabilityService.update(idAvailability, availabilityPUT.getIdStopBus(), availabilityPUT.getState())
+        );
     }
 
     @DeleteMapping(value = "/{idAvailability}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -84,10 +95,10 @@ public class AvailabilityController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public AvailabilityGET deleteAvailability(@RequestHeader (name="Authorization") String jwtToken,
+    public void deleteAvailability(@RequestHeader (name="Authorization") String jwtToken,
                                            @PathVariable("idAvailability")String idAvailability) {
-        //TODO
-        throw new NotImplementedException();
+
+        this.availabilityService.deleteById(idAvailability);
     }
 
 }
