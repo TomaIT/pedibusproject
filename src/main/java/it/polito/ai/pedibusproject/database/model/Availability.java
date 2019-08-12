@@ -17,4 +17,11 @@ public class Availability {
     private String idStopBus;
     private String idUser; //Escort
     private AvailabilityState state;
+
+    public Availability(String idBusRide, String idStopBus, String idUser, AvailabilityState state) {
+        this.idBusRide = idBusRide;
+        this.idStopBus = idStopBus;
+        this.idUser = idUser;
+        this.state = state;
+    }
 }
