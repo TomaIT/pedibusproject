@@ -8,8 +8,5 @@ import org.springframework.data.mongodb.repository.Query;
 import java.util.Set;
 
 public interface UserRepository extends MongoRepository<User, String> {
-
-    // TODO: non ho ancora capito come fare la Query
-    @Query(value = "{ 'users.roles' : ?0 }")
-    Set<User> findByRole(Role role);
+    Set<User> findAllByRolesContains(Role role);
 }

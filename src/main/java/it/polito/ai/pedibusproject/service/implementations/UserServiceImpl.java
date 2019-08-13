@@ -91,6 +91,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Set<User> findByRole(Role role) {
+        return this.userRepository.findAllByRolesContains(role);
+    }
+
+    @Override
     public void enableUser(String username) {
         Update update = new Update();
         update.set("isEnabled", true);

@@ -23,6 +23,8 @@ public interface UserService extends UserDetailsService {
     @Override
     User loadUserByUsername(String username);
 
+    Set<User> findByRole(Role role);
+
     void enableUser(String username);
 
     void deleteById(String username);

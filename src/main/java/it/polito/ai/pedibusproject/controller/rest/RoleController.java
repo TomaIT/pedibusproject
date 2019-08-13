@@ -5,8 +5,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import it.polito.ai.pedibusproject.controller.model.get.UserGET;
 import it.polito.ai.pedibusproject.database.model.Role;
-import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
-import it.polito.ai.pedibusproject.service.interfaces.RoleService;
+import it.polito.ai.pedibusproject.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,11 +19,11 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/rest/roles")
 public class RoleController {
-    private RoleService roleService;
+    private UserService userService;
 
     @Autowired
-    public RoleController(RoleService roleService) {
-        this.roleService = roleService;
+    public RoleController(UserService userService) {
+        this.userService=userService;
     }
 
     @GetMapping(value = "",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -46,8 +45,7 @@ public class RoleController {
     })
     public Set<UserGET> getLine(@RequestHeader (name="Authorization") String jwtToken,
                                 @PathVariable("role") Role role) {
-        //TODO
-        this.roleService.findUsersByRole(role);
-        return null;
+        return this.userService.findByRole(role).stream()
+                .map(UserGET::new).collect(Collectors.toSet());
     }
 }
