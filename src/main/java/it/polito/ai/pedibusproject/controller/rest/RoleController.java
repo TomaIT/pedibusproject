@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiResponses;
 import it.polito.ai.pedibusproject.controller.model.get.UserGET;
 import it.polito.ai.pedibusproject.database.model.Role;
 import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
+import it.polito.ai.pedibusproject.service.interfaces.RoleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/rest/roles")
 public class RoleController {
+    private RoleService roleService;
+
+    @Autowired
+    public RoleController(RoleService roleService) {
+        this.roleService = roleService;
+    }
 
     @GetMapping(value = "",produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna Lista Possibili Valori di Role")
@@ -39,6 +47,7 @@ public class RoleController {
     public Set<UserGET> getLine(@RequestHeader (name="Authorization") String jwtToken,
                                 @PathVariable("role") Role role) {
         //TODO
-        throw new NotImplementedException();
+        this.roleService.findUsersByRole(role);
+        return null;
     }
 }
