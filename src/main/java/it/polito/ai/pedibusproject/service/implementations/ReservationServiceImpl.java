@@ -28,6 +28,11 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    public Set<Reservation> findAllByIdUser(String idUser) {
+        return reservationRepository.findAllByIdUser(idUser);
+    }
+
+    @Override
     public void deleteById(String id) {
         this.reservationRepository.deleteById(id);
     }

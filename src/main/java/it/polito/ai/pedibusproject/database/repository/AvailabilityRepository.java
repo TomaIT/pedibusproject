@@ -7,4 +7,5 @@ import java.util.Set;
 
 public interface AvailabilityRepository extends MongoRepository<Availability,String> {
     Set<Availability> findAllByIdBusRide(String idBusRide);
+    Set<Availability> findAllByIdUser(String idUser);
 }

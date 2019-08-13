@@ -14,6 +14,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 @Service
 public class MessageServiceImpl implements MessageService {
     private MessageRepository messageRepository;
@@ -63,5 +65,10 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public void deleteById(String id) {
         this.messageRepository.deleteById(id);
+    }
+
+    @Override
+    public Set<Message> findAllByIdUserTo(String idUserTo) {
+        return this.messageRepository.findAllByIdUserTo(idUserTo);
     }
 }

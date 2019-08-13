@@ -7,12 +7,11 @@ import it.polito.ai.pedibusproject.controller.model.get.*;
 import it.polito.ai.pedibusproject.controller.model.post.UserPOST;
 import it.polito.ai.pedibusproject.controller.model.put.UserPUT;
 import it.polito.ai.pedibusproject.controller.model.put.UserRolePUT;
+import it.polito.ai.pedibusproject.database.model.Message;
 import it.polito.ai.pedibusproject.database.model.User;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
 import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
-import it.polito.ai.pedibusproject.service.interfaces.ConfirmationTokenService;
-import it.polito.ai.pedibusproject.service.interfaces.RecoveryTokenService;
-import it.polito.ai.pedibusproject.service.interfaces.UserService;
+import it.polito.ai.pedibusproject.service.interfaces.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -31,14 +31,26 @@ public class UserController {
     private UserService userService;
     private ConfirmationTokenService confirmationTokenService;
     private RecoveryTokenService recoveryTokenService;
+    private ChildService childService;
+    private ReservationService reservationService;
+    private AvailabilityService availabilityService;
+    private MessageService messageService;
 
     @Autowired
     public UserController(UserService userService,
                           ConfirmationTokenService confirmationTokenService,
-                          RecoveryTokenService recoveryTokenService){
+                          RecoveryTokenService recoveryTokenService,
+                          ChildService childService,
+                          ReservationService reservationService,
+                          AvailabilityService availabilityService,
+                          MessageService messageService) {
         this.userService=userService;
         this.confirmationTokenService=confirmationTokenService;
         this.recoveryTokenService=recoveryTokenService;
+        this.childService=childService;
+        this.reservationService=reservationService;
+        this.availabilityService=availabilityService;
+        this.messageService=messageService;
     }
 
 
@@ -128,8 +140,8 @@ public class UserController {
     })
     public Set<ChildGET> getChildrenById(@RequestHeader (name="Authorization") String jwtToken,
                                          @PathVariable("idUser")String idUser) {
-        //TODO
-        throw new NotImplementedException();
+        return this.childService.findByIdUser(idUser).stream()
+                .map(ChildGET::new).collect(Collectors.toSet());
     }
 
     @GetMapping(value = "/{idUser}/reservations", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -141,8 +153,8 @@ public class UserController {
     })
     public Set<ReservationGET> getReservationByUser(@RequestHeader (name="Authorization") String jwtToken,
                                                     @PathVariable("idUser")String idUser) {
-        //TODO
-        throw new NotImplementedException();
+        return this.reservationService.findAllByIdUser(idUser).stream()
+                .map(ReservationGET::new).collect(Collectors.toSet());
     }
 
     @GetMapping(value = "/{idUser}/availabilities", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -154,8 +166,8 @@ public class UserController {
     })
     public Set<AvailabilityGET> getAvailabilitiesByUser(@RequestHeader (name="Authorization") String jwtToken,
                                                         @PathVariable("idUser")String idUser) {
-        //TODO
-        throw new NotImplementedException();
+        return this.availabilityService.findAllByIdUser(idUser).stream()
+                .map(AvailabilityGET::new).collect(Collectors.toSet());
     }
 
     @GetMapping(value = "/{idUser}/messages", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -167,8 +179,8 @@ public class UserController {
     })
     public Set<MessageGET> getReceivedMessages(@RequestHeader (name="Authorization") String jwtToken,
                                                    @PathVariable("idUser")String idUser) {
-        //TODO
-        throw new NotImplementedException();
+        return this.messageService.findAllByIdUserTo(idUser).stream()
+                .map(MessageGET::new).collect(Collectors.toSet());
     }
 
     @GetMapping(value = "/{idUser}/messages/notReadCounter", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -180,8 +192,9 @@ public class UserController {
     })
     public Long getReceivedMessagesNotReadCounter(@RequestHeader (name="Authorization") String jwtToken,
                                                @PathVariable("idUser")String idUser) {
-        //TODO
-        throw new NotImplementedException();
+        //TODO only to improve performance...
+        return this.messageService.findAllByIdUserTo(idUser).stream()
+                .filter(x->x.getReadConfirm()!=null).count();
     }
 
 

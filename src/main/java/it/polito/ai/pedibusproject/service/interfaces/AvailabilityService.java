@@ -11,4 +11,5 @@ public interface AvailabilityService {
     Availability update(String id, String idStopBus, AvailabilityState state);
     void deleteById(String id);
     Set<Availability> findAllByIdBusRide(String idBusRide);
+    Set<Availability> findAllByIdUser(String idUser);
 }

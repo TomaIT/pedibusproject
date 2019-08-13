@@ -103,4 +103,9 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     public Set<Availability> findAllByIdBusRide(String idBusRide) {
         return this.availabilityRepository.findAllByIdBusRide(idBusRide);
     }
+
+    @Override
+    public Set<Availability> findAllByIdUser(String idUser) {
+        return this.availabilityRepository.findAllByIdUser(idUser);
+    }
 }
