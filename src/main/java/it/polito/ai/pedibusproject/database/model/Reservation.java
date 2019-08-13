@@ -17,6 +17,13 @@ public class Reservation {
     private String idChild;
     private String idStopBus;
     private String idUser;
-    private ReservationState getIn;
-    private ReservationState getOut;
+    private ReservationState getIn=null;
+    private ReservationState getOut=null;
+
+    public Reservation(String idBusRide,String idChild,String idStopBus,String idUser){
+        this.idBusRide=idBusRide;
+        this.idChild=idChild;
+        this.idStopBus=idStopBus;
+        this.idUser=idUser;
+    }
 }
