@@ -70,6 +70,20 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
     @Override
     public Availability update(String id, String idStopBus, AvailabilityState state) {
+
+        // AGGIUNTO I CONTROLLI SU idStopBus
+        Optional<Availability> av = this.availabilityRepository.findById(id);
+        if(!av.isPresent())
+            throw new NotFoundException("Availability <update>");
+        String idBusRide = av.get().getIdBusRide();
+        Optional<BusRide> br = this.busRideRepository.findById(idBusRide);
+        if(!br.isPresent())
+            throw new BadRequestException("Availability <update> not found BusRide");
+        if(!br.get().getStopBuses().stream().map(x -> x.getId()).anyMatch(y -> y.equals(idStopBus)))
+            throw new BadRequestException("Availability <update> not found StopBus in BusRide");
+        // AGGIUNTO I CONTROLLI SU idStopBus FINE
+        // TODO: concorrenza!?
+
         Update update = new Update();
         update.set("idStopBus", idStopBus);
         update.set("state", state);
