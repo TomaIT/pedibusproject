@@ -9,9 +9,12 @@ import it.polito.ai.pedibusproject.exceptions.InternalServerErrorException;
 import it.polito.ai.pedibusproject.exceptions.NotFoundException;
 import it.polito.ai.pedibusproject.service.interfaces.BusRideService;
 import it.polito.ai.pedibusproject.service.interfaces.LineService;
+import it.polito.ai.pedibusproject.service.interfaces.MessageService;
+import it.polito.ai.pedibusproject.service.interfaces.ReservationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -19,6 +22,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
+import java.util.Set;
 import java.util.TreeSet;
 
 @Service
@@ -27,13 +31,20 @@ public class BusRideServiceImpl implements BusRideService {
     private BusRideRepository busRideRepository;
     private LineService lineService;
     private MongoTemplate mongoTemplate;
+    private ReservationService reservationService;
+    private MessageService messageService;
+    @Value("${spring.mail.username}")
+    private String sysAdmin;
 
     @Autowired
     public BusRideServiceImpl(BusRideRepository busRideRepository, LineService lineService,
-                              MongoTemplate mongoTemplate) {
+                              MongoTemplate mongoTemplate,ReservationService reservationService,
+                              MessageService messageService) {
         this.busRideRepository = busRideRepository;
         this.lineService = lineService;
         this.mongoTemplate=mongoTemplate;
+        this.reservationService=reservationService;
+        this.messageService=messageService;
     }
 
     private BusRide mySave(BusRide busRide){
@@ -130,5 +141,18 @@ public class BusRideServiceImpl implements BusRideService {
     @Override
     public TreeSet<BusRide> findAll() {
         return new TreeSet<>(this.busRideRepository.findAll());
+    }
+
+    @Override
+    public void deleteById(String id) {
+        Set<Reservation> temp=this.reservationService.findAllByIdBusRide(id);
+        temp.forEach(x-> {
+            this.messageService.create(sysAdmin, x.getIdUser(),
+                    "",
+                    "",
+                    System.currentTimeMillis());
+            this.reservationService.deleteById(x.getId());
+        });
+        this.busRideRepository.deleteById(id);
     }
 }

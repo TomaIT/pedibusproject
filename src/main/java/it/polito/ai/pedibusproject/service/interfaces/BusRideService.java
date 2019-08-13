@@ -23,4 +23,7 @@ public interface BusRideService {
     BusRide updateLastStopBus(String id,Long timestampLastStopBus,String idLastStopBus);
 
     TreeSet<BusRide> findAll();
+
+    //Cancella busride, creando un messaggio di comunicazioni per tutte le prenotazioni annullate
+    void deleteById(String id);
 }

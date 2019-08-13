@@ -10,6 +10,7 @@ import it.polito.ai.pedibusproject.controller.model.put.BusRidePUT;
 import it.polito.ai.pedibusproject.database.model.BusRide;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
 import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
+import it.polito.ai.pedibusproject.service.interfaces.AvailabilityService;
 import it.polito.ai.pedibusproject.service.interfaces.BusRideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,16 +20,20 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/rest/busrides")
 public class BusRideController {
     private BusRideService busRideService;
+    private AvailabilityService availabilityService;
 
     @Autowired
-    public BusRideController(BusRideService busRideService){
+    public BusRideController(BusRideService busRideService,AvailabilityService availabilityService){
         this.busRideService=busRideService;
+        this.availabilityService=availabilityService;
+
     }
 
     @GetMapping(value = "",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -62,8 +67,8 @@ public class BusRideController {
     })
     public Set<AvailabilityGET> getAvailabilities(@RequestHeader (name="Authorization") String jwtToken,
                                                   @PathVariable("idBusRide")String idBusRide) {
-        //TODO
-        throw new NotImplementedException();
+        return this.availabilityService.findAllByIdBusRide(idBusRide).stream()
+                .map(AvailabilityGET::new).collect(Collectors.toSet());
     }
 
     @GetMapping(value = "/{idLine}/{stopBusType}/{year}/{month}/{day}",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -121,16 +126,15 @@ public class BusRideController {
         );
     }
 
-    @DeleteMapping(value = "/{idBusRide}",consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/{idBusRide}")
     @ApiOperation(value = "'Elimina' tale corsa. (Crea messaggio per tutte le prenotazioni annullate)")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public BusRideGET deleteBusRide(@RequestHeader (name="Authorization") String jwtToken) {
-        //TODO
-        throw new NotImplementedException();
+    public void deleteBusRide(@RequestHeader (name="Authorization") String jwtToken,
+                                    @PathVariable("idBusRide")String idBusRide) {
+        this.busRideService.deleteById(idBusRide);
     }
 }

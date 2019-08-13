@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class AvailabilityServiceImpl implements AvailabilityService {
@@ -57,5 +58,10 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     @Override
     public void deleteById(String id) {
         this.availabilityRepository.deleteById(id);
+    }
+
+    @Override
+    public Set<Availability> findAllByIdBusRide(String idBusRide) {
+        return this.availabilityRepository.findAllByIdBusRide(idBusRide);
     }
 }
