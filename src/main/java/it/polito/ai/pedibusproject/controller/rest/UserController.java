@@ -192,9 +192,8 @@ public class UserController {
     })
     public Long getReceivedMessagesNotReadCounter(@RequestHeader (name="Authorization") String jwtToken,
                                                @PathVariable("idUser")String idUser) {
-        //TODO only to improve performance...
         return this.messageService.findAllByIdUserTo(idUser).stream()
-                .filter(x->x.getReadConfirm()!=null).count();
+                .filter(x->x.getReadConfirm()==null).count();
     }
 
 
