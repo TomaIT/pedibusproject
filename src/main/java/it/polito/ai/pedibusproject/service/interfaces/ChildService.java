@@ -7,10 +7,11 @@ import java.util.Date;
 import java.util.Set;
 
 public interface ChildService {
+    //NOTA: Esso ritorna anche i bambini 'cancellati'
     Child findById(String id);
+    //NOTA: Esso ritorna anche i bambini 'cancellati'
     Set<Child> findByIdUser(String idUser);
     Child create(String idUser, String firstname, String surname, Date birth,Gender gender,String blobBase64,String idStopBusOutDef,String idStopBusRetDef);
     Child update(String id,String firstname, String surname, Date birth,Gender gender,String blobBase64,String idStopBusOutDef,String idStopBusRetDef);
-    //TODO delete non vera solo boolean
     void deleteById(String id);
 }

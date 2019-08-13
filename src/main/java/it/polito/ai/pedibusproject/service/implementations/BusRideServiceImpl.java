@@ -148,8 +148,10 @@ public class BusRideServiceImpl implements BusRideService {
         Set<Reservation> temp=this.reservationService.findAllByIdBusRide(id);
         temp.forEach(x-> {
             this.messageService.create(sysAdmin, x.getIdUser(),
-                    "",
-                    "",
+                    "Deleted Reservation",
+                    "La sua prenotazione ("+x.toString()+") è stata cancellata," +
+                            " in quanto la corsa per quel giorno è stata annullata.\n" +
+                            "Ci scusiamo per il disagio.",
                     System.currentTimeMillis());
             this.reservationService.deleteById(x.getId());
         });

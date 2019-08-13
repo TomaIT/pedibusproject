@@ -75,6 +75,9 @@ public class ChildServiceImpl implements ChildService {
 
     @Override
     public void deleteById(String id) {
-        this.childRepository.deleteById(id);
+        Update update = new Update();
+        update.set("isDeleted", true);
+        UpdateResult updateResult=myUpdateFunctionFirst(id,update);
+        if(updateResult.getMatchedCount()==0) throw new NotFoundException("Child <delete>");
     }
 }

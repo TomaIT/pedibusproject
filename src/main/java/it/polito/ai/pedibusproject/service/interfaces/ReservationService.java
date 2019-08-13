@@ -6,5 +6,6 @@ import java.util.Set;
 
 public interface ReservationService {
     Set<Reservation> findAllByIdBusRide(String idBusRide);
+    Set<Reservation> findAllByIdChild(String idChild);
     void deleteById(String id);
 }

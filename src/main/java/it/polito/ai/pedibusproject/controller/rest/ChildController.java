@@ -7,10 +7,12 @@ import it.polito.ai.pedibusproject.controller.model.get.ChildGET;
 import it.polito.ai.pedibusproject.controller.model.get.ReservationGET;
 import it.polito.ai.pedibusproject.controller.model.post.ChildPOST;
 import it.polito.ai.pedibusproject.database.model.Gender;
+import it.polito.ai.pedibusproject.database.model.Reservation;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
 import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
 import it.polito.ai.pedibusproject.security.JwtTokenProvider;
 import it.polito.ai.pedibusproject.service.interfaces.ChildService;
+import it.polito.ai.pedibusproject.service.interfaces.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,10 +29,13 @@ import java.util.stream.Collectors;
 public class ChildController {
     private ChildService childService;
     private JwtTokenProvider jwtTokenProvider;
+    private ReservationService reservationService;
 
     @Autowired
-    public ChildController(ChildService childService,JwtTokenProvider jwtTokenProvider){
+    public ChildController(ChildService childService, JwtTokenProvider jwtTokenProvider,
+                           ReservationService reservationService){
         this.childService=childService;
+        this.reservationService=reservationService;
         this.jwtTokenProvider=jwtTokenProvider;
     }
 
@@ -120,7 +125,7 @@ public class ChildController {
     })
     public Set<ReservationGET> getReservationByChild(@RequestHeader (name="Authorization") String jwtToken,
                                                      @PathVariable("idChild")String idChild) {
-        //TODO
-        throw new NotImplementedException();
+        return this.reservationService.findAllByIdChild(idChild).stream()
+                .map(ReservationGET::new).collect(Collectors.toSet());
     }
 }

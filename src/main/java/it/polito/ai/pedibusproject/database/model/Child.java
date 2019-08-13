@@ -23,6 +23,7 @@ public class Child {
     private String blobBase64; //Photo ??
     private String idStopBusOutDef;
     private String idStopBusRetDef;
+    private Boolean isDeleted=false;
 
     public Child(String idUser, String firstname, String surname, Date birth, Gender gender, String blobBase64, String idStopBusOutDef, String idStopBusRetDef){
         this.idUser=idUser;
