@@ -524,3 +524,66 @@ Mail server connection failed; nested exception is com.sun.mail.util.MailConnect
 2019-08-14 09:55:57.479  INFO 43300 --- [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
 2019-08-14 09:55:57.479  INFO 43300 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2019-08-14 09:55:57.487  INFO 43300 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 8 ms
+2019-08-14 10:05:06.273  INFO 44048 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Starting PedibusprojectApplication on ITTURWNCATC9VVV with PID 44048 (C:\Users\nz4vrg\IdeaProjects\pedibusproject\target\classes started by nz4vrg in C:\Users\nz4vrg\IdeaProjects\pedibusproject)
+2019-08-14 10:05:06.278  INFO 44048 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : No active profile set, falling back to default profiles: default
+2019-08-14 10:05:06.390  INFO 44048 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2019-08-14 10:05:06.390  INFO 44048 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2019-08-14 10:05:07.800  INFO 44048 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data repositories in DEFAULT mode.
+2019-08-14 10:05:07.937  INFO 44048 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 132ms. Found 10 repository interfaces.
+2019-08-14 10:05:08.294  INFO 44048 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.hateoas.config.HateoasConfiguration' of type [org.springframework.hateoas.config.HateoasConfiguration$$EnhancerBySpringCGLIB$$40c2ccd8] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-08-14 10:05:08.605  INFO 44048 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2019-08-14 10:05:08.635  INFO 44048 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2019-08-14 10:05:08.636  INFO 44048 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.21]
+2019-08-14 10:05:08.799  INFO 44048 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2019-08-14 10:05:08.799  INFO 44048 --- [restartedMain] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 2409 ms
+2019-08-14 10:05:09.392  INFO 44048 --- [restartedMain] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=MULTIPLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms', maxWaitQueueSize=500}
+2019-08-14 10:05:09.393  INFO 44048 --- [restartedMain] org.mongodb.driver.cluster               : Adding discovered server localhost:27017 to client view of cluster
+2019-08-14 10:05:09.444  INFO 44048 --- [cluster-ClusterId{value='5d53c0b569552cac108ae071', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:1, serverValue:18}] to localhost:27017
+2019-08-14 10:05:09.448  INFO 44048 --- [cluster-ClusterId{value='5d53c0b569552cac108ae071', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, version=ServerVersion{versionList=[4, 0, 8]}, minWireVersion=0, maxWireVersion=7, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=2789496}
+2019-08-14 10:05:09.450  INFO 44048 --- [cluster-ClusterId{value='5d53c0b569552cac108ae071', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Discovered cluster type of STANDALONE
+2019-08-14 10:05:09.591  INFO 44048 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2019-08-14 10:05:09.703  INFO 44048 --- [restartedMain] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:2, serverValue:19}] to localhost:27017
+2019-08-14 10:05:10.593  INFO 44048 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService
+2019-08-14 10:05:10.594  INFO 44048 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'threadPoolTaskExecutor'
+2019-08-14 10:05:10.968  INFO 44048 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@77a717a4, org.springframework.security.web.context.SecurityContextPersistenceFilter@1cb34e16, org.springframework.security.web.header.HeaderWriterFilter@24b2f49e, org.springframework.web.filter.CorsFilter@7336717d, org.springframework.security.web.authentication.logout.LogoutFilter@1ae1e9c, it.polito.ai.pedibusproject.security.JwtTokenFilter@5fde0bb5, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@652e5b44, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4bb78b3e, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@21afba6f, org.springframework.security.web.session.SessionManagementFilter@7dbf0c8b, org.springframework.security.web.access.ExceptionTranslationFilter@3fe9b02f, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@bace86f]
+2019-08-14 10:05:11.055  INFO 44048 --- [restartedMain] d.s.w.p.DocumentationPluginsBootstrapper : Context refreshed
+2019-08-14 10:05:11.067  INFO 44048 --- [restartedMain] d.s.w.p.DocumentationPluginsBootstrapper : Found 1 custom documentation plugin(s)
+2019-08-14 10:05:11.077  INFO 44048 --- [restartedMain] s.d.s.w.s.ApiListingReferenceScanner     : Scanning for api listing references
+2019-08-14 10:05:11.332  INFO 44048 --- [restartedMain] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getLineUsingGET_1
+2019-08-14 10:05:11.338  INFO 44048 --- [restartedMain] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getLineUsingGET_2
+2019-08-14 10:05:11.442  INFO 44048 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2019-08-14 10:05:11.444  INFO 44048 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Started PedibusprojectApplication in 5.622 seconds (JVM running for 6.546)
+2019-08-14 10:05:11.542  INFO 44048 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: users
+2019-08-14 10:05:11.623  INFO 44048 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: recoverytokens
+2019-08-14 10:05:11.697  INFO 44048 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: confirmationtokens
+2019-08-14 10:05:11.747  INFO 44048 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: lines
+2019-08-14 10:05:11.800  INFO 44048 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: busrides
+2019-08-14 10:05:11.859  INFO 44048 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: stopbuses
+2019-08-14 10:05:12.141  INFO 44048 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Via Thaon de Revel/Giov. Bosco
+2019-08-14 10:05:12.143  INFO 44048 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI V. Thaon di Revel/Lamporo
+2019-08-14 10:05:12.145  INFO 44048 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI V. Thaon di Revel/Carrozzino
+2019-08-14 10:05:12.146  INFO 44048 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI C.so Giovanni Paolo II/Scalise
+2019-08-14 10:05:12.147  INFO 44048 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI C.so Giovanni Paolo II/Montebello
+2019-08-14 10:05:12.149  INFO 44048 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI C.so Giovanni Paolo II/Eritrea
+2019-08-14 10:05:12.150  INFO 44048 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Istituto Comprensivo 'Bernardino Lanino'
+2019-08-14 10:05:12.151  INFO 44048 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Via Thaon de Revel/Giov. Bosco
+2019-08-14 10:05:12.152  INFO 44048 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI V. Thaon di Revel/Lamporo
+2019-08-14 10:05:12.153  INFO 44048 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI V. Thaon di Revel/Carrozzino
+2019-08-14 10:05:12.154  INFO 44048 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI C.so Giovanni Paolo II/Scalise
+2019-08-14 10:05:12.155  INFO 44048 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI C.so Giovanni Paolo II/Montebello
+2019-08-14 10:05:12.156  INFO 44048 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI C.so Giovanni Paolo II/Eritrea
+2019-08-14 10:05:12.158  INFO 44048 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Istituto Comprensivo 'Bernardino Lanino'
+2019-08-14 10:05:12.274  INFO 44048 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Line Coccinelle_spaventate
+2019-08-14 10:05:12.439  INFO 44048 --- [restartedMain] i.p.a.p.s.i.ConfirmationTokenServiceImpl : http://127.0.0.1:8080/confirmation/99497ebf-d4b7-4f67-9d0e-9ceaa23e6670
+2019-08-14 10:05:13.503  INFO 44048 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Created BusRides for Line <Coccinelle_spaventate>
+2019-08-14 10:05:13.742 ERROR 44048 --- [Async-1] i.p.a.p.utility.EmailSender              : sendEmail <SimpleMailMessage: from=pedibus.application@gmail.com; replyTo=null; to=pedibus.application@gmail.com; cc=; bcc=; sentDate=null; subject=Confirm Registration; text=Please complete your registration: http://127.0.0.1:8080/confirmation/99497ebf-d4b7-4f67-9d0e-9ceaa23e6670>
+Authentication failed; nested exception is javax.mail.AuthenticationFailedException: 534-5.7.14 <https://accounts.google.com/signin/continue?sarp=1&scc=1&plt=AKgnsbvE
+534-5.7.14 VYMDk6kgVZJ4BDHuXLIf_BB36hSvm55S9fV0SnotOd46EvOaOR-Z2B4aRbRbhVV68beddY
+534-5.7.14 NrwbGHsjy-Ttf2owydk9mJlr9Q2uhWnYqPSiugpwem55UV1xJmu_zhuHXijVOG> Please
+534-5.7.14 log in via your web browser and then try again.
+534-5.7.14  Learn more at
+534 5.7.14  https://support.google.com/mail/answer/78754 a8sm3511847wma.31 - gsmtp
+
+2019-08-14 10:05:19.490  INFO 44048 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2019-08-14 10:05:19.490  INFO 44048 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2019-08-14 10:05:19.499  INFO 44048 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 8 ms
