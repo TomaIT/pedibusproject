@@ -4,10 +4,12 @@ import com.mongodb.client.result.UpdateResult;
 import it.polito.ai.pedibusproject.database.model.Availability;
 import it.polito.ai.pedibusproject.database.model.AvailabilityState;
 import it.polito.ai.pedibusproject.database.model.BusRide;
+import it.polito.ai.pedibusproject.database.model.StopBus;
 import it.polito.ai.pedibusproject.database.repository.AvailabilityRepository;
 import it.polito.ai.pedibusproject.database.repository.BusRideRepository;
 import it.polito.ai.pedibusproject.database.repository.UserRepository;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
+import it.polito.ai.pedibusproject.exceptions.DuplicateKeyException;
 import it.polito.ai.pedibusproject.exceptions.NotFoundException;
 import it.polito.ai.pedibusproject.service.interfaces.AvailabilityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,16 +56,20 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     public Availability create(String idBusRide, String idStopBus, String idUser, AvailabilityState state) {
 
         Optional<BusRide> br = this.busRideRepository.findById(idBusRide);
-        if(!br.isPresent())
-            throw new BadRequestException("Availability <create> not found BusRide");
-        if(!br.get().getStopBuses().stream().map(x -> x.getId()).anyMatch(y -> y.equals(idStopBus)))
+
+        if(!br.isPresent()) throw new BadRequestException("Availability <create> not found BusRide");
+
+        if(br.get().getStopBuses().stream().map(StopBus::getId).noneMatch(y -> y.equals(idStopBus)))
             throw new BadRequestException("Availability <create> not found StopBus in BusRide");
 
-        // TODO: concorrenza?!
         if(!this.userRepository.existsById(idUser))
             throw new BadRequestException("Availability <create> not found User");
 
-        return this.availabilityRepository.insert(new Availability(idBusRide, idStopBus, idUser, state));
+        try {
+            return this.availabilityRepository.insert(new Availability(idBusRide, idStopBus, idUser, state));
+        }catch (org.springframework.dao.DuplicateKeyException e){
+            throw new DuplicateKeyException("Availability <create>");
+        }
     }
 
     @Override
@@ -71,16 +77,14 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
         // AGGIUNTO I CONTROLLI SU idStopBus
         Optional<Availability> av = this.availabilityRepository.findById(id);
-        if(!av.isPresent())
-            throw new NotFoundException("Availability <update>");
+        if(!av.isPresent()) throw new NotFoundException("Availability <update> not exist");
         String idBusRide = av.get().getIdBusRide();
         Optional<BusRide> br = this.busRideRepository.findById(idBusRide);
-        if(!br.isPresent())
-            throw new BadRequestException("Availability <update> not found BusRide");
-        if(!br.get().getStopBuses().stream().map(x -> x.getId()).anyMatch(y -> y.equals(idStopBus)))
+        if(!br.isPresent()) throw new BadRequestException("Availability <update> not found BusRide");
+        if(br.get().getStopBuses().stream().map(StopBus::getId).noneMatch(y -> y.equals(idStopBus)))
             throw new BadRequestException("Availability <update> not found StopBus in BusRide");
         // AGGIUNTO I CONTROLLI SU idStopBus FINE
-        // TODO: concorrenza!?
+
 
         Update update = new Update();
         update.set("idStopBus", idStopBus);
@@ -89,7 +93,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         if(updateResult.getMatchedCount()==0)
             throw new NotFoundException("Availability <update>");
         return this.availabilityRepository.findById(id)
-                .orElseThrow(()->new NotFoundException("Availability"));
+                .orElseThrow(()->new NotFoundException("Availability <update>"));
     }
 
     @Override

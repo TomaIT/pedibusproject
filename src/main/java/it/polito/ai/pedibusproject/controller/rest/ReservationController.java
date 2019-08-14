@@ -8,6 +8,7 @@ import it.polito.ai.pedibusproject.controller.model.post.ReservationPOST;
 import it.polito.ai.pedibusproject.controller.model.put.ReservationPUT;
 import it.polito.ai.pedibusproject.database.model.ReservationState;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
+import it.polito.ai.pedibusproject.security.JwtTokenProvider;
 import it.polito.ai.pedibusproject.service.interfaces.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,10 +22,13 @@ import javax.validation.Valid;
 @RequestMapping("/rest/reservations")
 public class ReservationController {
     private ReservationService reservationService;
+    private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public ReservationController(ReservationService reservationService){
+    public ReservationController(ReservationService reservationService,
+                                 JwtTokenProvider jwtTokenProvider){
         this.reservationService=reservationService;
+        this.jwtTokenProvider=jwtTokenProvider;
     }
 
     @GetMapping(value = "/{idReservation}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -49,10 +53,10 @@ public class ReservationController {
     })
     public ReservationGET postReservation(@RequestHeader (name="Authorization") String jwtToken,
                                        @RequestBody @Valid ReservationPOST reservationPOST) {
-        //TODO user from jwt
+        String username=jwtTokenProvider.getUsername(jwtToken);
         return new ReservationGET(
                 reservationService.create(reservationPOST.getIdBusRide(),reservationPOST.getIdChild(),
-                reservationPOST.getIdStopBus(),"TODO USER from JWT"));
+                reservationPOST.getIdStopBus(),username));
     }
 
     @PutMapping(value = "/{idReservation}",consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -67,11 +71,11 @@ public class ReservationController {
     public ReservationGET putReservationById(@RequestHeader (name="Authorization") String jwtToken,
                                           @PathVariable("idReservation")String idReservation,
                                           @RequestBody @Valid ReservationPUT reservationPUT) {
-        //TODO user from jwt
+        String username=jwtTokenProvider.getUsername(jwtToken);
         ReservationState rs=new ReservationState(
                 reservationPUT.getIdStopBus(),
                 reservationPUT.getEpochTime(),
-                "TODO user from jwt");
+                username);
         ReservationGET ret;
         switch (reservationPUT.getEnumChildGet()){
             case GetIn:

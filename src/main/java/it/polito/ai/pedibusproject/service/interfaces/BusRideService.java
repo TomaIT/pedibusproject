@@ -27,7 +27,7 @@ public interface BusRideService {
 
     TreeSet<BusRide> findAll();
 
-    //Cancella busride e prenotazioni associate,
-    //creando un messaggio di comunicazione per tutte le prenotazioni annullate
+    //Cancella busride prenotazioni e availability associate,
+    //creando un messaggio di comunicazione per tutte le prenotazioni e availability annullate
     void deleteById(String id);
 }

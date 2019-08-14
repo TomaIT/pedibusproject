@@ -5,13 +5,13 @@ import it.polito.ai.pedibusproject.controller.model.get.LineEnumGET;
 import it.polito.ai.pedibusproject.database.model.Line;
 import it.polito.ai.pedibusproject.database.model.StopBus;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
+import it.polito.ai.pedibusproject.database.repository.AvailabilityRepository;
 import it.polito.ai.pedibusproject.database.repository.BusRideRepository;
 import it.polito.ai.pedibusproject.database.repository.LineRepository;
 import it.polito.ai.pedibusproject.database.repository.ReservationRepository;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
 import it.polito.ai.pedibusproject.exceptions.DuplicateKeyException;
 import it.polito.ai.pedibusproject.exceptions.NotFoundException;
-import it.polito.ai.pedibusproject.service.interfaces.BusRideService;
 import it.polito.ai.pedibusproject.service.interfaces.LineService;
 import it.polito.ai.pedibusproject.service.interfaces.MessageService;
 import it.polito.ai.pedibusproject.service.interfaces.StopBusService;
@@ -37,6 +37,7 @@ public class LineServiceImpl implements LineService {
     private StopBusService stopBusService;
     private BusRideRepository busRideRepository;
     private ReservationRepository reservationRepository;
+    private AvailabilityRepository availabilityRepository;
     private MessageService messageService;
     @Value("${spring.mail.username}")
     private String sysAdmin;
@@ -47,13 +48,15 @@ public class LineServiceImpl implements LineService {
                            StopBusService stopBusService,
                            BusRideRepository busRideRepository,
                            ReservationRepository reservationRepository,
-                           MessageService messageService){
+                           MessageService messageService,
+                           AvailabilityRepository availabilityRepository){
         this.lineRepository=lineRepository;
         this.stopBusService=stopBusService;
         this.mongoTemplate=mongoTemplate;
         this.busRideRepository=busRideRepository;
         this.reservationRepository=reservationRepository;
         this.messageService=messageService;
+        this.availabilityRepository=availabilityRepository;
     }
 
     @Override
@@ -102,6 +105,14 @@ public class LineServiceImpl implements LineService {
                                 "Ci scusiamo per il disagio.",
                         System.currentTimeMillis());
                 reservationRepository.deleteById(y.getId());
+            });
+            availabilityRepository.findAllByIdBusRide(x.getId()).forEach(y->{
+                this.messageService.create(sysAdmin, y.getIdUser(),
+                        "Deleted Availability",
+                        "La sua disponiblità ("+x.toString()+") è stata annullata," +
+                                " in quanto la linea e quindi la sua corsa è stata cancellata.",
+                        System.currentTimeMillis());
+                availabilityRepository.deleteById(y.getId());
             });
             busRideRepository.deleteById(x.getId());
         });

@@ -10,11 +10,10 @@ import java.util.*;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Document(collection = "busrides")
 public class BusRide implements Comparable<BusRide> {
     @Id
-    private String id;
+    private String id; //Creato concatenando idLine,stopBusType,year,month,day
     private String idLine;
     private StopBusType stopBusType;
     private TreeSet<StopBus> stopBuses = new TreeSet<>();
@@ -55,6 +54,7 @@ public class BusRide implements Comparable<BusRide> {
         this.year=year;
         this.month=month;
         this.day=day;
+        this.id=idLine+"."+stopBusType+"."+year.toString()+"."+month.toString()+"."+day.toString();
 
         Calendar calendar=getCalendarOnlyDay(year,month,day);
         calendar.set(Calendar.MINUTE, Objects.requireNonNull(stopBuses.pollFirst()).getHours().intValue());

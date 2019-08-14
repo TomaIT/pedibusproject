@@ -1,7 +1,13 @@
 package it.polito.ai.pedibusproject.service.implementations;
 
+import com.mongodb.ClientSessionOptions;
+import com.mongodb.TransactionOptions;
+import com.mongodb.client.ClientSession;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.result.UpdateResult;
 import it.polito.ai.pedibusproject.database.model.*;
+import it.polito.ai.pedibusproject.database.repository.AvailabilityRepository;
 import it.polito.ai.pedibusproject.database.repository.BusRideRepository;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
 import it.polito.ai.pedibusproject.exceptions.DuplicateKeyException;
@@ -20,6 +26,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Set;
@@ -33,27 +40,30 @@ public class BusRideServiceImpl implements BusRideService {
     private MongoTemplate mongoTemplate;
     private ReservationService reservationService;
     private MessageService messageService;
+    private AvailabilityRepository availabilityRepository;
     @Value("${spring.mail.username}")
     private String sysAdmin;
+
 
     @Autowired
     public BusRideServiceImpl(BusRideRepository busRideRepository, LineService lineService,
                               MongoTemplate mongoTemplate,ReservationService reservationService,
-                              MessageService messageService) {
+                              MessageService messageService,
+                              AvailabilityRepository availabilityRepository) {
         this.busRideRepository = busRideRepository;
         this.lineService = lineService;
         this.mongoTemplate=mongoTemplate;
         this.reservationService=reservationService;
         this.messageService=messageService;
+        this.availabilityRepository=availabilityRepository;
     }
 
-    private BusRide mySave(BusRide busRide){
-        //TODO transazione...
-        if(this.busRideRepository.findByIdLineAndStopBusTypeAndYearAndMonthAndDay(
-                busRide.getIdLine(),busRide.getStopBusType(),busRide.getYear(),
-                busRide.getMonth(),busRide.getDay()).isPresent())
+    public BusRide mySave(BusRide busRide){
+        try {
+            return this.busRideRepository.insert(busRide);
+        }catch (org.springframework.dao.DuplicateKeyException e){
             throw new DuplicateKeyException("BusRide <save>");
-        return this.busRideRepository.insert(busRide);
+        }
     }
 
     private UpdateResult myUpdateFunctionFirst(String id, Update update){
@@ -159,6 +169,14 @@ public class BusRideServiceImpl implements BusRideService {
                             "Ci scusiamo per il disagio.",
                     System.currentTimeMillis());
             this.reservationService.deleteById(x.getId());
+        });
+        this.availabilityRepository.findAllByIdBusRide(id).forEach(x-> {
+            this.messageService.create(sysAdmin, x.getIdUser(),
+                    "Deleted Availability",
+                    "La sua disponibilità ("+x.toString()+") è stata cancellata," +
+                            " in quanto la corsa per quel giorno è stata annullata.",
+                    System.currentTimeMillis());
+            this.availabilityRepository.deleteById(x.getId());
         });
         this.busRideRepository.deleteById(id);
     }

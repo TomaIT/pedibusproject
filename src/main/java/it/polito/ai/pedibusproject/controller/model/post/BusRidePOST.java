@@ -14,12 +14,9 @@ public class BusRidePOST {
     @NotNull
     private StopBusType stopBusType;
     @NotNull
-    @Size(min = 1970,max = 4096)
     private Integer year;
     @NotNull
-    @Size(min = 0,max = 11)
     private Integer month;
     @NotNull
-    @Size(min = 1,max = 31)
     private Integer day;
 }

@@ -8,11 +8,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Document(collection = "availabilities")
 public class Availability {
     @Id
-    private String id;
+    private String id; //Creato concatenando idUser,idBusRide
     private String idBusRide;
     private String idStopBus;
     private String idUser; //Escort
@@ -23,5 +22,6 @@ public class Availability {
         this.idStopBus = idStopBus;
         this.idUser = idUser;
         this.state = state;
+        this.id=idUser+"."+idBusRide;
     }
 }
