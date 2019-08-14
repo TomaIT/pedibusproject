@@ -10,7 +10,6 @@ import javax.validation.constraints.Size;
 public class UserRolePUT {
     @NotNull
     private Role role;
-    @NotNull
     @Size(max = 1024)
     private String idLine;
 }

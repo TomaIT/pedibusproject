@@ -9,7 +9,6 @@ import it.polito.ai.pedibusproject.controller.model.post.BusRidePOST;
 import it.polito.ai.pedibusproject.controller.model.put.BusRidePUT;
 import it.polito.ai.pedibusproject.database.model.BusRide;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
-import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
 import it.polito.ai.pedibusproject.service.interfaces.AvailabilityService;
 import it.polito.ai.pedibusproject.service.interfaces.BusRideService;
 import org.springframework.beans.factory.annotation.Autowired;

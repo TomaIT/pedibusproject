@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface RecoveryTokenService {
-    //Create token and sendEmail
+    //Create token only to Active User and sendEmail
     RecoveryToken create(String email);
 
     RecoveryToken findByUuid(UUID uuid);

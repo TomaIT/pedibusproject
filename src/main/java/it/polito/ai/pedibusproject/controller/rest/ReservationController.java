@@ -8,7 +8,6 @@ import it.polito.ai.pedibusproject.controller.model.post.ReservationPOST;
 import it.polito.ai.pedibusproject.controller.model.put.ReservationPUT;
 import it.polito.ai.pedibusproject.database.model.ReservationState;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
-import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
 import it.polito.ai.pedibusproject.service.interfaces.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Set;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController

@@ -5,15 +5,20 @@ import it.polito.ai.pedibusproject.controller.model.get.LineEnumGET;
 import it.polito.ai.pedibusproject.database.model.Line;
 import it.polito.ai.pedibusproject.database.model.StopBus;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
+import it.polito.ai.pedibusproject.database.repository.BusRideRepository;
 import it.polito.ai.pedibusproject.database.repository.LineRepository;
+import it.polito.ai.pedibusproject.database.repository.ReservationRepository;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
 import it.polito.ai.pedibusproject.exceptions.DuplicateKeyException;
 import it.polito.ai.pedibusproject.exceptions.NotFoundException;
+import it.polito.ai.pedibusproject.service.interfaces.BusRideService;
 import it.polito.ai.pedibusproject.service.interfaces.LineService;
+import it.polito.ai.pedibusproject.service.interfaces.MessageService;
 import it.polito.ai.pedibusproject.service.interfaces.StopBusService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -30,14 +35,25 @@ public class LineServiceImpl implements LineService {
     private LineRepository lineRepository;
     private MongoTemplate mongoTemplate;
     private StopBusService stopBusService;
+    private BusRideRepository busRideRepository;
+    private ReservationRepository reservationRepository;
+    private MessageService messageService;
+    @Value("${spring.mail.username}")
+    private String sysAdmin;
 
     @Autowired
     public LineServiceImpl(LineRepository lineRepository,
                            MongoTemplate mongoTemplate,
-                           StopBusService stopBusService){
+                           StopBusService stopBusService,
+                           BusRideRepository busRideRepository,
+                           ReservationRepository reservationRepository,
+                           MessageService messageService){
         this.lineRepository=lineRepository;
         this.stopBusService=stopBusService;
         this.mongoTemplate=mongoTemplate;
+        this.busRideRepository=busRideRepository;
+        this.reservationRepository=reservationRepository;
+        this.messageService=messageService;
     }
 
     @Override
@@ -76,6 +92,20 @@ public class LineServiceImpl implements LineService {
 
     @Override
     public void deleteById(String id) {
+        //Delete BusRides and Reservations
+        busRideRepository.findAllByIdLine(id).forEach(x->{
+            reservationRepository.findAllByIdBusRide(x.getId()).forEach(y->{
+                this.messageService.create(sysAdmin, y.getIdUser(),
+                        "Deleted Reservation",
+                        "La sua prenotazione ("+x.toString()+") è stata annullata," +
+                                " in quanto la linea e quindi la sua corsa è stata cancellata.\n" +
+                                "Ci scusiamo per il disagio.",
+                        System.currentTimeMillis());
+                reservationRepository.deleteById(y.getId());
+            });
+            busRideRepository.deleteById(x.getId());
+        });
+        //
         Update update = new Update();
         update.set("isDeleted", true);
         update.set("deletedTime", System.currentTimeMillis());

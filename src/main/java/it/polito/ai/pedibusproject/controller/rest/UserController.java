@@ -7,7 +7,7 @@ import it.polito.ai.pedibusproject.controller.model.get.*;
 import it.polito.ai.pedibusproject.controller.model.post.UserPOST;
 import it.polito.ai.pedibusproject.controller.model.put.UserPUT;
 import it.polito.ai.pedibusproject.controller.model.put.UserRolePUT;
-import it.polito.ai.pedibusproject.database.model.Message;
+import it.polito.ai.pedibusproject.database.model.Role;
 import it.polito.ai.pedibusproject.database.model.User;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
 import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
@@ -30,7 +30,6 @@ public class UserController {
     private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
     private UserService userService;
     private ConfirmationTokenService confirmationTokenService;
-    private RecoveryTokenService recoveryTokenService;
     private ChildService childService;
     private ReservationService reservationService;
     private AvailabilityService availabilityService;
@@ -39,14 +38,12 @@ public class UserController {
     @Autowired
     public UserController(UserService userService,
                           ConfirmationTokenService confirmationTokenService,
-                          RecoveryTokenService recoveryTokenService,
                           ChildService childService,
                           ReservationService reservationService,
                           AvailabilityService availabilityService,
                           MessageService messageService) {
         this.userService=userService;
         this.confirmationTokenService=confirmationTokenService;
-        this.recoveryTokenService=recoveryTokenService;
         this.childService=childService;
         this.reservationService=reservationService;
         this.availabilityService=availabilityService;
@@ -101,7 +98,8 @@ public class UserController {
 
     @PutMapping(value = "/{idUser}/role",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Modifica ruolo Utente idUser")
+    @ApiOperation(value = "Aggiunge ruolo all'utente idUser. Nota che i ruoli validi sono tutti tranne ROLE_ADMIN. " +
+            "Per gestire tale ruolo affidarsi ai metodi addLine e removeLine i quali assegnano il ruolo di ROLE_ADMIN in automatico.")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Bad Request"),
@@ -109,10 +107,39 @@ public class UserController {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public UserGET putUserRoleById(@RequestHeader (name="Authorization") String jwtToken,
-                                @PathVariable("idUser")String idUser,
-                                @RequestBody @Valid UserRolePUT userRolePUT) {
-        //TODO
-        throw new NotImplementedException();
+                                   @PathVariable("idUser")String idUser,
+                                   @RequestParam @Valid Role role) {
+        return new UserGET(userService.addRole(idUser,role));
+    }
+
+    @PutMapping(value = "/{idUser}/addLine",consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Aggiunge linea all'utente idUser, nel caso non lo fosse già assegna ruolo di ROLE_ADMIN")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public UserGET putUserAddLine(@RequestHeader (name="Authorization") String jwtToken,
+                                   @PathVariable("idUser")String idUser,
+                                   @RequestParam @Valid String idLine) {
+        return new UserGET(userService.addLine(idUser,idLine));
+    }
+
+    @PutMapping(value = "/{idUser}/removeLine",consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Rimuove linea all'utente idUser, nota che il ruolo di ROLE_ADMIN persisterà anche se non ha piu linee")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public UserGET putUserRemoveLine(@RequestHeader (name="Authorization") String jwtToken,
+                                  @PathVariable("idUser")String idUser,
+                                  @RequestParam @Valid String idLine) {
+        return new UserGET(userService.removeLine(idUser,idLine));
     }
 
     @PutMapping(value = "/{idUser}",consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -127,8 +154,11 @@ public class UserController {
     public UserGET putUserById(@RequestHeader (name="Authorization") String jwtToken,
                             @PathVariable("idUser")String idUser,
                             @RequestBody @Valid UserPUT userPUT) {
-        //TODO
-        throw new NotImplementedException();
+        if(!userPUT.getPassword().equals(userPUT.getVerifyPassword()))
+            throw new BadRequestException("Update User password mismatch");
+        return new UserGET(
+                userService.updateUser(idUser,userPUT.getPassword(),userPUT.getFirstname(),
+                userPUT.getSurname(),userPUT.getBirth(),userPUT.getStreet(),userPUT.getPhoneNumber()));
     }
 
     @GetMapping(value = "/{idUser}/children",produces = MediaType.APPLICATION_JSON_VALUE)

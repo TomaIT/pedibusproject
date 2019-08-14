@@ -25,6 +25,11 @@ public interface UserService extends UserDetailsService {
 
     Set<User> findByRole(Role role);
 
+    User updateUser(String email,String password,String firstname, String surname,
+                    Date birth,String street,String phoneNumber);
+
+    User addRole(String id,Role role);
+
     void enableUser(String username);
 
     void deleteById(String username);
@@ -39,7 +44,7 @@ public interface UserService extends UserDetailsService {
 
     //Aggiunge idLine e ROLE_ADMIN come set
     //(quindi duplicati non possono esistere)!!
-    void addLine(String username, String idLine);
+    User addLine(String username, String idLine);
 
-    void removeLine(String username, String idLine);
+    User removeLine(String username, String idLine);
 }

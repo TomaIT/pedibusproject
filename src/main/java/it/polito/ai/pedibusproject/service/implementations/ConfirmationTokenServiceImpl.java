@@ -47,9 +47,9 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
                     .toUriComponentsBuilder()
                     .build().toUriString();
 
-            //TODO non funziona se la richiesta non arriva da un Context Uri
-            // (quindi da http)
-            //Risoluzione parziale (fa schifo)
+            //Non funziona se la richiesta non arriva da un Context Uri
+            //(quindi da http)
+            //Risoluzione (improvable)
             if(link.toCharArray()[0]=='/'){ link=this.uriContext+link; }
 
         }catch (Exception e){

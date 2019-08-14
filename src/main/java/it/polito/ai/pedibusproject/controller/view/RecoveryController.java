@@ -56,7 +56,7 @@ public class RecoveryController {
             throw new BadRequestException("User-UUID not exist");
         }
 
-        this.userService.updatePassword(recoveryUserView.getEmail(),recoveryUserView.getEmail());
+        this.userService.updatePassword(recoveryUserView.getEmail(),recoveryUserView.getPassword());
         this.recoveryTokenService.deleteByUuid(uuid);
         //TODO angular login
         return "tempLogin";

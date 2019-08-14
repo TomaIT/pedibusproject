@@ -3,6 +3,7 @@ package it.polito.ai.pedibusproject.service.interfaces;
 import it.polito.ai.pedibusproject.database.model.BusRide;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
 
+import java.util.Set;
 import java.util.TreeSet;
 
 public interface BusRideService {
@@ -17,6 +18,8 @@ public interface BusRideService {
 
     BusRide findById(String id);
 
+    Set<BusRide> findByIdLine(String idLine);
+
     BusRide findByIdLineAndStopBusTypeAndYearAndMonthAndDay(String idLine, StopBusType stopBusType,
                                                             Integer year, Integer month, Integer day);
 
@@ -24,6 +27,7 @@ public interface BusRideService {
 
     TreeSet<BusRide> findAll();
 
-    //Cancella busride, creando un messaggio di comunicazioni per tutte le prenotazioni annullate
+    //Cancella busride e prenotazioni associate,
+    //creando un messaggio di comunicazione per tutte le prenotazioni annullate
     void deleteById(String id);
 }

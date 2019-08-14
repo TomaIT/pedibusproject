@@ -3,7 +3,9 @@ package it.polito.ai.pedibusproject.service.implementations;
 import it.polito.ai.pedibusproject.controller.model.RecoveryUserView;
 import it.polito.ai.pedibusproject.controller.view.RecoveryController;
 import it.polito.ai.pedibusproject.database.model.RecoveryToken;
+import it.polito.ai.pedibusproject.database.model.User;
 import it.polito.ai.pedibusproject.database.repository.RecoveryTokenRepository;
+import it.polito.ai.pedibusproject.exceptions.BadRequestException;
 import it.polito.ai.pedibusproject.exceptions.InternalServerErrorException;
 import it.polito.ai.pedibusproject.exceptions.NotFoundException;
 import it.polito.ai.pedibusproject.service.interfaces.RecoveryTokenService;
@@ -40,7 +42,7 @@ public class RecoveryTokenServiceImpl implements RecoveryTokenService {
         this.userService=userService;
     }
 
-    private String getLinkConfirmRegistration(UUID uuid){
+    private String getLinkRecoveryRegistration(UUID uuid){
         String link;
         try {
             link= linkTo(RecoveryController.class,
@@ -50,9 +52,9 @@ public class RecoveryTokenServiceImpl implements RecoveryTokenService {
                     .toUriComponentsBuilder()
                     .build().toUriString();
 
-            //TODO non funziona se la richiesta non arriva da un Context Uri
-            // (quindi da http)
-            //Risoluzione parziale (fa schifo)
+            //Non funziona se la richiesta non arriva da un Context Uri
+            //(quindi da http)
+            //Risoluzione (improvable)
             if(link.toCharArray()[0]=='/'){ link=this.uriContext+link; }
 
         }catch (Exception e){
@@ -64,9 +66,12 @@ public class RecoveryTokenServiceImpl implements RecoveryTokenService {
 
     @Override
     public RecoveryToken create(String email) {
-        this.userService.loadUserByUsername(email);
+        User user=this.userService.loadUserByUsername(email);
+        if(!user.isEnabled())
+            throw new BadRequestException("Recovery, please confirm your registration first. " +
+                    "If is expired contact the System Admin.");
         RecoveryToken temp=this.recoveryTokenRepository.insert(new RecoveryToken(email));
-        String link=getLinkConfirmRegistration(temp.getUuid());
+        String link=getLinkRecoveryRegistration(temp.getUuid());
         LOG.info(link);
         this.emailSender.sendEmail("Recovery Registration",
                 "Please click here: "+link,

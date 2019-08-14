@@ -8,7 +8,6 @@ import it.polito.ai.pedibusproject.controller.model.get.AvailabilityGET;
 import it.polito.ai.pedibusproject.controller.model.post.AvailabilityPOST;
 import it.polito.ai.pedibusproject.controller.model.put.AvailabilityPUT;
 import it.polito.ai.pedibusproject.database.model.AvailabilityState;
-import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
 import it.polito.ai.pedibusproject.service.interfaces.AvailabilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

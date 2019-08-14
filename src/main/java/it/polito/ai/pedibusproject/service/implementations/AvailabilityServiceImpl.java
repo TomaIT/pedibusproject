@@ -1,11 +1,9 @@
 package it.polito.ai.pedibusproject.service.implementations;
 
-import com.mongodb.Mongo;
 import com.mongodb.client.result.UpdateResult;
 import it.polito.ai.pedibusproject.database.model.Availability;
 import it.polito.ai.pedibusproject.database.model.AvailabilityState;
 import it.polito.ai.pedibusproject.database.model.BusRide;
-import it.polito.ai.pedibusproject.database.model.User;
 import it.polito.ai.pedibusproject.database.repository.AvailabilityRepository;
 import it.polito.ai.pedibusproject.database.repository.BusRideRepository;
 import it.polito.ai.pedibusproject.database.repository.UserRepository;

@@ -64,7 +64,7 @@ public class AuthenticationController {
     }
 
     @PostMapping(value = "/recover",consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Creai recoveryToken e invia il link all'interno dell'email")
+    @ApiOperation(value = "Crea recoveryToken e invia il link all'interno dell'email")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value={
             @ApiResponse(code = 404,message = "Not Found User"),

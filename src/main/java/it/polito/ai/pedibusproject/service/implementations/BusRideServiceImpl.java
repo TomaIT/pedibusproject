@@ -102,6 +102,11 @@ public class BusRideServiceImpl implements BusRideService {
     }
 
     @Override
+    public Set<BusRide> findByIdLine(String idLine) {
+        return this.busRideRepository.findAllByIdLine(idLine);
+    }
+
+    @Override
     public BusRide findByIdLineAndStopBusTypeAndYearAndMonthAndDay(String idLine,
                                                                    StopBusType stopBusType,
                                                                    Integer year, Integer month,

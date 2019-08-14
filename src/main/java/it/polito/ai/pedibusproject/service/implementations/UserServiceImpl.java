@@ -3,7 +3,9 @@ package it.polito.ai.pedibusproject.service.implementations;
 import com.mongodb.client.result.UpdateResult;
 import it.polito.ai.pedibusproject.database.model.Role;
 import it.polito.ai.pedibusproject.database.model.User;
+import it.polito.ai.pedibusproject.database.repository.LineRepository;
 import it.polito.ai.pedibusproject.database.repository.UserRepository;
+import it.polito.ai.pedibusproject.exceptions.BadRequestException;
 import it.polito.ai.pedibusproject.exceptions.DuplicateKeyException;
 import it.polito.ai.pedibusproject.exceptions.NotFoundException;
 import it.polito.ai.pedibusproject.service.interfaces.ConfirmationTokenService;
@@ -31,16 +33,19 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private MongoTemplate mongoTemplate;
     private ConfirmationTokenService confirmationTokenService;
+    private LineRepository lineRepository;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            PasswordEncoder passwordEncoder,
                            MongoTemplate mongoTemplate,
-                           ConfirmationTokenService confirmationTokenService) {
+                           ConfirmationTokenService confirmationTokenService,
+                           LineRepository lineRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder=passwordEncoder;
         this.mongoTemplate=mongoTemplate;
         this.confirmationTokenService=confirmationTokenService;
+        this.lineRepository=lineRepository;
     }
 
     private UpdateResult myUpdateFunctionFirst(String id,Update update){
@@ -96,6 +101,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User updateUser(String email,String password, String firstname, String surname, Date birth, String street, String phoneNumber) {
+        Update update = new Update();
+        update.set("password", passwordEncoder.encode(password));
+        update.set("firstname", firstname);
+        update.set("surname", surname);
+        update.set("birth", birth);
+        update.set("street", street);
+        update.set("phoneNumber", phoneNumber);
+        UpdateResult updateResult=myUpdateFunctionFirst(email,update);
+        if(updateResult.getMatchedCount()==0)
+            throw new NotFoundException("User <update>");
+        return this.userRepository.findById(email)
+                .orElseThrow(()->new NotFoundException("User <update>"));
+    }
+
+    @Override
+    public User addRole(String id, Role role) {
+        if(role.equals(Role.ROLE_ADMIN))
+            throw new BadRequestException("User <addRole> does not handle role "+role);
+        Update update = new Update();
+        update.addToSet("roles",role);
+        UpdateResult updateResult=myUpdateFunctionFirst(id,update);
+        if(updateResult.getMatchedCount()==0)
+            throw new NotFoundException("User <addRole>");
+        return this.userRepository.findById(id)
+                .orElseThrow(()->new NotFoundException("User <addRole>"));
+    }
+
+    @Override
     public void enableUser(String username) {
         Update update = new Update();
         update.set("isEnabled", true);
@@ -138,21 +172,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addLine(String username, String idLine) {
+    public User addLine(String username, String idLine) {
+        if(!lineRepository.existsById(idLine))
+            throw new BadRequestException("User <addLine> line not found");
         Update update = new Update();
         update.addToSet("idLines",idLine);
         update.addToSet("roles",Role.ROLE_ADMIN);
         UpdateResult updateResult=myUpdateFunctionFirst(username,update);
         if(updateResult.getMatchedCount()==0)
-            throw new NotFoundException("User");
+            throw new NotFoundException("User <addLine>");
+        return this.userRepository.findById(username)
+                .orElseThrow(()->new NotFoundException("User <addLine>"));
     }
 
     @Override
-    public void removeLine(String username, String idLine) {
+    public User removeLine(String username, String idLine) {
         Update update = new Update();
         update.pull("idLines",idLine);
         UpdateResult updateResult=myUpdateFunctionFirst(username,update);
         if(updateResult.getMatchedCount()==0)
-            throw new NotFoundException("User");
+            throw new NotFoundException("User <removeLine>");
+        return this.userRepository.findById(username)
+                .orElseThrow(()->new NotFoundException("User <removeLine>"));
     }
 }

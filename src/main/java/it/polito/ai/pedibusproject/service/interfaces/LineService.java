@@ -16,8 +16,8 @@ public interface LineService {
 
     Line findByName(String name);
 
-    //In realtà non cancella ma setta lo stato della linea a cancellato
-    //TODO Quando si 'cancella' una linea come gestire le corse e le prenotazioni ?
+    //In realtà non cancella ma setta lo stato della linea a cancellato,
+    //inoltre cancella tutte le busride -> prenotazioni, associate
     void deleteById(String id);
 
     Set<Line> findAll();
