@@ -14,9 +14,9 @@ public class AvailabilityPOST {
     @NotNull
     @Size(max = 1024)
     private String idStopBus;
-    @NotNull
+    /*@NotNull
     @Size(max = 1024)
-    private String idUser; //Escort //Jwt ??
+    private String idUser; //Escort //Jwt ??*/
     @NotNull
     private AvailabilityState state;
 }

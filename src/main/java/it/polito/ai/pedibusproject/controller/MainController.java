@@ -13,11 +13,11 @@ public class MainController {
     /*TODO (qui riportiamo quali sono le funzionalità ancora da testare MANTENERE AGGIORNATO)
 
     -Authentication Controller
-        -post login
-        -post recover
+<DONE>        -post login
+<DONE>        -post recover
     -Availability Controller
         -post availabilites
-        -get states
+<DONE>        -get states
         -delete idAva
         -get idAva
         -put idAva

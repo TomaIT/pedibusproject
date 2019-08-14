@@ -1,10 +1,5 @@
 package it.polito.ai.pedibusproject.service.implementations;
 
-import com.mongodb.ClientSessionOptions;
-import com.mongodb.TransactionOptions;
-import com.mongodb.client.ClientSession;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 import com.mongodb.client.result.UpdateResult;
 import it.polito.ai.pedibusproject.database.model.*;
 import it.polito.ai.pedibusproject.database.repository.AvailabilityRepository;
@@ -26,7 +21,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Set;
@@ -128,7 +122,8 @@ public class BusRideServiceImpl implements BusRideService {
     @Override
     public BusRide updateLastStopBus(String id,Long timestampLastStopBus, String idLastStopBus) {
         //Check
-        BusRide temp=this.busRideRepository.findById(id).orElseThrow(()->new NotFoundException("BusRide"));
+        BusRide temp=this.busRideRepository.findById(id)
+                .orElseThrow(()->new NotFoundException("BusRide"));
         Line line=this.lineService.findById(temp.getIdLine());
         switch (temp.getStopBusType()){
             case Return:

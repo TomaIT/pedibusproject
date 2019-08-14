@@ -7,8 +7,14 @@ import io.swagger.annotations.ApiResponses;
 import it.polito.ai.pedibusproject.controller.model.get.AvailabilityGET;
 import it.polito.ai.pedibusproject.controller.model.post.AvailabilityPOST;
 import it.polito.ai.pedibusproject.controller.model.put.AvailabilityPUT;
+import it.polito.ai.pedibusproject.database.model.Availability;
 import it.polito.ai.pedibusproject.database.model.AvailabilityState;
+import it.polito.ai.pedibusproject.database.model.Role;
+import it.polito.ai.pedibusproject.exceptions.ForbiddenException;
+import it.polito.ai.pedibusproject.security.JwtTokenProvider;
 import it.polito.ai.pedibusproject.service.interfaces.AvailabilityService;
+import it.polito.ai.pedibusproject.service.interfaces.BusRideService;
+import it.polito.ai.pedibusproject.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,10 +31,21 @@ import java.util.stream.Collectors;
 @RequestMapping("/rest/availabilities")
 public class AvailabilityController {
     private AvailabilityService availabilityService;
+    private JwtTokenProvider jwtTokenProvider;
+    private BusRideService busRideService;
+    private UserService userService;
+
+
 
     @Autowired
-    public AvailabilityController(AvailabilityService availabilityService) {
+    public AvailabilityController(AvailabilityService availabilityService,
+                                  JwtTokenProvider jwtTokenProvider,
+                                  BusRideService busRideService,
+                                  UserService userService) {
         this.availabilityService = availabilityService;
+        this.jwtTokenProvider=jwtTokenProvider;
+        this.busRideService=busRideService;
+        this.userService=userService;
     }
 
     @GetMapping(value = "/states",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -40,6 +58,7 @@ public class AvailabilityController {
         return Arrays.stream(AvailabilityState.values()).map(Enum::name).collect(Collectors.toSet());
     }
 
+
     @GetMapping(value = "/{idAvailability}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna tale availability")
     @ResponseStatus(HttpStatus.OK)
@@ -49,7 +68,17 @@ public class AvailabilityController {
     })
     public AvailabilityGET getAvailability(@RequestHeader (name="Authorization") String jwtToken,
                                                  @PathVariable("idAvailability")String idAvailability) {
-        return new AvailabilityGET(this.availabilityService.findById(idAvailability));
+        List roles=jwtTokenProvider.getRoles(jwtToken);
+        String username=jwtTokenProvider.getUsername(jwtToken);
+        Availability temp=this.availabilityService.findById(idAvailability);
+        if(roles.contains(Role.ROLE_ESCORT)&&!temp.getIdUser().equals(username))
+            throw new ForbiddenException();
+        if(roles.contains(Role.ROLE_ADMIN)&&
+                !userService.isAdminOfLine(username,
+                        busRideService.findById(temp.getIdBusRide()).getIdLine()))
+                throw new ForbiddenException();
+
+        return new AvailabilityGET(temp);
     }
 
     @PostMapping(value = "",consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -63,11 +92,14 @@ public class AvailabilityController {
     })
     public AvailabilityGET postAvailability(@RequestHeader (name="Authorization") String jwtToken,
                                          @RequestBody @Valid AvailabilityPOST availabilityPOST) {
+        String username=jwtTokenProvider.getUsername(jwtToken);
+
         return new AvailabilityGET(
-                this.availabilityService.create(availabilityPOST.getIdBusRide(), availabilityPOST.getIdStopBus(),
-                                                availabilityPOST.getIdUser(), availabilityPOST.getState())
+                this.availabilityService.create(availabilityPOST.getIdBusRide(),
+                        availabilityPOST.getIdStopBus(),username, availabilityPOST.getState())
         );
     }
+
 
     @PutMapping(value = "/{idAvailability}",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -81,11 +113,24 @@ public class AvailabilityController {
     public AvailabilityGET putAvailability(@RequestHeader (name="Authorization") String jwtToken,
                                         @PathVariable("idAvailability")String idAvailability,
                                         @RequestBody @Valid AvailabilityPUT availabilityPUT) {
+        List roles=jwtTokenProvider.getRoles(jwtToken);
+        if(roles.contains(Role.ROLE_ESCORT)&&
+                !availabilityService.findById(idAvailability).getIdUser()
+                        .equals(jwtTokenProvider.getUsername(jwtToken)))
+            throw new ForbiddenException();
+
+        if(roles.contains(Role.ROLE_ADMIN)&&
+                !userService.isAdminOfLine(jwtTokenProvider.getUsername(jwtToken),
+                        busRideService.findById(
+                                availabilityService.findById(idAvailability).getIdBusRide()).getIdLine()))
+            throw new ForbiddenException();
 
         return new AvailabilityGET(
-                this.availabilityService.update(idAvailability, availabilityPUT.getIdStopBus(), availabilityPUT.getState())
+                this.availabilityService.update(idAvailability,
+                        availabilityPUT.getIdStopBus(), availabilityPUT.getState())
         );
     }
+
 
     @DeleteMapping(value = "/{idAvailability}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Cancella availability")
@@ -96,7 +141,16 @@ public class AvailabilityController {
     })
     public void deleteAvailability(@RequestHeader (name="Authorization") String jwtToken,
                                            @PathVariable("idAvailability")String idAvailability) {
-
+        List roles=jwtTokenProvider.getRoles(jwtToken);
+        if(roles.contains(Role.ROLE_ESCORT)&&
+                !availabilityService.findById(idAvailability).getIdUser()
+                        .equals(jwtTokenProvider.getUsername(jwtToken)))
+            throw new ForbiddenException();
+        if(roles.contains(Role.ROLE_ADMIN)&&
+                !userService.isAdminOfLine(jwtTokenProvider.getUsername(jwtToken),
+                        busRideService.findById(
+                                availabilityService.findById(idAvailability).getIdBusRide()).getIdLine()))
+            throw new ForbiddenException();
         this.availabilityService.deleteById(idAvailability);
     }
 

@@ -45,6 +45,7 @@ public class BusRideController {
         return this.busRideService.findAll();
     }
 
+    //TODO all roles
     @GetMapping(value = "/{idBusRide}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna corsa idBusRide")
     @ResponseStatus(HttpStatus.OK)
@@ -57,6 +58,7 @@ public class BusRideController {
         return new BusRideGET(this.busRideService.findById(idBusRide));
     }
 
+    //TODO only SYS_ADMIN,ADMIN,ESCORT
     @GetMapping(value = "/{idBusRide}/availabilities",produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna tutte le availabilities per una data corsa (idBusRide)")
     @ResponseStatus(HttpStatus.OK)
@@ -70,6 +72,7 @@ public class BusRideController {
                 .map(AvailabilityGET::new).collect(Collectors.toSet());
     }
 
+    //TODO all roles
     @GetMapping(value = "/{idLine}/{stopBusType}/{year}/{month}/{day}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna corsa per quella linea (andata/ritorno) in quel giorno. (NOTA mese: 0-11)")
     @ResponseStatus(HttpStatus.OK)
@@ -89,6 +92,7 @@ public class BusRideController {
 
 
 
+    //TODO only SYS_ADMIN,ADMIN
     @PostMapping(value = "",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Crea Nuova Corsa 'eccezionale', " +
@@ -108,6 +112,7 @@ public class BusRideController {
         );
     }
 
+    //TODO only ESCORT
     @PutMapping(value = "/{idBusRide}",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Aggiorna la posizione del 'bus'")
@@ -125,6 +130,7 @@ public class BusRideController {
         );
     }
 
+    //TODO only SYS_ADMIN,ADMIN
     @DeleteMapping(value = "/{idBusRide}")
     @ApiOperation(value = "'Elimina' tale corsa. (Crea messaggio per tutte le prenotazioni annullate)")
     @ResponseStatus(HttpStatus.NO_CONTENT)

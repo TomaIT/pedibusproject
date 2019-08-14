@@ -13,12 +13,14 @@ import it.polito.ai.pedibusproject.exceptions.DuplicateKeyException;
 import it.polito.ai.pedibusproject.exceptions.NotFoundException;
 import it.polito.ai.pedibusproject.service.interfaces.AvailabilityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 
@@ -28,6 +30,8 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     private BusRideRepository busRideRepository;
     private UserRepository userRepository;
     private MongoTemplate mongoTemplate;
+    @Value("${availability.time.expired.before.busride.start.seconds}")
+    private long timeBeforeStartBusRideSec;
 
     @Autowired
     public AvailabilityServiceImpl(AvailabilityRepository availabilityRepository,
@@ -59,6 +63,9 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
         if(!br.isPresent()) throw new BadRequestException("Availability <create> not found BusRide");
 
+        if(br.get().getStartTime().getTime()-timeBeforeStartBusRideSec<=(new Date()).getTime())
+            throw new BadRequestException("Availability <create> BusRide startTime is too close.");
+
         if(br.get().getStopBuses().stream().map(StopBus::getId).noneMatch(y -> y.equals(idStopBus)))
             throw new BadRequestException("Availability <create> not found StopBus in BusRide");
 
@@ -83,6 +90,8 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         if(!br.isPresent()) throw new BadRequestException("Availability <update> not found BusRide");
         if(br.get().getStopBuses().stream().map(StopBus::getId).noneMatch(y -> y.equals(idStopBus)))
             throw new BadRequestException("Availability <update> not found StopBus in BusRide");
+        if(br.get().getStartTime().getTime()-timeBeforeStartBusRideSec<=(new Date()).getTime())
+            throw new BadRequestException("Availability <update> BusRide startTime is too close.");
         // AGGIUNTO I CONTROLLI SU idStopBus FINE
 
 

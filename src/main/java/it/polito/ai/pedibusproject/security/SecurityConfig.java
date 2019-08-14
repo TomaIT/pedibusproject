@@ -4,6 +4,7 @@ import it.polito.ai.pedibusproject.exceptions.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,7 +29,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //TODO aggiungere regole di security sui path.
-        // (ULTIMA OPERAZIONE DOPO AVER TESTATO LE FUNZIONALITA)
         //@formatter:off
         http
                 .httpBasic().disable()
@@ -37,7 +37,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers ("/v2/api-docs", "/configuration/ui", "/swagger-resources", "/configuration/security", "/swagger-ui.html", "/webjars/**", "/swagger-resources/configuration/ui", "/swagger-ui.html", "/swagger-resources/configuration/security").permitAll()
-                //.antMatchers("/children").hasAnyRole("USER","ADMIN","SYS_ADMIN")
+                .antMatchers("/rest/availabilities/states").permitAll()
+                .antMatchers(HttpMethod.POST,"/rest/availabilities").hasRole("ESCORT")
+                .antMatchers("/rest/availabilities/**").hasAnyRole("ESCORT","ADMIN","SYS_ADMIN")
+
                 .antMatchers("/**").permitAll()
                 //.antMatchers(HttpMethod.GET, "/vehicles/**").permitAll()
                 .anyRequest().authenticated()

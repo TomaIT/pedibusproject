@@ -1,6 +1,5 @@
 package it.polito.ai.pedibusproject.database.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
