@@ -15,12 +15,12 @@ public class MainController {
     -Authentication Controller
 <DONE>        -post login
 <DONE>        -post recover
-    -Availability Controller
-        -post availabilites
+<DONE>    -Availability Controller
+<DONE>        -post availabilites
 <DONE>        -get states
-        -delete idAva
-        -get idAva
-        -put idAva
+<DONE>        -delete idAva
+<DONE>        -get idAva
+<DONE>        -put idAva
     -BusRide Controller
         -post
         -delete
