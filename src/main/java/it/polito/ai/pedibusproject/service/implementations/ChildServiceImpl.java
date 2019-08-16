@@ -1,10 +1,9 @@
 package it.polito.ai.pedibusproject.service.implementations;
 
 import com.mongodb.client.result.UpdateResult;
-import it.polito.ai.pedibusproject.database.model.Child;
-import it.polito.ai.pedibusproject.database.model.Gender;
-import it.polito.ai.pedibusproject.database.model.User;
+import it.polito.ai.pedibusproject.database.model.*;
 import it.polito.ai.pedibusproject.database.repository.ChildRepository;
+import it.polito.ai.pedibusproject.database.repository.StopBusRepository;
 import it.polito.ai.pedibusproject.database.repository.UserRepository;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
 import it.polito.ai.pedibusproject.exceptions.NotFoundException;
@@ -17,6 +16,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -24,12 +24,15 @@ public class ChildServiceImpl implements ChildService {
     private ChildRepository childRepository;
     private MongoTemplate mongoTemplate;
     private UserRepository userRepository;
+    private StopBusRepository stopBusRepository;
 
     @Autowired
-    public ChildServiceImpl(ChildRepository childRepository, MongoTemplate mongoTemplate,UserRepository userRepository){
+    public ChildServiceImpl(ChildRepository childRepository, MongoTemplate mongoTemplate,
+                            UserRepository userRepository, StopBusRepository stopBusRepository){
         this.childRepository=childRepository;
         this.mongoTemplate=mongoTemplate;
         this.userRepository=userRepository;
+        this.stopBusRepository=stopBusRepository;
     }
 
     private UpdateResult myUpdateFunctionFirst(String id, Update update){
@@ -52,8 +55,23 @@ public class ChildServiceImpl implements ChildService {
 
     @Override
     public Child create(String idUser, String firstname, String surname, Date birth, Gender gender, String blobBase64, String idStopBusOutDef, String idStopBusRetDef) {
-        if(!this.userRepository.existsById(idUser))
+        Optional<User> u = this.userRepository.findById(idUser);
+        if(!u.isPresent())
             throw new BadRequestException("Child <create> not found Parent");
+        if(!u.get().getRoles().contains(Role.ROLE_PARENT))
+            throw new BadRequestException("Child <create> not found Parent");
+
+        Optional<StopBus> sbOut = this.stopBusRepository.findById(idStopBusOutDef);
+        if(!sbOut.isPresent())
+            throw new BadRequestException("Child <create> not found StopBus with id=idStopBusOutDef");
+        if(!sbOut.get().getStopBusType().equals(StopBusType.Outward))
+            throw new BadRequestException("Child <create> StopBus with id=idStopBusOutDef is not of type OUTWARD");
+        Optional<StopBus> sbRet = this.stopBusRepository.findById(idStopBusRetDef);
+        if(!sbRet.isPresent())
+            throw new BadRequestException("Child <create> not found StopBus with id=idStopBusRetDef");
+        if(!sbRet.get().getStopBusType().equals(StopBusType.Return))
+            throw new BadRequestException("Child <create> StopBus with id=idStopBusRetDef is not of type RETURN");
+
         return this.childRepository.insert(new Child(idUser,firstname,surname,birth,gender,blobBase64,idStopBusOutDef,idStopBusRetDef));
     }
 

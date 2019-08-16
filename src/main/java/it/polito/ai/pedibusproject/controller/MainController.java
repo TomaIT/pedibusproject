@@ -29,12 +29,12 @@ public class MainController {
         -get availabilities
         -get stopbustype,year etc...
     -Child Controller
-        -get gende
+<DONE>        -get gende
         -delete
         -get idChild
         -put
         -get reservations
-        -post
+        -post   Senza bearer corretto risponde con 500 internal server error
     -Line Controller
         -get lines
         -get idLine
