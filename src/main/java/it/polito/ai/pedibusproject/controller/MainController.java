@@ -31,9 +31,9 @@ public class MainController {
     -Child Controller
 <DONE>        -get gende
         -delete
-        -get idChild
-        -put
-        -get reservations
+<DONE>        -get idChild
+        -put    Risponde sempre 404
+<DONE>        -get reservations
         -post   Senza bearer corretto risponde con 500 internal server error
     -Line Controller
         -get lines

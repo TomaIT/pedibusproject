@@ -53,30 +53,37 @@ public class ChildServiceImpl implements ChildService {
         return this.childRepository.findByIdUser(idUser);
     }
 
-    @Override
-    public Child create(String idUser, String firstname, String surname, Date birth, Gender gender, String blobBase64, String idStopBusOutDef, String idStopBusRetDef) {
-        Optional<User> u = this.userRepository.findById(idUser);
-        if(!u.isPresent())
-            throw new BadRequestException("Child <create> not found Parent");
-        if(!u.get().getRoles().contains(Role.ROLE_PARENT))
-            throw new BadRequestException("Child <create> not found Parent");
-
+    private void checkIdStopsBus(String idStopBusOutDef, String idStopBusRetDef) {
         Optional<StopBus> sbOut = this.stopBusRepository.findById(idStopBusOutDef);
         if(!sbOut.isPresent())
             throw new BadRequestException("Child <create> not found StopBus with id=idStopBusOutDef");
         if(!sbOut.get().getStopBusType().equals(StopBusType.Outward))
             throw new BadRequestException("Child <create> StopBus with id=idStopBusOutDef is not of type OUTWARD");
+
         Optional<StopBus> sbRet = this.stopBusRepository.findById(idStopBusRetDef);
         if(!sbRet.isPresent())
             throw new BadRequestException("Child <create> not found StopBus with id=idStopBusRetDef");
         if(!sbRet.get().getStopBusType().equals(StopBusType.Return))
             throw new BadRequestException("Child <create> StopBus with id=idStopBusRetDef is not of type RETURN");
+        // TODO: forse messaggi troppo dettagliati (troppi dettagli all'utente?)
+    }
+
+    @Override
+    public Child create(String idUser, String firstname, String surname, Date birth, Gender gender, String blobBase64, String idStopBusOutDef, String idStopBusRetDef) {
+        if(!this.userRepository.existsById(idUser))
+            throw new BadRequestException("Child <create> not found Parent");
+
+        checkIdStopsBus(idStopBusOutDef, idStopBusRetDef);
+
+        // TODO: un utente può avere due figli con lo stesso nome e cognome
 
         return this.childRepository.insert(new Child(idUser,firstname,surname,birth,gender,blobBase64,idStopBusOutDef,idStopBusRetDef));
     }
 
     @Override
     public Child update(String id, String firstname, String surname, Date birth, Gender gender, String blobBase64, String idStopBusOutDef, String idStopBusRetDef) {
+        checkIdStopsBus(idStopBusOutDef, idStopBusRetDef);
+
         Update update = new Update();
         update.set("firstname", firstname);
         update.set("surname", surname);
