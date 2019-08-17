@@ -44,7 +44,7 @@ public class MainController {
         -get
         -put
     -Reservation Controller
-        -post
+        -post   Posso fare prenotazioni identiche (da vedere la costruzione dell'id) -> idChild+StopBusType+Year+Month+Day
         -delete
         -get
         -put

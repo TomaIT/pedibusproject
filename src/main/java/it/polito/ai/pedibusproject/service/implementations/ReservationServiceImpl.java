@@ -1,8 +1,10 @@
 package it.polito.ai.pedibusproject.service.implementations;
 
 import com.mongodb.client.result.UpdateResult;
+import it.polito.ai.pedibusproject.database.model.BusRide;
 import it.polito.ai.pedibusproject.database.model.Reservation;
 import it.polito.ai.pedibusproject.database.model.ReservationState;
+import it.polito.ai.pedibusproject.database.model.StopBus;
 import it.polito.ai.pedibusproject.database.repository.BusRideRepository;
 import it.polito.ai.pedibusproject.database.repository.ChildRepository;
 import it.polito.ai.pedibusproject.database.repository.ReservationRepository;
@@ -17,6 +19,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -74,10 +77,15 @@ public class ReservationServiceImpl implements ReservationService {
         //Controlli
         if(!childRepository.existsById(idChild))
             throw new BadRequestException("Reservation <create> idChild not found");
-        if(!busRideRepository.existsById(idBusRide))
+        /*if(!busRideRepository.existsById(idBusRide))
             throw new BadRequestException("Reservation <create> idBusRide not found");
         if(!stopBusRepository.existsById(idStopBus))
-            throw new BadRequestException("Reservation <create> idStopBus not found");
+            throw new BadRequestException("Reservation <create> idStopBus not found");*/
+        Optional<BusRide> br = this.busRideRepository.findById(idBusRide);
+        if(!br.isPresent())
+            throw new BadRequestException("Reservation <create> idBusRide not found");
+        if(!br.get().getStopBuses().stream().map(StopBus::getId).anyMatch(y -> y.equals(idStopBus)))
+            throw new BadRequestException("Reservation <create> idStopBus not found in BusRide");
         //Fine controlli
         Reservation temp=new Reservation(idBusRide,idChild,idStopBus,idUser);
         return this.reservationRepository.insert(temp);
