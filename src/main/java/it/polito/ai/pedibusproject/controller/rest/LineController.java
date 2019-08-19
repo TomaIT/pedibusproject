@@ -28,6 +28,7 @@ public class LineController {
         this.stopBusService=stopBusService;
     }
 
+
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna tutte le linee (id e nome)")
     @ResponseStatus(HttpStatus.OK)
@@ -37,6 +38,7 @@ public class LineController {
     public Set<LineEnumGET> getLineNames(@RequestHeader (name="Authorization") String jwtToken) {
         return this.lineService.aggregateNames();
     }
+
 
     @GetMapping(value = "/{idLine}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna idLine")

@@ -28,6 +28,7 @@ public class MessageController {
         this.jwtTokenProvider=jwtTokenProvider;
     }
 
+    //TODO has any roles
     @GetMapping(value = "/{idMessage}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna tale message")
     @ResponseStatus(HttpStatus.OK)
@@ -42,6 +43,7 @@ public class MessageController {
         );
     }
 
+    //TODO has any roles
     @PostMapping(value = "",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Crea nuovo messaggio")
@@ -58,6 +60,7 @@ public class MessageController {
         );
     }
 
+    //TODO has any roles
     @PutMapping(value = "/{idMessage}",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Aggiorna messaggio per la conferma di lettura")
@@ -75,6 +78,7 @@ public class MessageController {
         );
     }
 
+    //TODO has any roles
     @DeleteMapping(value = "/{idMessage}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Cancella tale messaggio")
     @ResponseStatus(HttpStatus.NO_CONTENT)

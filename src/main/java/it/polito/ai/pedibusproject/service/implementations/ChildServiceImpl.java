@@ -78,7 +78,7 @@ public class ChildServiceImpl implements ChildService {
 
         checkIdStopsBus(idStopBusOutDef, idStopBusRetDef);
 
-        // TODO: un utente può avere due figli con lo stesso nome e cognome
+        // TODO: un utente può avere due figli con lo stesso nome e cognome <NON TI PIACE ?>
 
         return this.childRepository.insert(new Child(idUser,firstname,surname,birth,gender,blobBase64,idStopBusOutDef,idStopBusRetDef));
     }

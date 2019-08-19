@@ -58,7 +58,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE,"/rest/children/**").hasRole("PARENT")
                 .antMatchers(HttpMethod.GET,"/rest/children/**/reservations").hasAnyRole("PARENT","SYS_ADMIN","ADMIN")
 
+                //Lines
+                .antMatchers("/rest/lines/**").permitAll()
+                .antMatchers("/rest/lines").permitAll()
 
+                //Messages
 
                 .antMatchers("/**").permitAll()
                 //.antMatchers(HttpMethod.GET, "/vehicles/**").permitAll()
