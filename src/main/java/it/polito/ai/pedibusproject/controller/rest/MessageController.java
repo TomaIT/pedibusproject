@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiResponses;
 import it.polito.ai.pedibusproject.controller.model.get.MessageGET;
 import it.polito.ai.pedibusproject.controller.model.post.MessagePOST;
 import it.polito.ai.pedibusproject.controller.model.put.MessagePUT;
+import it.polito.ai.pedibusproject.database.model.Message;
+import it.polito.ai.pedibusproject.exceptions.ForbiddenException;
 import it.polito.ai.pedibusproject.security.JwtTokenProvider;
 import it.polito.ai.pedibusproject.service.interfaces.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,13 @@ public class MessageController {
         this.jwtTokenProvider=jwtTokenProvider;
     }
 
-    //TODO has any roles
+    private void checkUserIsProprietary(String jwtToken,String f,String t){
+        String username=jwtTokenProvider.getUsername(jwtToken);
+        if(!f.equals(username)&&!t.equals(username))
+            throw new ForbiddenException();
+    }
+
+
     @GetMapping(value = "/{idMessage}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna tale message")
     @ResponseStatus(HttpStatus.OK)
@@ -38,12 +46,13 @@ public class MessageController {
     })
     public MessageGET getMessageById(@RequestHeader (name="Authorization") String jwtToken,
                                      @PathVariable("idMessage")String idMessage) {
-        return new MessageGET(
+        MessageGET temp=new MessageGET(
                 this.messageService.findById(idMessage)
         );
+        checkUserIsProprietary(jwtToken,temp.getIdUserFrom(),temp.getIdUserTo());
+        return temp;
     }
 
-    //TODO has any roles
     @PostMapping(value = "",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Crea nuovo messaggio")
@@ -60,7 +69,6 @@ public class MessageController {
         );
     }
 
-    //TODO has any roles
     @PutMapping(value = "/{idMessage}",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Aggiorna messaggio per la conferma di lettura")
@@ -73,12 +81,15 @@ public class MessageController {
     public MessageGET putMessage(@RequestHeader (name="Authorization") String jwtToken,
                               @PathVariable("idMessage")String idMessage,
                               @RequestBody @Valid MessagePUT messagePUT) {
+        Message temp=messageService.findById(idMessage);
+        if(!jwtTokenProvider.getUsername(jwtToken).equals(temp.getIdUserTo()))
+            throw new ForbiddenException();
         return new MessageGET(
                 this.messageService.updateReadConfirmById(idMessage,messagePUT.getReadConfirm())
         );
     }
 
-    //TODO has any roles
+
     @DeleteMapping(value = "/{idMessage}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Cancella tale messaggio")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -88,6 +99,8 @@ public class MessageController {
     })
     public void deleteMessageById(@RequestHeader (name="Authorization") String jwtToken,
                                   @PathVariable("idMessage")String idMessage) {
+        Message temp=messageService.findById(idMessage);
+        checkUserIsProprietary(jwtToken,temp.getIdUserFrom(),temp.getIdUserTo());
         this.messageService.deleteById(idMessage);
     }
 
