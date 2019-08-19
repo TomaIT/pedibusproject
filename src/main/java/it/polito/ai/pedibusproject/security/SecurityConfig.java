@@ -70,6 +70,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/rest/roles").permitAll()
                 .antMatchers("/rest/roles/**/users").hasAnyRole("ADMIN","SYS_ADMIN")
 
+                //StopBuses
+                .antMatchers("/rest/stopbuses/types").permitAll()
+                .antMatchers("/rest/stopbuses/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
 
                 .antMatchers("/**").permitAll()
                 //.antMatchers(HttpMethod.GET, "/vehicles/**").permitAll()

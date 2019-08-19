@@ -33,6 +33,8 @@ public class UserController {
     private AvailabilityService availabilityService;
     private MessageService messageService;
 
+    //TODO security path
+
     @Autowired
     public UserController(UserService userService,
                           ConfirmationTokenService confirmationTokenService,

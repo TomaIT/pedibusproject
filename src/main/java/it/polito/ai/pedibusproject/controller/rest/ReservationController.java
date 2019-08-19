@@ -23,6 +23,7 @@ import javax.validation.Valid;
 public class ReservationController {
     private ReservationService reservationService;
     private JwtTokenProvider jwtTokenProvider;
+    //TODO Security path
 
     @Autowired
     public ReservationController(ReservationService reservationService,
