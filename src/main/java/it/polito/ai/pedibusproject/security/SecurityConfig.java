@@ -37,10 +37,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers ("/v2/api-docs", "/configuration/ui", "/swagger-resources", "/configuration/security", "/swagger-ui.html", "/webjars/**", "/swagger-resources/configuration/ui", "/swagger-ui.html", "/swagger-resources/configuration/security").permitAll()
+
                 //Availabilities
                 .antMatchers("/rest/availabilities/states").permitAll()
                 .antMatchers(HttpMethod.POST,"/rest/availabilities").hasRole("ESCORT")
                 .antMatchers("/rest/availabilities/**").hasAnyRole("ESCORT","ADMIN","SYS_ADMIN")
+
+                //BusRide
+                .antMatchers(HttpMethod.GET,"/rest/busrides/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
+                .antMatchers(HttpMethod.GET,"/rest/busrides/**/availabilities").hasAnyRole("ESCORT","ADMIN","SYS_ADMIN")
+                .antMatchers(HttpMethod.POST,"/rest/busrides").hasAnyRole("ADMIN","SYS_ADMIN")
+                .antMatchers(HttpMethod.DELETE,"/rest/busrides/**").hasAnyRole("ADMIN","SYS_ADMIN")
+                .antMatchers(HttpMethod.PUT,"/rest/busrides/**").hasAnyRole("ESCORT")
+
                 //Children
                 .antMatchers("/rest/children/genders").permitAll()
                 .antMatchers(HttpMethod.GET,"/rest/children/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
