@@ -30,11 +30,11 @@ public class MainController {
         -get stopbustype,year etc...
     -Child Controller
 <DONE>        -get gende
-        -delete
+<DONE>        -delete  -> a cosa serve ?? dubbioso.. reservations associate etc ??
 <DONE>        -get idChild
-        -put    Risponde sempre 404
+<DONE>        -put
 <DONE>        -get reservations
-        -post   Senza bearer corretto risponde con 500 internal server error
+<DONE>        -post
     -Line Controller
         -get lines
         -get idLine
@@ -56,7 +56,7 @@ public class MainController {
         -get idStop
     -User Controller
         -post user
-        -post uuid
+<DONE>        -post uuid
         -get idUser
         -get availabilites
         -get children

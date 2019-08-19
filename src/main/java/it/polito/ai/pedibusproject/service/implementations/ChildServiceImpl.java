@@ -40,7 +40,7 @@ public class ChildServiceImpl implements ChildService {
                 Criteria.where("_id").is(id)
         );
         Query query = new Query(criteria);
-        return mongoTemplate.updateFirst(query, update, User.class);
+        return mongoTemplate.updateFirst(query, update, Child.class);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class ChildServiceImpl implements ChildService {
             throw new BadRequestException("Child <create> not found StopBus with id=idStopBusRetDef");
         if(!sbRet.get().getStopBusType().equals(StopBusType.Return))
             throw new BadRequestException("Child <create> StopBus with id=idStopBusRetDef is not of type RETURN");
-        // TODO: forse messaggi troppo dettagliati (troppi dettagli all'utente?)
+        // forse messaggi troppo dettagliati (troppi dettagli all'utente!?)
     }
 
     @Override

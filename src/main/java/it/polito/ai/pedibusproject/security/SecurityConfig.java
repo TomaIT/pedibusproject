@@ -37,9 +37,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers ("/v2/api-docs", "/configuration/ui", "/swagger-resources", "/configuration/security", "/swagger-ui.html", "/webjars/**", "/swagger-resources/configuration/ui", "/swagger-ui.html", "/swagger-resources/configuration/security").permitAll()
+                //Availabilities
                 .antMatchers("/rest/availabilities/states").permitAll()
                 .antMatchers(HttpMethod.POST,"/rest/availabilities").hasRole("ESCORT")
                 .antMatchers("/rest/availabilities/**").hasAnyRole("ESCORT","ADMIN","SYS_ADMIN")
+                //Children
+                .antMatchers("/rest/children/genders").permitAll()
+                .antMatchers(HttpMethod.GET,"/rest/children/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
+                .antMatchers(HttpMethod.POST,"/rest/children/**").hasRole("PARENT")
+                .antMatchers(HttpMethod.PUT,"/rest/children/**").hasRole("PARENT")
+                .antMatchers(HttpMethod.DELETE,"/rest/children/**").hasRole("PARENT")
+                .antMatchers(HttpMethod.GET,"/rest/children/**/reservations").hasAnyRole("PARENT","SYS_ADMIN","ADMIN")
+
+
 
                 .antMatchers("/**").permitAll()
                 //.antMatchers(HttpMethod.GET, "/vehicles/**").permitAll()

@@ -37,7 +37,6 @@ public class ChildController {
         this.jwtTokenProvider=jwtTokenProvider;
     }
 
-    //TODO permitAll
     @GetMapping(value = "/genders",produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna i possibili valori di Gender")
     @ResponseStatus(HttpStatus.OK)
@@ -48,7 +47,6 @@ public class ChildController {
         return Arrays.stream(Gender.values()).map(Enum::name).collect(Collectors.toSet());
     }
 
-    //TODO all roles
     @GetMapping(value = "/{idChild}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna il bambino idChild")
     @ResponseStatus(HttpStatus.OK)
@@ -64,7 +62,6 @@ public class ChildController {
     }
 
 
-    //TODO only PARENT
     @PostMapping(value = "/{idUser}",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Crea bambino")
@@ -86,7 +83,6 @@ public class ChildController {
         );
     }
 
-    //TODO only PARENT
     @PutMapping(value = "/{idChild}",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Modifica bambino idChild")
@@ -105,9 +101,7 @@ public class ChildController {
         );
     }
 
-    //TODO only PARENT
-    @DeleteMapping(value = "/{idChild}",consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/{idChild}")
     @ApiOperation(value = "Cancella bambino idChild")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
@@ -119,7 +113,6 @@ public class ChildController {
         this.childService.deleteById(idChild);
     }
 
-    //TODO PARENT,SYS_ADMIN,ADMIN
     @GetMapping(value = "/{idChild}/reservations", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna tutte le prenotazioni per idChild")
     @ResponseStatus(HttpStatus.OK)
