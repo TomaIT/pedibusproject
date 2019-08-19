@@ -31,13 +31,14 @@ public class MainController {
     -Child Controller
 <DONE>        -get gende
 <DONE>        -delete  -> a cosa serve ?? dubbioso.. reservations associate etc ??
+                            DS: forse nel caso il figlio cambi scuola... nel caso le reservations associate andrebbero cancellate
 <DONE>        -get idChild
 <DONE>        -put
 <DONE>        -get reservations
 <DONE>        -post
     -Line Controller
-        -get lines
-        -get idLine
+<DONE>        -get lines
+<DONE>        -get idLine
     -Message Controller
         -post
         -delete
