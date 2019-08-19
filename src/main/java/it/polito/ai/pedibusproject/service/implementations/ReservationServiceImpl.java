@@ -10,6 +10,7 @@ import it.polito.ai.pedibusproject.database.repository.ChildRepository;
 import it.polito.ai.pedibusproject.database.repository.ReservationRepository;
 import it.polito.ai.pedibusproject.database.repository.StopBusRepository;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
+import it.polito.ai.pedibusproject.exceptions.DuplicateKeyException;
 import it.polito.ai.pedibusproject.exceptions.NotFoundException;
 import it.polito.ai.pedibusproject.service.interfaces.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +89,11 @@ public class ReservationServiceImpl implements ReservationService {
             throw new BadRequestException("Reservation <create> idStopBus not found in BusRide");
         //Fine controlli
         Reservation temp=new Reservation(idBusRide,idChild,idStopBus,idUser);
-        return this.reservationRepository.insert(temp);
+        try {
+            return this.reservationRepository.insert(temp);
+        }catch (org.springframework.dao.DuplicateKeyException e){
+            throw new DuplicateKeyException("Reservation <create> already exist");
+        }
     }
 
     @Override

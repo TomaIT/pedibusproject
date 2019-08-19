@@ -35,6 +35,7 @@ public class AvailabilityController {
     private BusRideService busRideService;
     private UserService userService;
 
+    //TODO BUG roles...
 
 
     @Autowired

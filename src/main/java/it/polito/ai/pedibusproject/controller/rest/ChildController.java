@@ -6,8 +6,11 @@ import io.swagger.annotations.ApiResponses;
 import it.polito.ai.pedibusproject.controller.model.get.ChildGET;
 import it.polito.ai.pedibusproject.controller.model.get.ReservationGET;
 import it.polito.ai.pedibusproject.controller.model.post.ChildPOST;
+import it.polito.ai.pedibusproject.database.model.Child;
 import it.polito.ai.pedibusproject.database.model.Gender;
+import it.polito.ai.pedibusproject.database.model.Role;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
+import it.polito.ai.pedibusproject.exceptions.ForbiddenException;
 import it.polito.ai.pedibusproject.security.JwtTokenProvider;
 import it.polito.ai.pedibusproject.service.interfaces.ChildService;
 import it.polito.ai.pedibusproject.service.interfaces.ReservationService;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -56,9 +60,20 @@ public class ChildController {
     })
     public ChildGET getChildById(@RequestHeader (name="Authorization") String jwtToken,
                                  @PathVariable("idChild")String idChild) {
-        return new ChildGET(
-                this.childService.findById(idChild)
-        );
+        List roles = jwtTokenProvider.getRoles(jwtToken);
+        if(roles.contains(Role.ROLE_ADMIN)||
+                roles.contains(Role.ROLE_SYS_ADMIN)||
+                roles.contains(Role.ROLE_ESCORT)
+        )
+            return new ChildGET(
+                    this.childService.findById(idChild)
+            );
+        String username=jwtTokenProvider.getUsername(jwtToken);
+        if(childService.findByIdUser(username).stream().map(Child::getId).anyMatch(x->x.equals(idChild)))
+            return new ChildGET(
+                    this.childService.findById(idChild)
+            );
+        throw new ForbiddenException();
     }
 
 
@@ -95,10 +110,14 @@ public class ChildController {
     public ChildGET putChildById(@RequestHeader (name="Authorization") String jwtToken,
                               @PathVariable("idChild")String idChild,
                               @RequestBody @Valid ChildPOST childPOST) {
-        return new ChildGET(
-                this.childService.update(idChild,childPOST.getFirstname(),childPOST.getSurname(),childPOST.getBirth(),
-                childPOST.getGender(),childPOST.getBlobBase64(),childPOST.getIdStopBusOutDef(),childPOST.getIdStopBusRetDef())
-        );
+        if(jwtTokenProvider.getRoles(jwtToken).contains(Role.ROLE_PARENT)&&
+            childService.findByIdUser(jwtTokenProvider.getUsername(jwtToken)).stream()
+        .map(Child::getId).anyMatch(x->x.equals(idChild)))
+            return new ChildGET(
+                    this.childService.update(idChild,childPOST.getFirstname(),childPOST.getSurname(),childPOST.getBirth(),
+                    childPOST.getGender(),childPOST.getBlobBase64(),childPOST.getIdStopBusOutDef(),childPOST.getIdStopBusRetDef())
+            );
+        throw new ForbiddenException();
     }
 
     @DeleteMapping(value = "/{idChild}")
@@ -110,7 +129,11 @@ public class ChildController {
     })
     public void deleteChildById(@RequestHeader (name="Authorization") String jwtToken,
                                 @PathVariable("idChild")String idChild) {
-        this.childService.deleteById(idChild);
+        if(jwtTokenProvider.getRoles(jwtToken).contains(Role.ROLE_PARENT)&&
+                childService.findByIdUser(jwtTokenProvider.getUsername(jwtToken)).stream()
+                        .map(Child::getId).anyMatch(x->x.equals(idChild)))
+            this.childService.deleteById(idChild);
+        throw new ForbiddenException();
     }
 
     @GetMapping(value = "/{idChild}/reservations", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -122,7 +145,17 @@ public class ChildController {
     })
     public Set<ReservationGET> getReservationByChild(@RequestHeader (name="Authorization") String jwtToken,
                                                      @PathVariable("idChild")String idChild) {
-        return this.reservationService.findAllByIdChild(idChild).stream()
-                .map(ReservationGET::new).collect(Collectors.toSet());
+        List roles = jwtTokenProvider.getRoles(jwtToken);
+        if(roles.contains(Role.ROLE_ADMIN)||
+                roles.contains(Role.ROLE_SYS_ADMIN)
+        )
+            return this.reservationService.findAllByIdChild(idChild).stream()
+                    .map(ReservationGET::new).collect(Collectors.toSet());
+        String username=jwtTokenProvider.getUsername(jwtToken);
+        if(roles.contains(Role.ROLE_PARENT)&&
+                childService.findByIdUser(username).stream().map(Child::getId).anyMatch(x->x.equals(idChild)))
+            return this.reservationService.findAllByIdChild(idChild).stream()
+                    .map(ReservationGET::new).collect(Collectors.toSet());
+        throw new ForbiddenException();
     }
 }

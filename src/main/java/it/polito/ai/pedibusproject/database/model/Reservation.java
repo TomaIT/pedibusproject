@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "reservations")
 public class Reservation {
     @Id
-    private String id;
+    private String id; //Costruito concatenando idChild+stopBusType+year+month+day
     private String idBusRide;
     private String idChild;
     private String idStopBus;
@@ -25,5 +25,6 @@ public class Reservation {
         this.idChild=idChild;
         this.idStopBus=idStopBus;
         this.idUser=idUser;
+        this.id=idChild+idBusRide.substring(idBusRide.indexOf('.'));
     }
 }
