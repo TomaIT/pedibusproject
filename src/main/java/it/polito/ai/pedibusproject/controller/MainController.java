@@ -32,6 +32,7 @@ public class MainController {
 <DONE>        -get gende
 <DONE>        -delete  -> a cosa serve ?? dubbioso.. reservations associate etc ??
                             DS: forse nel caso il figlio cambi scuola... nel caso le reservations associate andrebbero cancellate
+                            -> <FIXED>
 <DONE>        -get idChild
 <DONE>        -put
 <DONE>        -get reservations
@@ -40,15 +41,18 @@ public class MainController {
 <DONE>        -get lines
 <DONE>        -get idLine
     -Message Controller
-        -post       -> perché "creationTime" viene passato invece di essere settato dal server quando riceve la POST?
+        -post       -> perché "creationTime" viene passato invece di essere settato dal server quando riceve la POST? -> <FIXED>
+                    -> interfaccia rest non modificata, ma il tempo viene comunque settato dal server
+                        (questo per non fargli modificare frontend...)
 <DONE>        -delete
 <DONE>        -get
-        -put    -> risponde 404
+        -put    -> risponde 404 -> <FIXED> retry...
     -Reservation Controller
 <DONE>        -post
 <DONE>        -delete
 <DONE>        -get
-<DONE>        -put    -> "epochTime" penso sia meglio se settato dal server
+<DONE>        -put    -> "epochTime" penso sia meglio se settato dal server -> <FIXED>
+                        -> idem alla post di message...
     -Role Controller
         -get roles
         -get users

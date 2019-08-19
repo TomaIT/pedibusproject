@@ -9,4 +9,5 @@ public interface ReservationRepository extends MongoRepository<Reservation,Strin
     Set<Reservation> findAllByIdBusRide(String idBusRide);
     Set<Reservation> findAllByIdChild(String idChild);
     Set<Reservation> findAllByIdUser(String idUser);
+    void deleteByIdChild(String idChild);
 }

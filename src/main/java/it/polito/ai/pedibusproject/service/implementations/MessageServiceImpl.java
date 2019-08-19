@@ -36,7 +36,7 @@ public class MessageServiceImpl implements MessageService {
                 Criteria.where("_id").is(id)
         );
         Query query = new Query(criteria);
-        return mongoTemplate.updateFirst(query, update, User.class);
+        return mongoTemplate.updateFirst(query, update, Message.class);
     }
 
     @Override

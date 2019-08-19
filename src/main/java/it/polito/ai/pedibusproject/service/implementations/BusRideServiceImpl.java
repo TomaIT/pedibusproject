@@ -65,7 +65,7 @@ public class BusRideServiceImpl implements BusRideService {
                 Criteria.where("_id").is(id)
         );
         Query query = new Query(criteria);
-        return mongoTemplate.updateFirst(query, update, User.class);
+        return mongoTemplate.updateFirst(query, update, BusRide.class);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class BusRideServiceImpl implements BusRideService {
         Line line = this.lineService.findById(idLine);
         TreeSet<StopBus> stopBuses = this.lineService.findByIdAndStopBusType(idLine, stopBusType);
         for (int i = 0; i<intervalDays;i++){
-            //TODO holiday ?? http://www.bank-holidays.com/
+            //TODO holiday ?? https://publicholidays.it/school-holidays/piedmont/
             if (!(c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)) {
                 TreeSet<StopBus> tempStopBuses = new TreeSet<>(stopBuses);
                 BusRide temp = mySave(new BusRide(line.getId(), stopBusType,

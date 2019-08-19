@@ -6,6 +6,7 @@ import it.polito.ai.pedibusproject.database.model.Gender;
 import it.polito.ai.pedibusproject.database.model.StopBus;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
 import it.polito.ai.pedibusproject.database.repository.ChildRepository;
+import it.polito.ai.pedibusproject.database.repository.ReservationRepository;
 import it.polito.ai.pedibusproject.database.repository.StopBusRepository;
 import it.polito.ai.pedibusproject.database.repository.UserRepository;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
@@ -28,6 +29,7 @@ public class ChildServiceImpl implements ChildService {
     private MongoTemplate mongoTemplate;
     private UserRepository userRepository;
     private StopBusRepository stopBusRepository;
+    private ReservationRepository reservationRepository;
 
     @Autowired
     public ChildServiceImpl(ChildRepository childRepository, MongoTemplate mongoTemplate,
@@ -107,5 +109,6 @@ public class ChildServiceImpl implements ChildService {
         update.set("isDeleted", true);
         UpdateResult updateResult=myUpdateFunctionFirst(id,update);
         if(updateResult.getMatchedCount()==0) throw new NotFoundException("Child <delete>");
+        this.reservationRepository.deleteByIdChild(id);
     }
 }

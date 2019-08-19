@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -65,7 +66,7 @@ public class MessageController {
                                @RequestBody @Valid MessagePOST messagePOST) {
         return new MessageGET(
                 this.messageService.create(jwtTokenProvider.getUsername(jwtToken),messagePOST.getIdUserTo(),
-                messagePOST.getSubject(),messagePOST.getMessage(),messagePOST.getCreationTime())
+                messagePOST.getSubject(),messagePOST.getMessage(),(new Date()).getTime())
         );
     }
 

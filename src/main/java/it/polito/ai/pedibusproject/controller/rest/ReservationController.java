@@ -21,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -98,7 +99,7 @@ public class ReservationController {
         String username=jwtTokenProvider.getUsername(jwtToken);
         ReservationState rs=new ReservationState(
                 reservationPUT.getIdStopBus(),
-                reservationPUT.getEpochTime(),
+                (new Date()).getTime(),
                 username);
         ReservationGET ret;
         switch (reservationPUT.getEnumChildGet()){
