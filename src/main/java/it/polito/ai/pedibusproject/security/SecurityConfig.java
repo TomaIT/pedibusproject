@@ -74,8 +74,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/rest/stopbuses/types").permitAll()
                 .antMatchers("/rest/stopbuses/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
 
+                //Reservations
+                .antMatchers(HttpMethod.GET,"/rest/reservations/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
+                .antMatchers(HttpMethod.POST,"/rest/reservations").hasRole("PARENT")
+                .antMatchers(HttpMethod.PUT,"/rest/reservations/**").hasRole("ESCORT")
+                .antMatchers(HttpMethod.DELETE,"/rest/reservations/**").hasAnyRole("PARENT","ADMIN","SYS_ADMIN")
+
+                //Users
+
+
+                //Default
+                .antMatchers("/rest/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
                 .antMatchers("/**").permitAll()
-                //.antMatchers(HttpMethod.GET, "/vehicles/**").permitAll()
+
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()

@@ -6,9 +6,14 @@ import io.swagger.annotations.ApiResponses;
 import it.polito.ai.pedibusproject.controller.model.get.ReservationGET;
 import it.polito.ai.pedibusproject.controller.model.post.ReservationPOST;
 import it.polito.ai.pedibusproject.controller.model.put.ReservationPUT;
+import it.polito.ai.pedibusproject.database.model.Child;
+import it.polito.ai.pedibusproject.database.model.Reservation;
 import it.polito.ai.pedibusproject.database.model.ReservationState;
+import it.polito.ai.pedibusproject.database.model.Role;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
+import it.polito.ai.pedibusproject.exceptions.ForbiddenException;
 import it.polito.ai.pedibusproject.security.JwtTokenProvider;
+import it.polito.ai.pedibusproject.service.interfaces.ChildService;
 import it.polito.ai.pedibusproject.service.interfaces.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -23,14 +29,18 @@ import javax.validation.Valid;
 public class ReservationController {
     private ReservationService reservationService;
     private JwtTokenProvider jwtTokenProvider;
-    //TODO Security path
+    private ChildService childService;
+
 
     @Autowired
     public ReservationController(ReservationService reservationService,
-                                 JwtTokenProvider jwtTokenProvider){
+                                 JwtTokenProvider jwtTokenProvider,
+                                 ChildService childService){
         this.reservationService=reservationService;
         this.jwtTokenProvider=jwtTokenProvider;
+        this.childService=childService;
     }
+
 
     @GetMapping(value = "/{idReservation}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna tale prenotazione")
@@ -41,7 +51,17 @@ public class ReservationController {
     })
     public ReservationGET getReservationById(@RequestHeader (name="Authorization") String jwtToken,
                                                   @PathVariable("idReservation")String idReservation) {
-        return new ReservationGET(this.reservationService.findById(idReservation));
+        Reservation temp=this.reservationService.findById(idReservation);
+        String username=jwtTokenProvider.getUsername(jwtToken);
+        if(temp.getIdUser().equals(username))
+            return new ReservationGET(temp);
+
+        List roles=jwtTokenProvider.getRoles(jwtToken);
+        if(roles.contains(Role.ROLE_SYS_ADMIN)||roles.contains(Role.ROLE_ADMIN)||
+            roles.contains(Role.ROLE_ESCORT))
+            return new ReservationGET(temp);
+
+        throw new ForbiddenException();
     }
 
     @PostMapping(value = "",consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -55,9 +75,12 @@ public class ReservationController {
     public ReservationGET postReservation(@RequestHeader (name="Authorization") String jwtToken,
                                        @RequestBody @Valid ReservationPOST reservationPOST) {
         String username=jwtTokenProvider.getUsername(jwtToken);
-        return new ReservationGET(
-                reservationService.create(reservationPOST.getIdBusRide(),reservationPOST.getIdChild(),
-                reservationPOST.getIdStopBus(),username));
+        if( childService.findByIdUser(username).stream()
+                .map(Child::getId).anyMatch(x->x.equals(reservationPOST.getIdChild())))
+            return new ReservationGET(
+                    reservationService.create(reservationPOST.getIdBusRide(),reservationPOST.getIdChild(),
+                    reservationPOST.getIdStopBus(),username));
+        throw new ForbiddenException();
     }
 
     @PutMapping(value = "/{idReservation}",consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -100,6 +123,16 @@ public class ReservationController {
     })
     public void deleteReservationById(@RequestHeader (name="Authorization") String jwtToken,
                                       @PathVariable("idReservation")String idReservation) {
-        this.reservationService.deleteById(idReservation);
+        List roles=jwtTokenProvider.getRoles(jwtToken);
+        if(roles.contains(Role.ROLE_SYS_ADMIN)||roles.contains(Role.ROLE_ADMIN)) {
+            this.reservationService.deleteById(idReservation);
+            return;
+        }
+        Reservation temp=reservationService.findById(idReservation);
+        if(temp.getIdUser().equals(jwtTokenProvider.getUsername(jwtToken))) {
+            this.reservationService.deleteById(idReservation);
+            return;
+        }
+        throw new ForbiddenException();
     }
 }
