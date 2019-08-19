@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/rest/availabilities/**").hasAnyRole("ESCORT","ADMIN","SYS_ADMIN")
 
                 //BusRide
-                .antMatchers(HttpMethod.GET,"/rest/busrides/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
+                //.antMatchers(HttpMethod.GET,"/rest/busrides/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
                 .antMatchers(HttpMethod.GET,"/rest/busrides/**/availabilities").hasAnyRole("ESCORT","ADMIN","SYS_ADMIN")
                 .antMatchers(HttpMethod.POST,"/rest/busrides").hasAnyRole("ADMIN","SYS_ADMIN")
                 .antMatchers(HttpMethod.DELETE,"/rest/busrides/**").hasAnyRole("ADMIN","SYS_ADMIN")
@@ -52,19 +52,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 //Children
                 .antMatchers("/rest/children/genders").permitAll()
-                .antMatchers(HttpMethod.GET,"/rest/children/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
+                //.antMatchers(HttpMethod.GET,"/rest/children/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
                 .antMatchers(HttpMethod.POST,"/rest/children/**").hasRole("PARENT")
                 .antMatchers(HttpMethod.PUT,"/rest/children/**").hasRole("PARENT")
                 .antMatchers(HttpMethod.DELETE,"/rest/children/**").hasRole("PARENT")
                 .antMatchers(HttpMethod.GET,"/rest/children/**/reservations").hasAnyRole("PARENT","SYS_ADMIN","ADMIN")
 
                 //Lines
-                .antMatchers("/rest/lines/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
-                .antMatchers("/rest/lines").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
+                //.antMatchers("/rest/lines/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
+                //.antMatchers("/rest/lines").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
 
                 //Messages
-                .antMatchers("/rest/messages/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
-                .antMatchers("/rest/messages").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
+                //.antMatchers("/rest/messages/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
+                //.antMatchers("/rest/messages").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
 
                 //Roles
                 .antMatchers("/rest/roles").permitAll()
@@ -72,16 +72,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 //StopBuses
                 .antMatchers("/rest/stopbuses/types").permitAll()
-                .antMatchers("/rest/stopbuses/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
+                //.antMatchers("/rest/stopbuses/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
 
                 //Reservations
-                .antMatchers(HttpMethod.GET,"/rest/reservations/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
+                //.antMatchers(HttpMethod.GET,"/rest/reservations/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
                 .antMatchers(HttpMethod.POST,"/rest/reservations").hasRole("PARENT")
                 .antMatchers(HttpMethod.PUT,"/rest/reservations/**").hasRole("ESCORT")
                 .antMatchers(HttpMethod.DELETE,"/rest/reservations/**").hasAnyRole("PARENT","ADMIN","SYS_ADMIN")
 
                 //Users
-
+                .antMatchers(HttpMethod.POST,"/rest/users").hasAnyRole("ADMIN","SYS_ADMIN")
+                .antMatchers(HttpMethod.POST,"/rest/users/**/uuid").hasAnyRole("ADMIN","SYS_ADMIN")
+                //.antMatchers(HttpMethod.GET,"/rest/users/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
+                .antMatchers(HttpMethod.PUT,"/rest/users/**/role").hasAnyRole("SYS_ADMIN","ADMIN")
+                .antMatchers(HttpMethod.PUT,"/rest/users/**/addLine").hasAnyRole("SYS_ADMIN","ADMIN")
+                .antMatchers(HttpMethod.PUT,"/rest/users/**/removeLine").hasAnyRole("SYS_ADMIN","ADMIN")
+                //.antMatchers(HttpMethod.PUT,"/rest/users/**").hasAnyRole("PARENT","ESCORT","SYS_ADMIN","ADMIN")
+                //.antMatchers(HttpMethod.GET,"/rest/users/**/children").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
+                //.antMatchers(HttpMethod.GET,"/rest/users/**/messages").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
+                //.antMatchers(HttpMethod.GET,"/rest/users/**/messages/notReadCounter").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
+                //.antMatchers(HttpMethod.GET,"/rest/users/**/reservations").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
+                .antMatchers(HttpMethod.GET,"/rest/users/**/availabilities").hasAnyRole("ESCORT","ADMIN","SYS_ADMIN")
 
                 //Default
                 .antMatchers("/rest/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")

@@ -9,6 +9,8 @@ import it.polito.ai.pedibusproject.controller.model.put.UserPUT;
 import it.polito.ai.pedibusproject.database.model.Role;
 import it.polito.ai.pedibusproject.database.model.User;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
+import it.polito.ai.pedibusproject.exceptions.ForbiddenException;
+import it.polito.ai.pedibusproject.security.JwtTokenProvider;
 import it.polito.ai.pedibusproject.service.interfaces.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,6 +35,7 @@ public class UserController {
     private ReservationService reservationService;
     private AvailabilityService availabilityService;
     private MessageService messageService;
+    private JwtTokenProvider jwtTokenProvider;
 
     //TODO security path
 
@@ -41,13 +45,15 @@ public class UserController {
                           ChildService childService,
                           ReservationService reservationService,
                           AvailabilityService availabilityService,
-                          MessageService messageService) {
+                          MessageService messageService,
+                          JwtTokenProvider jwtTokenProvider) {
         this.userService=userService;
         this.confirmationTokenService=confirmationTokenService;
         this.childService=childService;
         this.reservationService=reservationService;
         this.availabilityService=availabilityService;
         this.messageService=messageService;
+        this.jwtTokenProvider=jwtTokenProvider;
     }
 
 
@@ -66,7 +72,6 @@ public class UserController {
         return new UserGET(temp);
     }
 
-
     @PostMapping(value = "/{idUser}/uuid",produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Crea nuovo uuid per la registrazione e invia l'email, " +
             "se l'utente è già/ancora attivo -> BadRequest")
@@ -84,8 +89,9 @@ public class UserController {
         return new UserGET(temp);
     }
 
+
     @GetMapping(value = "/{idUser}",produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Ritorna l'utente idUser con password oscurata")
+    @ApiOperation(value = "Ritorna l'utente idUser (senza password)")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Not Found"),
@@ -93,8 +99,15 @@ public class UserController {
     })
     public UserGET getUserById(@RequestHeader (name="Authorization") String jwtToken,
                             @PathVariable("idUser")String idUser) {
-        return new UserGET(this.userService.loadUserByUsername(idUser));
+        String username=jwtTokenProvider.getUsername(jwtToken);
+        List roles=jwtTokenProvider.getRoles(jwtToken);
+        if(roles.contains(Role.ROLE_SYS_ADMIN)||roles.contains(Role.ROLE_ADMIN))
+            return new UserGET(this.userService.loadUserByUsername(idUser));
+        if(username.equals(idUser))
+            return new UserGET(this.userService.loadUserByUsername(idUser));
+        throw new ForbiddenException();
     }
+
 
     @PutMapping(value = "/{idUser}/role",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -112,6 +125,7 @@ public class UserController {
         return new UserGET(userService.addRole(idUser,role));
     }
 
+
     @PutMapping(value = "/{idUser}/addLine",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Aggiunge linea all'utente idUser, nel caso non lo fosse già assegna ruolo di ROLE_ADMIN")
@@ -124,7 +138,12 @@ public class UserController {
     public UserGET putUserAddLine(@RequestHeader (name="Authorization") String jwtToken,
                                    @PathVariable("idUser")String idUser,
                                    @RequestParam @Valid String idLine) {
-        return new UserGET(userService.addLine(idUser,idLine));
+        List roles=jwtTokenProvider.getRoles(jwtToken);
+        if(roles.contains("SYS_ADMIN"))
+            return new UserGET(userService.addLine(idUser,idLine));
+        if(roles.contains("ADMIN")&&userService.isAdminOfLine(jwtTokenProvider.getUsername(jwtToken),idLine))
+            return new UserGET(userService.addLine(idUser,idLine));
+        throw new ForbiddenException();
     }
 
     @PutMapping(value = "/{idUser}/removeLine",consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -139,7 +158,12 @@ public class UserController {
     public UserGET putUserRemoveLine(@RequestHeader (name="Authorization") String jwtToken,
                                   @PathVariable("idUser")String idUser,
                                   @RequestParam @Valid String idLine) {
-        return new UserGET(userService.removeLine(idUser,idLine));
+        List roles=jwtTokenProvider.getRoles(jwtToken);
+        if(roles.contains("SYS_ADMIN"))
+            return new UserGET(userService.removeLine(idUser,idLine));
+        if(roles.contains("ADMIN")&&userService.isAdminOfLine(jwtTokenProvider.getUsername(jwtToken),idLine))
+            return new UserGET(userService.removeLine(idUser,idLine));
+        throw new ForbiddenException();
     }
 
     @PutMapping(value = "/{idUser}",consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -156,6 +180,8 @@ public class UserController {
                             @RequestBody @Valid UserPUT userPUT) {
         if(!userPUT.getPassword().equals(userPUT.getVerifyPassword()))
             throw new BadRequestException("Update User password mismatch");
+        if(!jwtTokenProvider.getUsername(jwtToken).equals(idUser))
+            throw new ForbiddenException();
         return new UserGET(
                 userService.updateUser(idUser,userPUT.getPassword(),userPUT.getFirstname(),
                 userPUT.getSurname(),userPUT.getBirth(),userPUT.getStreet(),userPUT.getPhoneNumber()));
@@ -170,8 +196,12 @@ public class UserController {
     })
     public Set<ChildGET> getChildrenById(@RequestHeader (name="Authorization") String jwtToken,
                                          @PathVariable("idUser")String idUser) {
-        return this.childService.findByIdUser(idUser).stream()
-                .map(ChildGET::new).collect(Collectors.toSet());
+        List roles=jwtTokenProvider.getRoles(jwtToken);
+        if(roles.contains(Role.ROLE_SYS_ADMIN)||roles.contains(Role.ROLE_ADMIN)||roles.contains(Role.ROLE_ESCORT)
+        ||(roles.contains(Role.ROLE_PARENT)&&idUser.equals(jwtTokenProvider.getUsername(jwtToken))))
+            return this.childService.findByIdUser(idUser).stream()
+                    .map(ChildGET::new).collect(Collectors.toSet());
+        throw new ForbiddenException();
     }
 
     @GetMapping(value = "/{idUser}/reservations", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -183,8 +213,12 @@ public class UserController {
     })
     public Set<ReservationGET> getReservationByUser(@RequestHeader (name="Authorization") String jwtToken,
                                                     @PathVariable("idUser")String idUser) {
-        return this.reservationService.findAllByIdUser(idUser).stream()
-                .map(ReservationGET::new).collect(Collectors.toSet());
+        List roles=jwtTokenProvider.getRoles(jwtToken);
+        if(roles.contains(Role.ROLE_SYS_ADMIN)||roles.contains(Role.ROLE_ADMIN)||roles.contains(Role.ROLE_ESCORT)
+                ||(roles.contains(Role.ROLE_PARENT)&&idUser.equals(jwtTokenProvider.getUsername(jwtToken))))
+            return this.reservationService.findAllByIdUser(idUser).stream()
+                    .map(ReservationGET::new).collect(Collectors.toSet());
+        throw new ForbiddenException();
     }
 
     @GetMapping(value = "/{idUser}/availabilities", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -196,8 +230,12 @@ public class UserController {
     })
     public Set<AvailabilityGET> getAvailabilitiesByUser(@RequestHeader (name="Authorization") String jwtToken,
                                                         @PathVariable("idUser")String idUser) {
-        return this.availabilityService.findAllByIdUser(idUser).stream()
-                .map(AvailabilityGET::new).collect(Collectors.toSet());
+        List roles=jwtTokenProvider.getRoles(jwtToken);
+        if(roles.contains(Role.ROLE_SYS_ADMIN)||roles.contains(Role.ROLE_ADMIN)||
+                (roles.contains(Role.ROLE_ESCORT)&&idUser.equals(jwtTokenProvider.getUsername(jwtToken))))
+            return this.availabilityService.findAllByIdUser(idUser).stream()
+                    .map(AvailabilityGET::new).collect(Collectors.toSet());
+        throw new ForbiddenException();
     }
 
     @GetMapping(value = "/{idUser}/messages", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -209,6 +247,8 @@ public class UserController {
     })
     public Set<MessageGET> getReceivedMessages(@RequestHeader (name="Authorization") String jwtToken,
                                                    @PathVariable("idUser")String idUser) {
+        if(!jwtTokenProvider.getUsername(jwtToken).equals(idUser))
+            throw new ForbiddenException();
         return this.messageService.findAllByIdUserTo(idUser).stream()
                 .map(MessageGET::new).collect(Collectors.toSet());
     }
@@ -222,11 +262,10 @@ public class UserController {
     })
     public Long getReceivedMessagesNotReadCounter(@RequestHeader (name="Authorization") String jwtToken,
                                                @PathVariable("idUser")String idUser) {
+        if(!jwtTokenProvider.getUsername(jwtToken).equals(idUser))
+            throw new ForbiddenException();
         return this.messageService.findAllByIdUserTo(idUser).stream()
                 .filter(x->x.getReadConfirm()==null).count();
     }
-
-
-
 
 }
