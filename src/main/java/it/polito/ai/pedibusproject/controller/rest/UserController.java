@@ -37,8 +37,6 @@ public class UserController {
     private MessageService messageService;
     private JwtTokenProvider jwtTokenProvider;
 
-    //TODO security path
-
     @Autowired
     public UserController(UserService userService,
                           ConfirmationTokenService confirmationTokenService,
@@ -267,5 +265,7 @@ public class UserController {
         return this.messageService.findAllByIdUserTo(idUser).stream()
                 .filter(x->x.getReadConfirm()==null).count();
     }
+
+
 
 }

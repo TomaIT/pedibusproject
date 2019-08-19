@@ -35,8 +35,6 @@ public class AvailabilityController {
     private BusRideService busRideService;
     private UserService userService;
 
-    //TODO BUG roles...
-
 
     @Autowired
     public AvailabilityController(AvailabilityService availabilityService,
@@ -72,14 +70,18 @@ public class AvailabilityController {
         List roles=jwtTokenProvider.getRoles(jwtToken);
         String username=jwtTokenProvider.getUsername(jwtToken);
         Availability temp=this.availabilityService.findById(idAvailability);
-        if(roles.contains(Role.ROLE_ESCORT)&&!temp.getIdUser().equals(username))
-            throw new ForbiddenException();
-        if(roles.contains(Role.ROLE_ADMIN)&&
-                !userService.isAdminOfLine(username,
-                        busRideService.findById(temp.getIdBusRide()).getIdLine()))
-                throw new ForbiddenException();
 
-        return new AvailabilityGET(temp);
+        if(roles.contains(Role.ROLE_SYS_ADMIN))
+            return new AvailabilityGET(temp);
+        if(roles.contains(Role.ROLE_ADMIN)&&
+                userService.isAdminOfLine(username,
+                        busRideService.findById(temp.getIdBusRide()).getIdLine()))
+            return new AvailabilityGET(temp);
+
+        if(roles.contains(Role.ROLE_ESCORT)&&temp.getIdUser().equals(username))
+            return new AvailabilityGET(temp);
+
+        throw new ForbiddenException();
     }
 
     @PostMapping(value = "",consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -115,21 +117,28 @@ public class AvailabilityController {
                                         @PathVariable("idAvailability")String idAvailability,
                                         @RequestBody @Valid AvailabilityPUT availabilityPUT) {
         List roles=jwtTokenProvider.getRoles(jwtToken);
-        if(roles.contains(Role.ROLE_ESCORT)&&
-                !availabilityService.findById(idAvailability).getIdUser()
-                        .equals(jwtTokenProvider.getUsername(jwtToken)))
-            throw new ForbiddenException();
+        String username=jwtTokenProvider.getUsername(jwtToken);
 
-        if(roles.contains(Role.ROLE_ADMIN)&&
-                !userService.isAdminOfLine(jwtTokenProvider.getUsername(jwtToken),
-                        busRideService.findById(
-                                availabilityService.findById(idAvailability).getIdBusRide()).getIdLine()))
-            throw new ForbiddenException();
+        if(roles.contains(Role.ROLE_SYS_ADMIN))
+            return new AvailabilityGET(
+                    this.availabilityService.update(idAvailability,
+                            availabilityPUT.getIdStopBus(), availabilityPUT.getState())
+            );
 
-        return new AvailabilityGET(
-                this.availabilityService.update(idAvailability,
-                        availabilityPUT.getIdStopBus(), availabilityPUT.getState())
-        );
+        if(roles.contains(Role.ROLE_ADMIN)&& userService.isAdminOfLine(username,
+                busRideService.findById(availabilityService.findById(idAvailability).getIdBusRide()).getIdLine()))
+            return new AvailabilityGET(
+                    this.availabilityService.update(idAvailability,
+                            availabilityPUT.getIdStopBus(), availabilityPUT.getState())
+            );
+
+        if(roles.contains(Role.ROLE_ESCORT)&&availabilityService.findById(idAvailability).getIdUser().equals(username))
+            return new AvailabilityGET(
+                    this.availabilityService.update(idAvailability,
+                            availabilityPUT.getIdStopBus(), availabilityPUT.getState())
+            );
+
+        throw new ForbiddenException();
     }
 
 
@@ -143,16 +152,26 @@ public class AvailabilityController {
     public void deleteAvailability(@RequestHeader (name="Authorization") String jwtToken,
                                            @PathVariable("idAvailability")String idAvailability) {
         List roles=jwtTokenProvider.getRoles(jwtToken);
-        if(roles.contains(Role.ROLE_ESCORT)&&
-                !availabilityService.findById(idAvailability).getIdUser()
-                        .equals(jwtTokenProvider.getUsername(jwtToken)))
-            throw new ForbiddenException();
-        if(roles.contains(Role.ROLE_ADMIN)&&
-                !userService.isAdminOfLine(jwtTokenProvider.getUsername(jwtToken),
-                        busRideService.findById(
-                                availabilityService.findById(idAvailability).getIdBusRide()).getIdLine()))
-            throw new ForbiddenException();
-        this.availabilityService.deleteById(idAvailability);
+        String username=jwtTokenProvider.getUsername(jwtToken);
+
+
+        if(roles.contains(Role.ROLE_SYS_ADMIN)){
+            this.availabilityService.deleteById(idAvailability);
+            return;
+        }
+
+        if(roles.contains(Role.ROLE_ADMIN)&& userService.isAdminOfLine(username,
+                busRideService.findById(availabilityService.findById(idAvailability).getIdBusRide()).getIdLine())) {
+            this.availabilityService.deleteById(idAvailability);
+            return;
+        }
+
+        if(roles.contains(Role.ROLE_ESCORT)&&availabilityService.findById(idAvailability).getIdUser().equals(username)) {
+            this.availabilityService.deleteById(idAvailability);
+            return;
+        }
+
+        throw new ForbiddenException();
     }
 
 }
