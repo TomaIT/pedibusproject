@@ -1,7 +1,10 @@
 package it.polito.ai.pedibusproject.service.implementations;
 
 import com.mongodb.client.result.UpdateResult;
-import it.polito.ai.pedibusproject.database.model.*;
+import it.polito.ai.pedibusproject.database.model.Child;
+import it.polito.ai.pedibusproject.database.model.Gender;
+import it.polito.ai.pedibusproject.database.model.StopBus;
+import it.polito.ai.pedibusproject.database.model.StopBusType;
 import it.polito.ai.pedibusproject.database.repository.ChildRepository;
 import it.polito.ai.pedibusproject.database.repository.StopBusRepository;
 import it.polito.ai.pedibusproject.database.repository.UserRepository;

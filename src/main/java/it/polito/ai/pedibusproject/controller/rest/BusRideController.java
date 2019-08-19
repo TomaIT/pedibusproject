@@ -8,15 +8,20 @@ import it.polito.ai.pedibusproject.controller.model.get.BusRideGET;
 import it.polito.ai.pedibusproject.controller.model.post.BusRidePOST;
 import it.polito.ai.pedibusproject.controller.model.put.BusRidePUT;
 import it.polito.ai.pedibusproject.database.model.BusRide;
+import it.polito.ai.pedibusproject.database.model.Role;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
+import it.polito.ai.pedibusproject.exceptions.ForbiddenException;
+import it.polito.ai.pedibusproject.security.JwtTokenProvider;
 import it.polito.ai.pedibusproject.service.interfaces.AvailabilityService;
 import it.polito.ai.pedibusproject.service.interfaces.BusRideService;
+import it.polito.ai.pedibusproject.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -27,12 +32,16 @@ import java.util.stream.Collectors;
 public class BusRideController {
     private BusRideService busRideService;
     private AvailabilityService availabilityService;
+    private JwtTokenProvider jwtTokenProvider;
+    private UserService userService;
 
     @Autowired
-    public BusRideController(BusRideService busRideService,AvailabilityService availabilityService){
+    public BusRideController(BusRideService busRideService,AvailabilityService availabilityService,
+                             JwtTokenProvider jwtTokenProvider,UserService userService){
         this.busRideService=busRideService;
         this.availabilityService=availabilityService;
-
+        this.jwtTokenProvider=jwtTokenProvider;
+        this.userService=userService;
     }
 
     @GetMapping(value = "",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -45,7 +54,6 @@ public class BusRideController {
         return this.busRideService.findAll();
     }
 
-    //TODO all roles
     @GetMapping(value = "/{idBusRide}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna corsa idBusRide")
     @ResponseStatus(HttpStatus.OK)
@@ -58,7 +66,6 @@ public class BusRideController {
         return new BusRideGET(this.busRideService.findById(idBusRide));
     }
 
-    //TODO only SYS_ADMIN,ADMIN,ESCORT
     @GetMapping(value = "/{idBusRide}/availabilities",produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna tutte le availabilities per una data corsa (idBusRide)")
     @ResponseStatus(HttpStatus.OK)
@@ -72,7 +79,6 @@ public class BusRideController {
                 .map(AvailabilityGET::new).collect(Collectors.toSet());
     }
 
-    //TODO all roles
     @GetMapping(value = "/{idLine}/{stopBusType}/{year}/{month}/{day}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna corsa per quella linea (andata/ritorno) in quel giorno. (NOTA mese: 0-11)")
     @ResponseStatus(HttpStatus.OK)
@@ -91,8 +97,6 @@ public class BusRideController {
     }
 
 
-
-    //TODO only SYS_ADMIN,ADMIN
     @PostMapping(value = "",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Crea Nuova Corsa 'eccezionale', " +
@@ -106,13 +110,18 @@ public class BusRideController {
     })
     public BusRideGET postBusRide(@RequestHeader (name="Authorization") String jwtToken,
                                @RequestBody @Valid BusRidePOST busRidePOST) {
-        return new BusRideGET(
-                this.busRideService.create(busRidePOST.getIdLine(),busRidePOST.getStopBusType(),
-                busRidePOST.getYear(),busRidePOST.getMonth(),busRidePOST.getDay())
-        );
+        List roles= jwtTokenProvider.getRoles(jwtToken);
+        if(roles.contains(Role.ROLE_SYS_ADMIN)||(
+                roles.contains(Role.ROLE_ADMIN)&&userService.isAdminOfLine(
+                        jwtTokenProvider.getUsername(jwtToken),busRidePOST.getIdLine())
+        ))
+            return new BusRideGET(
+                    this.busRideService.create(busRidePOST.getIdLine(),busRidePOST.getStopBusType(),
+                    busRidePOST.getYear(),busRidePOST.getMonth(),busRidePOST.getDay())
+            );
+        throw new ForbiddenException();
     }
 
-    //TODO only ESCORT
     @PutMapping(value = "/{idBusRide}",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Aggiorna la posizione del 'bus'")
@@ -125,12 +134,13 @@ public class BusRideController {
     public BusRideGET putBusRide(@RequestHeader (name="Authorization") String jwtToken,
                               @PathVariable("idBusRide")String idBusRide,
                               @RequestBody @Valid BusRidePUT busRidePUT) {
+
         return new BusRideGET(
                 this.busRideService.updateLastStopBus(idBusRide,busRidePUT.getTimestampLastStopBus(),busRidePUT.getIdLastStopBus())
         );
     }
 
-    //TODO only SYS_ADMIN,ADMIN
+
     @DeleteMapping(value = "/{idBusRide}")
     @ApiOperation(value = "'Elimina' tale corsa. (Crea messaggio per tutte le prenotazioni annullate)")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -140,6 +150,12 @@ public class BusRideController {
     })
     public void deleteBusRide(@RequestHeader (name="Authorization") String jwtToken,
                                     @PathVariable("idBusRide")String idBusRide) {
-        this.busRideService.deleteById(idBusRide);
+        List roles= jwtTokenProvider.getRoles(jwtToken);
+        if(roles.contains(Role.ROLE_SYS_ADMIN)||(
+                roles.contains(Role.ROLE_ADMIN)&&userService.isAdminOfLine(
+                        jwtTokenProvider.getUsername(jwtToken),busRideService.findById(idBusRide).getIdLine())
+        ))
+            this.busRideService.deleteById(idBusRide);
+        throw new ForbiddenException();
     }
 }
