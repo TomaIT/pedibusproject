@@ -66,6 +66,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/rest/messages/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
                 .antMatchers("/rest/messages").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
 
+                //Roles
+                .antMatchers("/rest/roles").permitAll()
+                .antMatchers("/rest/roles/**/users").hasAnyRole("ADMIN","SYS_ADMIN")
+
 
                 .antMatchers("/**").permitAll()
                 //.antMatchers(HttpMethod.GET, "/vehicles/**").permitAll()
