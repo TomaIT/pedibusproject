@@ -37,6 +37,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers ("/v2/api-docs", "/configuration/ui", "/swagger-resources", "/configuration/security", "/swagger-ui.html", "/webjars/**", "/swagger-resources/configuration/ui", "/swagger-ui.html", "/swagger-resources/configuration/security").permitAll()
 
+                //Authentication
+                .antMatchers("/rest/authentications/**").permitAll()
+
+
                 //Availabilities
                 .antMatchers("/rest/availabilities/states").permitAll()
                 .antMatchers(HttpMethod.POST,"/rest/availabilities").hasRole("ESCORT")
@@ -82,6 +86,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //Users
                 .antMatchers(HttpMethod.POST,"/rest/users").hasAnyRole("ADMIN","SYS_ADMIN")
                 .antMatchers(HttpMethod.POST,"/rest/users/**/uuid").hasAnyRole("ADMIN","SYS_ADMIN")
+                .antMatchers(HttpMethod.POST,"/rest/users/**/disable").hasAnyRole("SYS_ADMIN")
                 //.antMatchers(HttpMethod.GET,"/rest/users/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
                 .antMatchers(HttpMethod.PUT,"/rest/users/**/role").hasAnyRole("SYS_ADMIN","ADMIN")
                 .antMatchers(HttpMethod.PUT,"/rest/users/**/addLine").hasAnyRole("SYS_ADMIN","ADMIN")

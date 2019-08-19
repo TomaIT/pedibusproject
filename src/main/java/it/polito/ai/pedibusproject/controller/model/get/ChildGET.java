@@ -17,6 +17,7 @@ public class ChildGET {
     private String blobBase64; //Photo ??
     private String idStopBusOutDef;
     private String idStopBusRetDef;
+    private Boolean isDeleted;
 
     public ChildGET(Child child){
         this.id=child.getId();
@@ -28,5 +29,6 @@ public class ChildGET {
         this.blobBase64=child.getBlobBase64();
         this.idStopBusOutDef=child.getIdStopBusOutDef();
         this.idStopBusRetDef=child.getIdStopBusRetDef();
+        this.isDeleted=child.getIsDeleted();
     }
 }

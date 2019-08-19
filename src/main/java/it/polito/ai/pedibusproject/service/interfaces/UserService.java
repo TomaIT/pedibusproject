@@ -47,4 +47,6 @@ public interface UserService extends UserDetailsService {
     User addLine(String username, String idLine);
 
     User removeLine(String username, String idLine);
+
+    User disableById(String idUser);
 }

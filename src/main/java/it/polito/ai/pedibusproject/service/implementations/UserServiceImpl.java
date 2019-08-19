@@ -195,4 +195,15 @@ public class UserServiceImpl implements UserService {
         return this.userRepository.findById(username)
                 .orElseThrow(()->new NotFoundException("User <removeLine>"));
     }
+
+    @Override
+    public User disableById(String idUser) {
+        Update update = new Update();
+        update.set("isAccountNonLocked",false);
+        UpdateResult updateResult=myUpdateFunctionFirst(idUser,update);
+        if(updateResult.getMatchedCount()==0)
+            throw new NotFoundException("User <disableById>");
+        return this.userRepository.findById(idUser)
+                .orElseThrow(()->new NotFoundException("User <disableById>"));
+    }
 }
