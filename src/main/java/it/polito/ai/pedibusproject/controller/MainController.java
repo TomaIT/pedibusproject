@@ -40,15 +40,15 @@ public class MainController {
 <DONE>        -get lines
 <DONE>        -get idLine
     -Message Controller
-        -post
-        -delete
-        -get
-        -put
+        -post       -> perché "creationTime" viene passato invece di essere settato dal server quando riceve la POST?
+<DONE>        -delete
+<DONE>        -get
+        -put    -> risponde 404
     -Reservation Controller
-        -post <fixed>
-        -delete
-        -get
-        -put
+<DONE>        -post
+<DONE>        -delete
+<DONE>        -get
+<DONE>        -put    -> "epochTime" penso sia meglio se settato dal server
     -Role Controller
         -get roles
         -get users

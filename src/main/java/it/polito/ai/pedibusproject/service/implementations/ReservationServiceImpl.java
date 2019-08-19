@@ -20,6 +20,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 
@@ -87,6 +88,9 @@ public class ReservationServiceImpl implements ReservationService {
             throw new BadRequestException("Reservation <create> idBusRide not found");
         if(!br.get().getStopBuses().stream().map(StopBus::getId).anyMatch(y -> y.equals(idStopBus)))
             throw new BadRequestException("Reservation <create> idStopBus not found in BusRide");
+
+        if(br.get().getStartTime().getTime()<=(new Date()).getTime())
+            throw new BadRequestException("Reservation <create> BusRide startTime has already passed.");
         //Fine controlli
         Reservation temp=new Reservation(idBusRide,idChild,idStopBus,idUser);
         try {
@@ -98,6 +102,15 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Reservation updateGetIn(String id,ReservationState reservationState) {
+        Optional<Reservation> r = this.reservationRepository.findById(id);
+        if(!r.isPresent())
+            throw new BadRequestException("Reservation <updateGetIn> Reservation not found");
+        Optional<BusRide> br = this.busRideRepository.findById(r.get().getIdBusRide());
+        if(!br.isPresent())
+            throw new BadRequestException("Reservation <updateGetIn> idBusRide not found");
+        if(!br.get().getStopBuses().stream().map(StopBus::getId).anyMatch(x -> x.equals(reservationState.getIdStopBus())))
+            throw new BadRequestException("Reservation <updateGetIn> idStopBus not found in BusRide");
+
         Update update = new Update();
         update.set("getIn", reservationState);
         UpdateResult updateResult=myUpdateFunctionFirst(id,update);
@@ -109,6 +122,15 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Reservation updateGetOut(String id,ReservationState reservationState) {
+        Optional<Reservation> r = this.reservationRepository.findById(id);
+        if(!r.isPresent())
+            throw new BadRequestException("Reservation <updateGetOut> Reservation not found");
+        Optional<BusRide> br = this.busRideRepository.findById(r.get().getIdBusRide());
+        if(!br.isPresent())
+            throw new BadRequestException("Reservation <updateGetOut> idBusRide not found");
+        if(!br.get().getStopBuses().stream().map(StopBus::getId).anyMatch(x -> x.equals(reservationState.getIdStopBus())))
+            throw new BadRequestException("Reservation <updateGetOut> idStopBus not found in BusRide");
+
         Update update = new Update();
         update.set("getOut", reservationState);
         UpdateResult updateResult=myUpdateFunctionFirst(id,update);
