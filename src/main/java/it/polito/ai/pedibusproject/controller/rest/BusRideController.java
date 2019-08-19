@@ -154,8 +154,10 @@ public class BusRideController {
         if(roles.contains(Role.ROLE_SYS_ADMIN)||(
                 roles.contains(Role.ROLE_ADMIN)&&userService.isAdminOfLine(
                         jwtTokenProvider.getUsername(jwtToken),busRideService.findById(idBusRide).getIdLine())
-        ))
+        )) {
             this.busRideService.deleteById(idBusRide);
+            return;
+        }
         throw new ForbiddenException();
     }
 }

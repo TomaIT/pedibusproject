@@ -131,8 +131,10 @@ public class ChildController {
                                 @PathVariable("idChild")String idChild) {
         if(jwtTokenProvider.getRoles(jwtToken).contains(Role.ROLE_PARENT)&&
                 childService.findByIdUser(jwtTokenProvider.getUsername(jwtToken)).stream()
-                        .map(Child::getId).anyMatch(x->x.equals(idChild)))
+                        .map(Child::getId).anyMatch(x->x.equals(idChild))) {
             this.childService.deleteById(idChild);
+            return;
+        }
         throw new ForbiddenException();
     }
 
