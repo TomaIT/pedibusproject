@@ -22,6 +22,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Calendar;
 import java.util.Set;
 import java.util.TreeSet;
@@ -71,6 +72,10 @@ public class BusRideServiceImpl implements BusRideService {
     @Override
     public BusRide create(String idLine, StopBusType stopBusType, Integer year,
                           Integer month, Integer day) {
+        Date date = new Date(year, month, day);
+        if(date.getTime()<(new Date()).getTime())
+            throw new BadRequestException("BusRide <create> data in the past");
+
         Line line = this.lineService.findById(idLine);
         TreeSet<StopBus> stopBuses = this.lineService.findByIdAndStopBusType(idLine, stopBusType);
         BusRide busRide = new BusRide(line.getId(), stopBusType, stopBuses, year, month, day);

@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -99,7 +100,8 @@ public class BusRideController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public ResponseEntity<Resource> downloadInfoBusRide(@PathVariable("idBusRide")String idBusRide) {
+    public ResponseEntity<Resource> downloadInfoBusRide(@RequestHeader (name="Authorization") String jwtToken,
+                                                        @PathVariable("idBusRide")String idBusRide) {
         BusRide busRide=busRideService.findById(idBusRide);
         byte[] out=busRide.exportExcel(reservationService,childService);
 
@@ -181,7 +183,7 @@ public class BusRideController {
                               @RequestBody @Valid BusRidePUT busRidePUT) {
 
         return new BusRideGET(
-                this.busRideService.updateLastStopBus(idBusRide,busRidePUT.getTimestampLastStopBus(),busRidePUT.getIdLastStopBus())
+                this.busRideService.updateLastStopBus(idBusRide,(new Date()).getTime(),busRidePUT.getIdLastStopBus())
         );
     }
 

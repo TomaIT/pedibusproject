@@ -22,13 +22,13 @@ public class MainController {
 <DONE>        -get idAva
 <DONE>        -put idAva
     -BusRide Controller
-        -post
-        -delete
-        -get idBus
-        -put idBus
-        -get availabilities
-        -get stopbustype,year etc...
-        -get downloadInfo
+<DONE>        -post      -> ho aggiunto il controllo che la data sia futura
+<DONE>        -delete
+<DONE>        -get idBus
+<DONE>        -put idBus      -> ho settato "timestampLastStopBus" nel controller
+<DONE>        -get availabilities     -> ritorna sempre 200 anche se idBusRide non esiste, è corretto?
+<DONE>        -get stopbustype,year etc...      -> ritorna sempre 200 anche se idBusRide non esiste, è corretto?
+<DONE>        -get downloadInfo
     -Child Controller
 <DONE>        -get gende
 <DONE>        -delete  -> a cosa serve ?? dubbioso.. reservations associate etc ??
