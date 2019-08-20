@@ -33,7 +33,8 @@ public class StopBusController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public StopBusGET getLine(@PathVariable("idStopBus") String idStopBus) {
+    public StopBusGET getLine(@RequestHeader (name="Authorization") String jwtToken,
+                              @PathVariable("idStopBus") String idStopBus) {
         return new StopBusGET(
                 this.stopBusService.findById(idStopBus)
         );
