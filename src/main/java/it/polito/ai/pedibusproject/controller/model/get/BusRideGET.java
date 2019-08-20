@@ -3,6 +3,7 @@ package it.polito.ai.pedibusproject.controller.model.get;
 import it.polito.ai.pedibusproject.database.model.BusRide;
 import it.polito.ai.pedibusproject.database.model.Reservation;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
+import it.polito.ai.pedibusproject.service.interfaces.LineService;
 import it.polito.ai.pedibusproject.service.interfaces.ReservationService;
 import lombok.Data;
 
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 public class BusRideGET {
     private String id;
     private String idLine;
+    private String lineName;
     private StopBusType stopBusType;
     private TreeSet<StopBusGET> stopBuses = new TreeSet<>();
 
@@ -30,8 +32,9 @@ public class BusRideGET {
     private Long timestampLastStopBus; //Epoch time
     private String idLastStopBus;
 
-    public BusRideGET(BusRide busRide, ReservationService reservationService){
+    public BusRideGET(BusRide busRide, ReservationService reservationService, LineService lineService){
         this.id=busRide.getId();
+        this.lineName=lineService.findById(busRide.getIdLine()).getName();
         this.idLine=busRide.getIdLine();
         this.stopBusType=busRide.getStopBusType();
         this.year=busRide.getYear();

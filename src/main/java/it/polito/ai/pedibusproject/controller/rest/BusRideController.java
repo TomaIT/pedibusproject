@@ -42,12 +42,13 @@ public class BusRideController {
     private UserService userService;
     private ReservationService reservationService;
     private ChildService childService;
+    private LineService lineService;
 
     @Autowired
     public BusRideController(BusRideService busRideService,AvailabilityService availabilityService,
                              JwtTokenProvider jwtTokenProvider,UserService userService,
                              ReservationService reservationService,
-                             ChildService childService){
+                             ChildService childService,LineService lineService){
         this.busRideService=busRideService;
         this.availabilityService=availabilityService;
         this.jwtTokenProvider=jwtTokenProvider;
@@ -75,7 +76,7 @@ public class BusRideController {
     })
     public BusRideGET getBusRide(@RequestHeader (name="Authorization") String jwtToken,
                               @PathVariable("idBusRide")String idBusRide) {
-        return new BusRideGET(this.busRideService.findById(idBusRide),reservationService);
+        return new BusRideGET(this.busRideService.findById(idBusRide),reservationService,lineService);
     }
 
     public static ResponseEntity<Resource> getResponseEntityForDownload(
@@ -140,7 +141,7 @@ public class BusRideController {
                                              @PathVariable("day")Integer day) {
         return new BusRideGET(
                 this.busRideService.findByIdLineAndStopBusTypeAndYearAndMonthAndDay(idLine,stopBusType, year,month,day),
-                reservationService
+                reservationService,lineService
         );
     }
 
@@ -165,7 +166,8 @@ public class BusRideController {
         ))
             return new BusRideGET(
                     this.busRideService.create(busRidePOST.getIdLine(),busRidePOST.getStopBusType(),
-                    busRidePOST.getYear(),busRidePOST.getMonth(),busRidePOST.getDay()),reservationService
+                    busRidePOST.getYear(),busRidePOST.getMonth(),busRidePOST.getDay()),reservationService,
+                    lineService
             );
         throw new ForbiddenException();
     }
@@ -185,7 +187,7 @@ public class BusRideController {
 
         return new BusRideGET(
                 this.busRideService.updateLastStopBus(idBusRide,(new Date()).getTime(),busRidePUT.getIdLastStopBus()),
-                reservationService
+                reservationService,lineService
         );
     }
 
