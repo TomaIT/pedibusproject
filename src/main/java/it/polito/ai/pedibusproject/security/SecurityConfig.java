@@ -80,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 //Reservations
                 //.antMatchers(HttpMethod.GET,"/rest/reservations/**").hasAnyRole("PARENT","ESCORT","ADMIN","SYS_ADMIN")
-                .antMatchers(HttpMethod.POST,"/rest/reservations").hasRole("PARENT")
+                .antMatchers(HttpMethod.POST,"/rest/reservations").hasAnyRole("PARENT","ESCORT")
                 .antMatchers(HttpMethod.PUT,"/rest/reservations/**").hasRole("ESCORT")
                 .antMatchers(HttpMethod.DELETE,"/rest/reservations/**").hasAnyRole("PARENT","ADMIN","SYS_ADMIN")
 
