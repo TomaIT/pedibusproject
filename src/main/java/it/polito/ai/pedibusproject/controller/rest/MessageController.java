@@ -86,7 +86,7 @@ public class MessageController {
         if(!jwtTokenProvider.getUsername(jwtToken).equals(temp.getIdUserTo()))
             throw new ForbiddenException();
         return new MessageGET(
-                this.messageService.updateReadConfirmById(idMessage,messagePUT.getReadConfirm())
+                this.messageService.updateReadConfirmById(idMessage,(new Date()).getTime())
         );
     }
 

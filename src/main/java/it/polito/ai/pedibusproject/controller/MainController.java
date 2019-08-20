@@ -47,7 +47,7 @@ public class MainController {
                         (questo per non fargli modificare frontend...)
 <DONE>        -delete
 <DONE>        -get
-<DONE>        -put        -> "readConfirm" è l'epoch time, settaggio dal server??
+<DONE>        -put        -> "readConfirm" è l'epoch time, settaggio dal server?? -> <FIXED>
     -Reservation Controller
 <DONE>        -post
 <DONE>        -delete
