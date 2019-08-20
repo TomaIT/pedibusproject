@@ -28,6 +28,7 @@ public class MainController {
         -put idBus
         -get availabilities
         -get stopbustype,year etc...
+        -get downloadInfo
     -Child Controller
 <DONE>        -get gende
 <DONE>        -delete  -> a cosa serve ?? dubbioso.. reservations associate etc ??
