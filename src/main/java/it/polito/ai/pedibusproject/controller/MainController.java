@@ -47,7 +47,7 @@ public class MainController {
                         (questo per non fargli modificare frontend...)
 <DONE>        -delete
 <DONE>        -get
-        -put    -> risponde 404 -> <FIXED> retry...
+<DONE>        -put        -> "readConfirm" è l'epoch time, settaggio dal server??
     -Reservation Controller
 <DONE>        -post
 <DONE>        -delete
@@ -55,11 +55,11 @@ public class MainController {
 <DONE>        -put    -> "epochTime" penso sia meglio se settato dal server -> <FIXED>
                         -> idem alla post di message...
     -Role Controller
-        -get roles
-        -get users
+<DONE>        -get roles
+<DONE>        -get users
     -StopBus Controller
-        -get types
-        -get idStop
+<DONE>        -get types
+<DONE>        -get idStop
     -User Controller
         -post user
 <DONE>        -post uuid
