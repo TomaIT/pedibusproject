@@ -11,19 +11,21 @@ import it.polito.ai.pedibusproject.database.model.BusRide;
 import it.polito.ai.pedibusproject.database.model.Role;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
 import it.polito.ai.pedibusproject.exceptions.ForbiddenException;
+import it.polito.ai.pedibusproject.exceptions.InternalServerErrorException;
 import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
 import it.polito.ai.pedibusproject.security.JwtTokenProvider;
-import it.polito.ai.pedibusproject.service.interfaces.AvailabilityService;
-import it.polito.ai.pedibusproject.service.interfaces.BusRideService;
-import it.polito.ai.pedibusproject.service.interfaces.UserService;
+import it.polito.ai.pedibusproject.service.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -37,14 +39,20 @@ public class BusRideController {
     private AvailabilityService availabilityService;
     private JwtTokenProvider jwtTokenProvider;
     private UserService userService;
+    private ReservationService reservationService;
+    private ChildService childService;
 
     @Autowired
     public BusRideController(BusRideService busRideService,AvailabilityService availabilityService,
-                             JwtTokenProvider jwtTokenProvider,UserService userService){
+                             JwtTokenProvider jwtTokenProvider,UserService userService,
+                             ReservationService reservationService,
+                             ChildService childService){
         this.busRideService=busRideService;
         this.availabilityService=availabilityService;
         this.jwtTokenProvider=jwtTokenProvider;
         this.userService=userService;
+        this.reservationService=reservationService;
+        this.childService=childService;
     }
 
     @GetMapping(value = "",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -69,16 +77,38 @@ public class BusRideController {
         return new BusRideGET(this.busRideService.findById(idBusRide));
     }
 
+    public static ResponseEntity<Resource> getResponseEntityForDownload(
+            String fileName, MediaType mediaType, ByteArrayResource byteArrayResource){
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+fileName);
+
+        ResponseEntity<Resource> ret=ResponseEntity.ok()
+                .headers(headers)
+                .contentLength(byteArrayResource.contentLength())
+                .contentType(mediaType)
+                .body(byteArrayResource);
+        return ret;
+    }
+
     @GetMapping(value = "/{idBusRide}/downloadInfo",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    @ApiOperation(value = "Ritorna informazioni bambini presi/non presi, per quella corsa.")
+    @ApiOperation(value = "Ritorna informazioni bambini presi/non presi, per quella corsa. (.xlsx)")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public ResponseEntity<Resource> downloadInfoBusRide(@RequestHeader (name="Authorization") String jwtToken,
-                                               @PathVariable("idBusRide")String idBusRide) {
-        //TODO
-        throw new NotImplementedException();
+    public ResponseEntity<Resource> downloadInfoBusRide(@PathVariable("idBusRide")String idBusRide) {
+        BusRide busRide=busRideService.findById(idBusRide);
+        byte[] out=busRide.exportExcel(reservationService,childService);
+
+        if(out==null) throw new InternalServerErrorException("Export .xlsx of BusRide Failed");
+        String fileName= busRide.getId()+".xlsx";
+
+        return BusRideController.getResponseEntityForDownload(
+                fileName,MediaType.APPLICATION_OCTET_STREAM,new ByteArrayResource(out));
+        //TODOthrow new NotImplementedException();
     }
 
     @GetMapping(value = "/{idBusRide}/availabilities",produces = MediaType.APPLICATION_JSON_VALUE)

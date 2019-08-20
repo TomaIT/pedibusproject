@@ -1,11 +1,19 @@
 package it.polito.ai.pedibusproject.database.model;
 
+import it.polito.ai.pedibusproject.exceptions.InternalServerErrorException;
+import it.polito.ai.pedibusproject.service.interfaces.ChildService;
+import it.polito.ai.pedibusproject.service.interfaces.ReservationService;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.ByteArrayOutputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -62,6 +70,128 @@ public class BusRide implements Comparable<BusRide> {
 
     public void addStopBus(StopBus stopBus){
         this.stopBuses.add(stopBus);
+    }
+
+    public byte[] exportExcel(ReservationService reservationService, ChildService childService){
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Children State");
+        workbook.getProperties().getCoreProperties().setCreator("pedibus.application");
+        if(this.timestampLastStopBus!=null)
+        workbook.getProperties().getCoreProperties().setModified(Optional.of(new Date(this.timestampLastStopBus)));
+        workbook.getProperties().getCoreProperties().setCreated(Optional.of(this.startTime));
+
+        CellStyle headerStyle = workbook.createCellStyle();
+
+        XSSFFont font = workbook.createFont();
+        font.setFontName("Arial");
+        font.setFontHeightInPoints((short) 14);
+        font.setBold(true);
+        headerStyle.setFont(font);
+        headerStyle.setAlignment(HorizontalAlignment.CENTER);
+
+        CellStyle style = workbook.createCellStyle();
+        style.setAlignment(HorizontalAlignment.CENTER);
+
+        style.setWrapText(true);
+
+        Cell headerCell;
+        Cell cell;Child child;Row row;StopBus stopBus;
+        int r=2;
+
+        Row header = sheet.createRow(0);
+
+        headerCell = header.createCell(0);
+        headerCell.setCellValue("Child");
+        headerCell.setCellStyle(headerStyle);
+
+        headerCell = header.createCell(1);
+        headerCell.setCellValue("Stop_Bus_In");
+        headerCell.setCellStyle(headerStyle);
+
+        headerCell = header.createCell(2);
+        headerCell.setCellValue("Date_Get_In");
+        headerCell.setCellStyle(headerStyle);
+
+        headerCell = header.createCell(3);
+        headerCell.setCellValue("Escort");
+        headerCell.setCellStyle(headerStyle);
+
+        headerCell = header.createCell(4);
+        headerCell.setCellValue("Stop_Bus_Out");
+        headerCell.setCellStyle(headerStyle);
+
+        headerCell = header.createCell(5);
+        headerCell.setCellValue("Date_Get_Out");
+        headerCell.setCellStyle(headerStyle);
+
+        headerCell = header.createCell(6);
+        headerCell.setCellValue("Escort");
+        headerCell.setCellStyle(headerStyle);
+
+
+        Set<Reservation> reservations=idReservations.stream().map(reservationService::findById).collect(Collectors.toSet());
+
+        r=2;
+        for(Reservation reservation:reservations){
+            row = sheet.createRow(r);
+
+            child=childService.findById(reservation.getIdChild());
+
+            cell = row.createCell(0);
+            cell.setCellValue(child.getFirstname()+" "+child.getSurname());
+            cell.setCellStyle(style);
+
+
+            cell = row.createCell(1);
+            stopBus=stopBuses.stream()
+                    .filter(x->x.getId().equals(reservation.getGetIn().getIdStopBus())).findFirst()
+                    .orElseThrow(()->new InternalServerErrorException("Id Stop Bus GetIn reservation not present in busRide"));
+            cell.setCellValue(stopBus.getName());
+            cell.setCellStyle(style);
+
+            cell = row.createCell(2);
+            cell.setCellValue((new Date(reservation.getGetIn().getEpochTime())));
+            cell.setCellStyle(style);
+
+            cell = row.createCell(3);
+            cell.setCellValue(reservation.getGetIn().getIdUser());
+            cell.setCellStyle(style);
+
+
+            cell = row.createCell(4);
+            stopBus=stopBuses.stream()
+                    .filter(x->x.getId().equals(reservation.getGetOut().getIdStopBus())).findFirst()
+                    .orElseThrow(()->new InternalServerErrorException("Id Stop Bus GetIn reservation not present in busRide"));
+            cell.setCellValue(stopBus.getName());
+            cell.setCellStyle(style);
+
+            cell = row.createCell(5);
+            cell.setCellValue((new Date(reservation.getGetOut().getEpochTime())));
+            cell.setCellStyle(style);
+
+            cell = row.createCell(6);
+            cell.setCellValue(reservation.getGetOut().getIdUser());
+            cell.setCellStyle(style);
+
+            r++;
+        }
+
+        sheet.autoSizeColumn(0,true);
+        sheet.autoSizeColumn(1,true);
+        sheet.autoSizeColumn(2,true);
+        sheet.autoSizeColumn(3,true);
+        sheet.autoSizeColumn(4,true);
+        sheet.autoSizeColumn(5,true);
+        sheet.autoSizeColumn(6,true);
+
+
+        ByteArrayOutputStream out=new ByteArrayOutputStream();
+        try {
+            workbook.write(out);
+            workbook.close();
+        }catch (Exception e){e.printStackTrace();return null;}
+        return out.toByteArray();
+        //return null;
     }
 
     @Override
