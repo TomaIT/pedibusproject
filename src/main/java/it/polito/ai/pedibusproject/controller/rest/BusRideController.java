@@ -11,13 +11,16 @@ import it.polito.ai.pedibusproject.database.model.BusRide;
 import it.polito.ai.pedibusproject.database.model.Role;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
 import it.polito.ai.pedibusproject.exceptions.ForbiddenException;
+import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
 import it.polito.ai.pedibusproject.security.JwtTokenProvider;
 import it.polito.ai.pedibusproject.service.interfaces.AvailabilityService;
 import it.polito.ai.pedibusproject.service.interfaces.BusRideService;
 import it.polito.ai.pedibusproject.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -64,6 +67,18 @@ public class BusRideController {
     public BusRideGET getBusRide(@RequestHeader (name="Authorization") String jwtToken,
                               @PathVariable("idBusRide")String idBusRide) {
         return new BusRideGET(this.busRideService.findById(idBusRide));
+    }
+
+    @GetMapping(value = "/{idBusRide}/downloadInfo",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @ApiOperation(value = "Ritorna informazioni bambini presi/non presi, per quella corsa.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ResponseEntity<Resource> downloadInfoBusRide(@RequestHeader (name="Authorization") String jwtToken,
+                                               @PathVariable("idBusRide")String idBusRide) {
+        //TODO
+        throw new NotImplementedException();
     }
 
     @GetMapping(value = "/{idBusRide}/availabilities",produces = MediaType.APPLICATION_JSON_VALUE)

@@ -69,6 +69,10 @@ public class MainController {
         -get counter messages
         -get reservations
         -put idUser
+        -put addRole
+        -put removeRole
+        -put disable
+
 <DONE>        -put addline
 <DONE>        -put removeLine
 <DONE>        -put role
