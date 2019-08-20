@@ -90,7 +90,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     public boolean isExpired(ConfirmationToken confirmationToken) {
         long diff=System.currentTimeMillis()-confirmationToken.getCreationTime();
         if((diff / 1000)>expiredTimeout){
-            this.confirmationTokenRepository.deleteById(confirmationToken.getId());
+            //this.confirmationTokenRepository.deleteById(confirmationToken.getId());
             return true;
         }
         return false;
