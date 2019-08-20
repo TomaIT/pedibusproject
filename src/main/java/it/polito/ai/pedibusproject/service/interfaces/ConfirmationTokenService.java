@@ -15,7 +15,6 @@ public interface ConfirmationTokenService {
     void deleteByUuid(UUID uuid);
 
     Optional<ConfirmationToken> findByEmail(String email);
-
-    //If isExpired delete the confirmationToken
+    
     boolean isExpired(ConfirmationToken confirmationToken);
 }

@@ -29,6 +29,7 @@ public interface UserService extends UserDetailsService {
                     Date birth,String street,String phoneNumber);
 
     User addRole(String id,Role role);
+    User removeRole(String id,Role role);
 
     void enableUser(String username);
 

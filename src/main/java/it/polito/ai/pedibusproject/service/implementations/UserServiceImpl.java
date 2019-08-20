@@ -118,8 +118,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addRole(String id, Role role) {
-        if(role.equals(Role.ROLE_ADMIN))
-            throw new BadRequestException("User <addRole> does not handle role "+role);
+        //if(role.equals(Role.ROLE_ADMIN)) throw new BadRequestException("User <addRole> does not handle role "+role);
         Update update = new Update();
         update.addToSet("roles",role);
         UpdateResult updateResult=myUpdateFunctionFirst(id,update);
@@ -127,6 +126,17 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException("User <addRole>");
         return this.userRepository.findById(id)
                 .orElseThrow(()->new NotFoundException("User <addRole>"));
+    }
+
+    @Override
+    public User removeRole(String id, Role role) {
+        Update update = new Update();
+        update.pull("roles",role);
+        UpdateResult updateResult=myUpdateFunctionFirst(id,update);
+        if(updateResult.getMatchedCount()==0)
+            throw new NotFoundException("User <removeRole>");
+        return this.userRepository.findById(id)
+                .orElseThrow(()->new NotFoundException("User <removeRole>"));
     }
 
     @Override

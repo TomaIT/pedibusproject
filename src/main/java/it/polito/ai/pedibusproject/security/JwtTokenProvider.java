@@ -1,6 +1,7 @@
 package it.polito.ai.pedibusproject.security;
 
 import io.jsonwebtoken.*;
+import it.polito.ai.pedibusproject.database.model.Role;
 import it.polito.ai.pedibusproject.service.interfaces.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -68,11 +70,13 @@ public class JwtTokenProvider {
                 .getBody().getSubject();
     }
 
-    //List<String> ??
-    public List getRoles(String token) {
-        return Jwts.parser().setSigningKey(secretKey)
+    public List<Role> getRoles(String token) {
+        List temp=Jwts.parser().setSigningKey(secretKey)
                 .parseClaimsJws(token.replace(TOKEN_PREFIX,""))
                 .getBody().get("roles", List.class);
+        List<Role> ret=new ArrayList<>();
+        temp.forEach(x->ret.add(Role.valueOf(x.toString())));
+        return ret;
     }
 
     public String resolveToken(HttpServletRequest req) {

@@ -107,20 +107,34 @@ public class UserController {
     }
 
 
-    @PutMapping(value = "/{idUser}/role",consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PutMapping(value = "/{idUser}/addRole",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Aggiunge ruolo all'utente idUser. Nota che i ruoli validi sono tutti tranne ROLE_ADMIN. " +
-            "Per gestire tale ruolo affidarsi ai metodi addLine e removeLine i quali assegnano il ruolo di ROLE_ADMIN in automatico.")
+    @ApiOperation(value = "Aggiunge ruolo all'utente idUser.")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public UserGET putUserRoleById(@RequestHeader (name="Authorization") String jwtToken,
+    public UserGET addRoleById(@RequestHeader (name="Authorization") String jwtToken,
                                    @PathVariable("idUser")String idUser,
                                    @RequestParam @Valid Role role) {
         return new UserGET(userService.addRole(idUser,role));
+    }
+
+    @PutMapping(value = "/{idUser}/removeRole",consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Rimuove ruolo all'utente idUser.")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public UserGET removeRoleById(@RequestHeader (name="Authorization") String jwtToken,
+                                   @PathVariable("idUser")String idUser,
+                                   @RequestParam @Valid Role role) {
+        return new UserGET(userService.removeRole(idUser,role));
     }
 
 
@@ -137,16 +151,17 @@ public class UserController {
                                    @PathVariable("idUser")String idUser,
                                    @RequestParam @Valid String idLine) {
         List roles=jwtTokenProvider.getRoles(jwtToken);
-        if(roles.contains("SYS_ADMIN"))
+        if(roles.contains(Role.ROLE_SYS_ADMIN))
             return new UserGET(userService.addLine(idUser,idLine));
-        if(roles.contains("ADMIN")&&userService.isAdminOfLine(jwtTokenProvider.getUsername(jwtToken),idLine))
+        if(roles.contains(Role.ROLE_ADMIN)&&userService.isAdminOfLine(jwtTokenProvider.getUsername(jwtToken),idLine))
             return new UserGET(userService.addLine(idUser,idLine));
         throw new ForbiddenException();
     }
 
     @PutMapping(value = "/{idUser}/removeLine",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Rimuove linea all'utente idUser, nota che il ruolo di ROLE_ADMIN persisterà anche se non ha piu linee")
+    @ApiOperation(value = "Rimuove linea all'utente idUser, " +
+            "nota che il ruolo di ROLE_ADMIN persisterà anche se non ha piu linee.")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Bad Request"),
@@ -157,9 +172,9 @@ public class UserController {
                                   @PathVariable("idUser")String idUser,
                                   @RequestParam @Valid String idLine) {
         List roles=jwtTokenProvider.getRoles(jwtToken);
-        if(roles.contains("SYS_ADMIN"))
+        if(roles.contains(Role.ROLE_SYS_ADMIN))
             return new UserGET(userService.removeLine(idUser,idLine));
-        if(roles.contains("ADMIN")&&userService.isAdminOfLine(jwtTokenProvider.getUsername(jwtToken),idLine))
+        if(roles.contains(Role.ROLE_ADMIN)&&userService.isAdminOfLine(jwtTokenProvider.getUsername(jwtToken),idLine))
             return new UserGET(userService.removeLine(idUser,idLine));
         throw new ForbiddenException();
     }
