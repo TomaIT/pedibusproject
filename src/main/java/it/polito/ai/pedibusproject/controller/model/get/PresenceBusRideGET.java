@@ -38,8 +38,7 @@ public class PresenceBusRideGET {
                     .getName();
         this.lineName=lineService.findById(this.idLine).getName();
         this.presenceStopBusGETTreeSet=new TreeSet<>();
-        Set<Reservation> reservations=busRide.getIdReservations().stream()
-                .map(reservationService::findById).collect(Collectors.toSet());
+        Set<Reservation> reservations=reservationService.findAllByIdBusRide(busRide.getId());
         for(StopBus stopBus:busRide.getStopBuses()){
             Calendar start=BusRide.getCalendarOnlyDay(busRide.getYear(),busRide.getMonth(),busRide.getDay());
             this.presenceStopBusGETTreeSet.add(

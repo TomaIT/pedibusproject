@@ -31,7 +31,7 @@ public class BusRide implements Comparable<BusRide> {
 
     private Date startTime; //Data:ora in cui inizia la corsa
     private Boolean isEnabled=true; //Stato che indica la cancellazione
-    private Set<String> idReservations = new HashSet<>(); //Prenotazioni per tale corsa
+    //private Set<String> idReservations = new HashSet<>(); //Prenotazioni per tale corsa
 
     private Long timestampLastStopBus; //Epoch time
     private String idLastStopBus;
@@ -130,7 +130,8 @@ public class BusRide implements Comparable<BusRide> {
         headerCell.setCellStyle(headerStyle);
 
 
-        Set<Reservation> reservations=idReservations.stream().map(reservationService::findById).collect(Collectors.toSet());
+        //TODO
+        Set<Reservation> reservations=reservationService.findAllByIdBusRide(id);
 
         r=2;
         for(Reservation reservation:reservations){

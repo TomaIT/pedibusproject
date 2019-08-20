@@ -1,13 +1,16 @@
 package it.polito.ai.pedibusproject.controller.model.get;
 
 import it.polito.ai.pedibusproject.database.model.BusRide;
+import it.polito.ai.pedibusproject.database.model.Reservation;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
+import it.polito.ai.pedibusproject.service.interfaces.ReservationService;
 import lombok.Data;
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 @Data
 public class BusRideGET {
@@ -27,7 +30,7 @@ public class BusRideGET {
     private Long timestampLastStopBus; //Epoch time
     private String idLastStopBus;
 
-    public BusRideGET(BusRide busRide){
+    public BusRideGET(BusRide busRide, ReservationService reservationService){
         this.id=busRide.getId();
         this.idLine=busRide.getIdLine();
         this.stopBusType=busRide.getStopBusType();
@@ -36,7 +39,7 @@ public class BusRideGET {
         this.day=busRide.getDay();
         this.startTime=busRide.getStartTime();
         this.isEnabled=busRide.getIsEnabled();
-        this.idReservations=new HashSet<>(busRide.getIdReservations());
+        this.idReservations=reservationService.findAllByIdBusRide(busRide.getId()).stream().map(Reservation::getId).collect(Collectors.toSet());
         this.timestampLastStopBus=busRide.getTimestampLastStopBus();
         this.idLastStopBus=busRide.getIdLastStopBus();
         busRide.getStopBuses().forEach(x->this.stopBuses.add(new StopBusGET(x)));

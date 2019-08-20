@@ -75,7 +75,7 @@ public class BusRideController {
     })
     public BusRideGET getBusRide(@RequestHeader (name="Authorization") String jwtToken,
                               @PathVariable("idBusRide")String idBusRide) {
-        return new BusRideGET(this.busRideService.findById(idBusRide));
+        return new BusRideGET(this.busRideService.findById(idBusRide),reservationService);
     }
 
     public static ResponseEntity<Resource> getResponseEntityForDownload(
@@ -139,7 +139,8 @@ public class BusRideController {
                                              @PathVariable("month")Integer month,
                                              @PathVariable("day")Integer day) {
         return new BusRideGET(
-                this.busRideService.findByIdLineAndStopBusTypeAndYearAndMonthAndDay(idLine,stopBusType, year,month,day)
+                this.busRideService.findByIdLineAndStopBusTypeAndYearAndMonthAndDay(idLine,stopBusType, year,month,day),
+                reservationService
         );
     }
 
@@ -164,7 +165,7 @@ public class BusRideController {
         ))
             return new BusRideGET(
                     this.busRideService.create(busRidePOST.getIdLine(),busRidePOST.getStopBusType(),
-                    busRidePOST.getYear(),busRidePOST.getMonth(),busRidePOST.getDay())
+                    busRidePOST.getYear(),busRidePOST.getMonth(),busRidePOST.getDay()),reservationService
             );
         throw new ForbiddenException();
     }
@@ -183,7 +184,8 @@ public class BusRideController {
                               @RequestBody @Valid BusRidePUT busRidePUT) {
 
         return new BusRideGET(
-                this.busRideService.updateLastStopBus(idBusRide,(new Date()).getTime(),busRidePUT.getIdLastStopBus())
+                this.busRideService.updateLastStopBus(idBusRide,(new Date()).getTime(),busRidePUT.getIdLastStopBus()),
+                reservationService
         );
     }
 
