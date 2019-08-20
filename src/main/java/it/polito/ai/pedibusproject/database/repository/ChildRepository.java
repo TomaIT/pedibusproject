@@ -7,4 +7,6 @@ import java.util.Set;
 
 public interface ChildRepository extends MongoRepository<Child,String> {
     Set<Child> findByIdUser(String idUser);
+    Set<Child> findAllByIdStopBusOutDef(String idStopBusOutDef);
+    Set<Child> findAllByIdStopBusRetDef(String idStopBusRetDef);
 }

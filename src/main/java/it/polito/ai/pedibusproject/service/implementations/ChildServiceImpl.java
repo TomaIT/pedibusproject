@@ -58,6 +58,16 @@ public class ChildServiceImpl implements ChildService {
         return this.childRepository.findByIdUser(idUser);
     }
 
+    @Override
+    public Set<Child> findAllByIdStopBusOutDef(String idStopBusOutDef) {
+        return this.childRepository.findAllByIdStopBusOutDef(idStopBusOutDef);
+    }
+
+    @Override
+    public Set<Child> findAllByIdStopBusRetDef(String idStopBusRetDef) {
+        return this.childRepository.findAllByIdStopBusRetDef(idStopBusRetDef);
+    }
+
     private void checkIdStopsBus(String idStopBusOutDef, String idStopBusRetDef) {
         Optional<StopBus> sbOut = this.stopBusRepository.findById(idStopBusOutDef);
         if(!sbOut.isPresent())

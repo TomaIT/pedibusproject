@@ -76,7 +76,12 @@ public class ReservationController {
     public ReservationGET postReservation(@RequestHeader (name="Authorization") String jwtToken,
                                        @RequestBody @Valid ReservationPOST reservationPOST) {
         String username=jwtTokenProvider.getUsername(jwtToken);
-        if( childService.findByIdUser(username).stream()
+        List roles=jwtTokenProvider.getRoles(jwtToken);
+        if(roles.contains(Role.ROLE_ESCORT))
+            return new ReservationGET(
+                    reservationService.create(reservationPOST.getIdBusRide(),reservationPOST.getIdChild(),
+                            reservationPOST.getIdStopBus(),username));
+        if(childService.findByIdUser(username).stream()
                 .map(Child::getId).anyMatch(x->x.equals(reservationPOST.getIdChild())))
             return new ReservationGET(
                     reservationService.create(reservationPOST.getIdBusRide(),reservationPOST.getIdChild(),

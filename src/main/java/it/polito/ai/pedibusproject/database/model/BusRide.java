@@ -46,6 +46,7 @@ public class BusRide implements Comparable<BusRide> {
         calendar.set(Calendar.MONTH,month);
         calendar.set(Calendar.YEAR,year);
         calendar.set(Calendar.DAY_OF_MONTH,day);
+        calendar.set(Calendar.AM_PM,Calendar.AM);
         calendar.set(Calendar.HOUR,0);
         calendar.set(Calendar.MINUTE,0);
         calendar.set(Calendar.SECOND,0);

@@ -11,6 +11,10 @@ public interface ChildService {
     Child findById(String id);
     //NOTA: Esso ritorna anche i bambini 'cancellati'
     Set<Child> findByIdUser(String idUser);
+
+    Set<Child> findAllByIdStopBusOutDef(String idStopBusOutDef);
+    Set<Child> findAllByIdStopBusRetDef(String idStopBusRetDef);
+
     Child create(String idUser, String firstname, String surname, Date birth,Gender gender,String blobBase64,String idStopBusOutDef,String idStopBusRetDef);
     Child update(String id,String firstname, String surname, Date birth,Gender gender,String blobBase64,String idStopBusOutDef,String idStopBusRetDef);
     //Delete Reservations...
