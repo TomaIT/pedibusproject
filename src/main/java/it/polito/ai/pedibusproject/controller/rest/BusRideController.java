@@ -55,6 +55,7 @@ public class BusRideController {
         this.userService=userService;
         this.reservationService=reservationService;
         this.childService=childService;
+        this.lineService=lineService;
     }
 
     @GetMapping(value = "",produces = MediaType.APPLICATION_JSON_VALUE)
