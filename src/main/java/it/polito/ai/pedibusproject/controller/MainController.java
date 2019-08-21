@@ -26,7 +26,7 @@ public class MainController {
 <DONE>        -delete
 <DONE>        -get idBus
 <DONE>        -put idBus      -> ho settato "timestampLastStopBus" nel controller
-<DONE>        -get availabilities     -> ritorna sempre 200 anche se idBusRide non esiste, è corretto?
+<DONE>        -get availabilities      -> ritorna sempre 200 anche se idBusRide non esiste, è corretto?
 <DONE>        -get stopbustype,year etc...      -> ritorna sempre 200 anche se idBusRide non esiste, è corretto?
 <DONE>        -get downloadInfo
     -Child Controller
@@ -38,7 +38,7 @@ public class MainController {
 <DONE>        -put
 <DONE>        -get reservations
 <DONE>        -post
-    -Line Controller
+    -Line Controller        -> se un PARENT non ha accesso come fa a sceglire fermate di default?
 <DONE>        -get lines
 <DONE>        -get idLine
     -Message Controller
@@ -61,18 +61,19 @@ public class MainController {
 <DONE>        -get types
 <DONE>        -get idStop
     -User Controller
-        -post user
+<DONE>        -post user
 <DONE>        -post uuid
-        -get idUser
-        -get availabilites
-        -get children
-        -get messages
-        -get counter messages
-        -get reservations
-        -put idUser
-        -put addRole
-        -put removeRole
-        -put disable
+<DONE>        -get idUser
+<DONE>        -get availabilites
+<DONE>        -get children
+<DONE>        -get messages
+<DONE>        -get counter messages
+<DONE>        -get reservations
+<DONE>        -put idUser
+<DONE>        -put addLine
+<DONE>        -put addRole
+<DONE>        -put removeRole
+        -put disable    -> setta a false "isAccountNonLocked", non "isEnabled" come mi sarei aspettato
 
 <DONE>        -put addline
 <DONE>        -put removeLine
