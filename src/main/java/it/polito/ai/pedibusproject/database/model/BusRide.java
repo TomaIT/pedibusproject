@@ -144,36 +144,64 @@ public class BusRide implements Comparable<BusRide> {
             cell.setCellStyle(style);
 
 
-            cell = row.createCell(1);
-            stopBus=stopBuses.stream()
-                    .filter(x->x.getId().equals(reservation.getGetIn().getIdStopBus())).findFirst()
-                    .orElseThrow(()->new InternalServerErrorException("Id Stop Bus GetIn reservation not present in busRide"));
-            cell.setCellValue(stopBus.getName());
-            cell.setCellStyle(style);
+            if(reservation.getGetIn()!=null) {
+                cell = row.createCell(1);
+                stopBus = stopBuses.stream()
+                        .filter(x -> x.getId().equals(reservation.getGetIn().getIdStopBus())).findFirst()
+                        .orElseThrow(() -> new InternalServerErrorException("Id Stop Bus GetIn reservation not present in busRide"));
+                cell.setCellValue(stopBus.getName());
+                cell.setCellStyle(style);
 
-            cell = row.createCell(2);
-            cell.setCellValue((new Date(reservation.getGetIn().getEpochTime())));
-            cell.setCellStyle(style);
+                cell = row.createCell(2);
+                cell.setCellValue((new Date(reservation.getGetIn().getEpochTime())).toString());
+                cell.setCellStyle(style);
 
-            cell = row.createCell(3);
-            cell.setCellValue(reservation.getGetIn().getIdUser());
-            cell.setCellStyle(style);
+                cell = row.createCell(3);
+                cell.setCellValue(reservation.getGetIn().getIdUser());
+                cell.setCellStyle(style);
+            }else{
+                cell = row.createCell(1);
+                cell.setCellValue("-");
+                cell.setCellStyle(style);
+
+                cell = row.createCell(2);
+                cell.setCellValue("-");
+                cell.setCellStyle(style);
+
+                cell = row.createCell(3);
+                cell.setCellValue("-");
+                cell.setCellStyle(style);
+            }
 
 
-            cell = row.createCell(4);
-            stopBus=stopBuses.stream()
-                    .filter(x->x.getId().equals(reservation.getGetOut().getIdStopBus())).findFirst()
-                    .orElseThrow(()->new InternalServerErrorException("Id Stop Bus GetIn reservation not present in busRide"));
-            cell.setCellValue(stopBus.getName());
-            cell.setCellStyle(style);
+            if(reservation.getGetOut()!=null) {
+                cell = row.createCell(4);
+                stopBus = stopBuses.stream()
+                        .filter(x -> x.getId().equals(reservation.getGetOut().getIdStopBus())).findFirst()
+                        .orElseThrow(() -> new InternalServerErrorException("Id Stop Bus GetIn reservation not present in busRide"));
+                cell.setCellValue(stopBus.getName());
+                cell.setCellStyle(style);
 
-            cell = row.createCell(5);
-            cell.setCellValue((new Date(reservation.getGetOut().getEpochTime())));
-            cell.setCellStyle(style);
+                cell = row.createCell(5);
+                cell.setCellValue((new Date(reservation.getGetOut().getEpochTime())).toString());
+                cell.setCellStyle(style);
 
-            cell = row.createCell(6);
-            cell.setCellValue(reservation.getGetOut().getIdUser());
-            cell.setCellStyle(style);
+                cell = row.createCell(6);
+                cell.setCellValue(reservation.getGetOut().getIdUser());
+                cell.setCellStyle(style);
+            }else{
+                cell = row.createCell(4);
+                cell.setCellValue("-");
+                cell.setCellStyle(style);
+
+                cell = row.createCell(5);
+                cell.setCellValue("-");
+                cell.setCellStyle(style);
+
+                cell = row.createCell(6);
+                cell.setCellValue("-");
+                cell.setCellStyle(style);
+            }
 
             r++;
         }
