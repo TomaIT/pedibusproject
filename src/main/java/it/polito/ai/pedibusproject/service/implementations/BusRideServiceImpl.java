@@ -38,6 +38,8 @@ public class BusRideServiceImpl implements BusRideService {
     private AvailabilityRepository availabilityRepository;
     @Value("${spring.mail.username}")
     private String sysAdmin;
+    @Value("${busride.time.delay.before.create.busride.seconds}")
+    private long minDelayBeforeCreateBusRideSec;
 
 
     @Autowired
@@ -72,13 +74,12 @@ public class BusRideServiceImpl implements BusRideService {
     @Override
     public BusRide create(String idLine, StopBusType stopBusType, Integer year,
                           Integer month, Integer day) {
-        Date date = new Date(year, month, day);
-        if(date.getTime()<(new Date()).getTime())
-            throw new BadRequestException("BusRide <create> data in the past");
-
         Line line = this.lineService.findById(idLine);
         TreeSet<StopBus> stopBuses = this.lineService.findByIdAndStopBusType(idLine, stopBusType);
         BusRide busRide = new BusRide(line.getId(), stopBusType, stopBuses, year, month, day);
+
+        if(busRide.getStartTime().getTime()-minDelayBeforeCreateBusRideSec<(new Date()).getTime())
+            throw new BadRequestException("BusRide <create> data is too close or in the past");
         return mySave(busRide);
     }
 
