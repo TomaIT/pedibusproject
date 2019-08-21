@@ -4,8 +4,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import it.polito.ai.pedibusproject.controller.model.get.LoginGET;
+import it.polito.ai.pedibusproject.controller.model.get.UserGET;
 import it.polito.ai.pedibusproject.controller.model.post.LoginPOST;
 import it.polito.ai.pedibusproject.controller.model.post.RecoverPOST;
+import it.polito.ai.pedibusproject.database.model.User;
 import it.polito.ai.pedibusproject.exceptions.UnauthorizedException;
 import it.polito.ai.pedibusproject.security.JwtTokenProvider;
 import it.polito.ai.pedibusproject.service.interfaces.RecoveryTokenService;
@@ -54,10 +56,11 @@ public class AuthenticationController {
             String email=loginPOST.getEmail();
             this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, loginPOST.getPassword()));
 
+            User user=userService.loadUserByUsername(email);
             String token = jwtTokenProvider.createToken(email,
-                    userService.loadUserByUsername(email).getRoles().stream().map(Enum::name).collect(Collectors.toList()));
+                    user.getRoles().stream().map(Enum::name).collect(Collectors.toList()));
 
-            return new LoginGET(email,token,jwtTokenProvider.getExpiration(token).getTime());
+            return new LoginGET(email,token,jwtTokenProvider.getExpiration(token).getTime(),new UserGET(user));
         } catch (AuthenticationException e) {
             throw new UnauthorizedException("Username or Password invalid");
         }
