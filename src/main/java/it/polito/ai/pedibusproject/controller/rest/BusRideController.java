@@ -84,15 +84,17 @@ public class BusRideController {
         return new BusRideGET(this.busRideService.findById(idBusRide),reservationService,lineService);
     }
 
-    @GetMapping(value = "/{idBusRide}/{idStopBus}/reservations",produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Ritorna corsa idBusRide")
+    @GetMapping(value = "/{idBusRide}/{idStopBus}/reservations",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Ritorna prenotazioni per quella corsa e quella fermata.")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
     public Set<ReservationGET> getReservationsForIdBusRideAndIdStopBus(
-            @RequestHeader (name="Authorization") String jwtToken, @PathVariable("idBusRide")String idBusRide,
+            @RequestHeader (name="Authorization") String jwtToken,
+            @PathVariable("idBusRide")String idBusRide,
             @PathVariable("idStopBus")String idStopBus) {
 
         return reservationService.findAllByIdBusRideAndIdStopBus(idBusRide,idStopBus).stream()

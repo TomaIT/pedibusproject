@@ -51,8 +51,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/rest/busrides/**/availabilities").hasAnyRole("ESCORT","ADMIN","SYS_ADMIN")
                 .antMatchers(HttpMethod.POST,"/rest/busrides").hasAnyRole("ADMIN","SYS_ADMIN")
                 .antMatchers(HttpMethod.DELETE,"/rest/busrides/**").hasAnyRole("ADMIN","SYS_ADMIN")
-                .antMatchers(HttpMethod.PUT,"/rest/busrides/**").hasAnyRole("ESCORT")
+                .antMatchers(HttpMethod.PUT,"/rest/busrides/**").hasRole("ESCORT")
                 .antMatchers(HttpMethod.GET,"/rest/busrides/**/downloadInfo").permitAll()
+                .antMatchers(HttpMethod.GET,"/rest/busrides/**/**/reservations").hasRole("ESCORT")
 
                 //Children
                 .antMatchers("/rest/children/genders").permitAll()
