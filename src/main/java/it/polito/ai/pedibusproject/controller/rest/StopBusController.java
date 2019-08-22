@@ -32,6 +32,19 @@ public class StopBusController {
         this.childService=childService;
     }
 
+    @GetMapping(value = "/withType/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Ritorna tutti gli stopBus con quel type")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public Set<StopBusGET> getStopBusesWithType(@RequestHeader (name="Authorization") String jwtToken,
+                              @PathVariable("type") StopBusType stopBusType) {
+        return this.stopBusService.findAllByStopBusType(stopBusType).stream()
+                .map(StopBusGET::new).collect(Collectors.toSet());
+    }
+
     @GetMapping(value = "/{idStopBus}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna idStopBus")
     @ResponseStatus(HttpStatus.OK)
@@ -57,9 +70,9 @@ public class StopBusController {
                                                @PathVariable("idStopBus") String idStopBus) {
         switch (stopBusService.findById(idStopBus).getStopBusType()){
             case Outward:
-                return childService.findAllByIdStopBusOutDef(idStopBus).stream().map(ChildGET::new).collect(Collectors.toSet());
+                return childService.findAllByIdStopBusOutDef(idStopBus).stream().map(x->new ChildGET(x,stopBusService)).collect(Collectors.toSet());
             case Return:
-                return childService.findAllByIdStopBusRetDef(idStopBus).stream().map(ChildGET::new).collect(Collectors.toSet());
+                return childService.findAllByIdStopBusRetDef(idStopBus).stream().map(x->new ChildGET(x,stopBusService)).collect(Collectors.toSet());
             default:
                 throw new InternalServerErrorException("StopBusType unrecognized.");
         }

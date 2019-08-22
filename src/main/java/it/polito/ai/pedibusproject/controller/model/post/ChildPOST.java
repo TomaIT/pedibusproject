@@ -24,6 +24,10 @@ public class ChildPOST {
     @NotNull
     private Gender gender;
     private String blobBase64; //Photo ??
+    @NotNull
+    @Size(max = 256)
     private String idStopBusOutDef;
+    @NotNull
+    @Size(max = 256)
     private String idStopBusRetDef;
 }

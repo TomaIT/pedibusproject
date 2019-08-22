@@ -1,6 +1,7 @@
 package it.polito.ai.pedibusproject.service.implementations;
 
 import it.polito.ai.pedibusproject.database.model.StopBus;
+import it.polito.ai.pedibusproject.database.model.StopBusType;
 import it.polito.ai.pedibusproject.database.repository.StopBusRepository;
 import it.polito.ai.pedibusproject.exceptions.NotFoundException;
 import it.polito.ai.pedibusproject.service.interfaces.StopBusService;
@@ -27,6 +28,11 @@ public class StopBusServiceImpl implements StopBusService {
     @Override
     public StopBus findById(String id) {
         return this.stopBusRepository.findById(id).orElseThrow(()->new NotFoundException("StopBus"));
+    }
+
+    @Override
+    public Set<StopBus> findAllByStopBusType(StopBusType stopBusType) {
+        return this.stopBusRepository.findAllByStopBusType(stopBusType);
     }
 
     @Override

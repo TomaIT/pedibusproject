@@ -36,6 +36,7 @@ public class UserController {
     private AvailabilityService availabilityService;
     private MessageService messageService;
     private JwtTokenProvider jwtTokenProvider;
+    private StopBusService stopBusService;
 
     @Autowired
     public UserController(UserService userService,
@@ -44,7 +45,8 @@ public class UserController {
                           ReservationService reservationService,
                           AvailabilityService availabilityService,
                           MessageService messageService,
-                          JwtTokenProvider jwtTokenProvider) {
+                          JwtTokenProvider jwtTokenProvider,
+                          StopBusService stopBusService) {
         this.userService=userService;
         this.confirmationTokenService=confirmationTokenService;
         this.childService=childService;
@@ -52,6 +54,7 @@ public class UserController {
         this.availabilityService=availabilityService;
         this.messageService=messageService;
         this.jwtTokenProvider=jwtTokenProvider;
+        this.stopBusService=stopBusService;
     }
 
 
@@ -233,7 +236,7 @@ public class UserController {
         if(roles.contains(Role.ROLE_SYS_ADMIN)||roles.contains(Role.ROLE_ADMIN)||roles.contains(Role.ROLE_ESCORT)
         ||(roles.contains(Role.ROLE_PARENT)&&idUser.equals(jwtTokenProvider.getUsername(jwtToken))))
             return this.childService.findByIdUser(idUser).stream()
-                    .map(ChildGET::new).collect(Collectors.toSet());
+                    .map(x->new ChildGET(x,stopBusService)).collect(Collectors.toSet());
         throw new ForbiddenException();
     }
 

@@ -14,6 +14,7 @@ import it.polito.ai.pedibusproject.exceptions.ForbiddenException;
 import it.polito.ai.pedibusproject.security.JwtTokenProvider;
 import it.polito.ai.pedibusproject.service.interfaces.ChildService;
 import it.polito.ai.pedibusproject.service.interfaces.ReservationService;
+import it.polito.ai.pedibusproject.service.interfaces.StopBusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,13 +33,16 @@ public class ChildController {
     private ChildService childService;
     private JwtTokenProvider jwtTokenProvider;
     private ReservationService reservationService;
+    private StopBusService stopBusService;
 
     @Autowired
     public ChildController(ChildService childService, JwtTokenProvider jwtTokenProvider,
-                           ReservationService reservationService){
+                           ReservationService reservationService,
+                           StopBusService stopBusService){
         this.childService=childService;
         this.reservationService=reservationService;
         this.jwtTokenProvider=jwtTokenProvider;
+        this.stopBusService=stopBusService;
     }
 
     @GetMapping(value = "/genders",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -66,12 +70,14 @@ public class ChildController {
                 roles.contains(Role.ROLE_ESCORT)
         )
             return new ChildGET(
-                    this.childService.findById(idChild)
+                    this.childService.findById(idChild),
+                    stopBusService
             );
         String username=jwtTokenProvider.getUsername(jwtToken);
         if(childService.findByIdUser(username).stream().map(Child::getId).anyMatch(x->x.equals(idChild)))
             return new ChildGET(
-                    this.childService.findById(idChild)
+                    this.childService.findById(idChild),
+                    stopBusService
             );
         throw new ForbiddenException();
     }
@@ -94,7 +100,8 @@ public class ChildController {
             throw new BadRequestException("Authentication Token and IdUser are different.");
         return new ChildGET(
                 this.childService.create(idUser,childPOST.getFirstname(),childPOST.getSurname(),childPOST.getBirth(),
-                childPOST.getGender(),childPOST.getBlobBase64(),childPOST.getIdStopBusOutDef(),childPOST.getIdStopBusRetDef())
+                childPOST.getGender(),childPOST.getBlobBase64(),childPOST.getIdStopBusOutDef(),childPOST.getIdStopBusRetDef()),
+                stopBusService
         );
     }
 
@@ -115,7 +122,8 @@ public class ChildController {
         .map(Child::getId).anyMatch(x->x.equals(idChild)))
             return new ChildGET(
                     this.childService.update(idChild,childPOST.getFirstname(),childPOST.getSurname(),childPOST.getBirth(),
-                    childPOST.getGender(),childPOST.getBlobBase64(),childPOST.getIdStopBusOutDef(),childPOST.getIdStopBusRetDef())
+                    childPOST.getGender(),childPOST.getBlobBase64(),childPOST.getIdStopBusOutDef(),childPOST.getIdStopBusRetDef()),
+                    stopBusService
             );
         throw new ForbiddenException();
     }
