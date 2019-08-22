@@ -122,6 +122,8 @@ public class UserController {
     public UserGET addRoleById(@RequestHeader (name="Authorization") String jwtToken,
                                    @PathVariable("idUser")String idUser,
                                    @RequestParam @Valid Role role) {
+        if(role.equals(Role.ROLE_SYS_ADMIN)&&!jwtTokenProvider.getRoles(jwtToken).contains(Role.ROLE_SYS_ADMIN))
+            throw new ForbiddenException();
         return new UserGET(userService.addRole(idUser,role));
     }
 
@@ -137,6 +139,8 @@ public class UserController {
     public UserGET removeRoleById(@RequestHeader (name="Authorization") String jwtToken,
                                    @PathVariable("idUser")String idUser,
                                    @RequestParam @Valid Role role) {
+        if(role.equals(Role.ROLE_SYS_ADMIN)&&!jwtTokenProvider.getRoles(jwtToken).contains(Role.ROLE_SYS_ADMIN))
+            throw new ForbiddenException();
         return new UserGET(userService.removeRole(idUser,role));
     }
 
