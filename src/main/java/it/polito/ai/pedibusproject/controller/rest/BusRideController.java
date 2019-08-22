@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import it.polito.ai.pedibusproject.controller.model.get.AvailabilityGET;
 import it.polito.ai.pedibusproject.controller.model.get.BusRideGET;
+import it.polito.ai.pedibusproject.controller.model.get.ReservationGET;
 import it.polito.ai.pedibusproject.controller.model.post.BusRidePOST;
 import it.polito.ai.pedibusproject.controller.model.put.BusRidePUT;
 import it.polito.ai.pedibusproject.database.model.BusRide;
@@ -43,12 +44,14 @@ public class BusRideController {
     private ReservationService reservationService;
     private ChildService childService;
     private LineService lineService;
+    private StopBusService stopBusService;
 
     @Autowired
     public BusRideController(BusRideService busRideService,AvailabilityService availabilityService,
                              JwtTokenProvider jwtTokenProvider,UserService userService,
                              ReservationService reservationService,
-                             ChildService childService,LineService lineService){
+                             ChildService childService,LineService lineService,
+                             StopBusService stopBusService){
         this.busRideService=busRideService;
         this.availabilityService=availabilityService;
         this.jwtTokenProvider=jwtTokenProvider;
@@ -56,6 +59,7 @@ public class BusRideController {
         this.reservationService=reservationService;
         this.childService=childService;
         this.lineService=lineService;
+        this.stopBusService=stopBusService;
     }
 
     @GetMapping(value = "",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -78,6 +82,22 @@ public class BusRideController {
     public BusRideGET getBusRide(@RequestHeader (name="Authorization") String jwtToken,
                               @PathVariable("idBusRide")String idBusRide) {
         return new BusRideGET(this.busRideService.findById(idBusRide),reservationService,lineService);
+    }
+
+    @GetMapping(value = "/{idBusRide}/{idStopBus}/reservations",produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Ritorna corsa idBusRide")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public Set<ReservationGET> getReservationsForIdBusRideAndIdStopBus(
+            @RequestHeader (name="Authorization") String jwtToken, @PathVariable("idBusRide")String idBusRide,
+            @PathVariable("idStopBus")String idStopBus) {
+
+        return reservationService.findAllByIdBusRideAndIdStopBus(idBusRide,idStopBus).stream()
+                .map(x->new ReservationGET(x,childService,stopBusService,lineService))
+                .collect(Collectors.toSet());
     }
 
     public static ResponseEntity<Resource> getResponseEntityForDownload(

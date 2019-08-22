@@ -14,7 +14,9 @@ import it.polito.ai.pedibusproject.exceptions.BadRequestException;
 import it.polito.ai.pedibusproject.exceptions.ForbiddenException;
 import it.polito.ai.pedibusproject.security.JwtTokenProvider;
 import it.polito.ai.pedibusproject.service.interfaces.ChildService;
+import it.polito.ai.pedibusproject.service.interfaces.LineService;
 import it.polito.ai.pedibusproject.service.interfaces.ReservationService;
+import it.polito.ai.pedibusproject.service.interfaces.StopBusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,15 +33,21 @@ public class ReservationController {
     private ReservationService reservationService;
     private JwtTokenProvider jwtTokenProvider;
     private ChildService childService;
+    private StopBusService stopBusService;
+    private LineService lineService;
 
 
     @Autowired
     public ReservationController(ReservationService reservationService,
                                  JwtTokenProvider jwtTokenProvider,
-                                 ChildService childService){
+                                 ChildService childService,
+                                 StopBusService stopBusService,
+                                 LineService lineService){
         this.reservationService=reservationService;
         this.jwtTokenProvider=jwtTokenProvider;
         this.childService=childService;
+        this.stopBusService=stopBusService;
+        this.lineService=lineService;
     }
 
 
@@ -55,12 +63,12 @@ public class ReservationController {
         Reservation temp=this.reservationService.findById(idReservation);
         String username=jwtTokenProvider.getUsername(jwtToken);
         if(temp.getIdUser().equals(username))
-            return new ReservationGET(temp);
+            return new ReservationGET(temp,childService,stopBusService,lineService);
 
         List roles=jwtTokenProvider.getRoles(jwtToken);
         if(roles.contains(Role.ROLE_SYS_ADMIN)||roles.contains(Role.ROLE_ADMIN)||
             roles.contains(Role.ROLE_ESCORT))
-            return new ReservationGET(temp);
+            return new ReservationGET(temp,childService,stopBusService,lineService);
 
         throw new ForbiddenException();
     }
@@ -80,12 +88,14 @@ public class ReservationController {
         if(roles.contains(Role.ROLE_ESCORT))
             return new ReservationGET(
                     reservationService.create(reservationPOST.getIdBusRide(),reservationPOST.getIdChild(),
-                            reservationPOST.getIdStopBus(),username));
+                            reservationPOST.getIdStopBus(),username)
+                    ,childService,stopBusService,lineService);
         if(childService.findByIdUser(username).stream()
                 .map(Child::getId).anyMatch(x->x.equals(reservationPOST.getIdChild())))
             return new ReservationGET(
                     reservationService.create(reservationPOST.getIdBusRide(),reservationPOST.getIdChild(),
-                    reservationPOST.getIdStopBus(),username));
+                    reservationPOST.getIdStopBus(),username)
+                    ,childService,stopBusService,lineService);
         throw new ForbiddenException();
     }
 
@@ -109,10 +119,12 @@ public class ReservationController {
         ReservationGET ret;
         switch (reservationPUT.getEnumChildGet()){
             case GetIn:
-                ret=new ReservationGET(reservationService.updateGetIn(idReservation,rs));
+                ret=new ReservationGET(reservationService.updateGetIn(idReservation,rs)
+                        ,childService,stopBusService,lineService);
                 break;
             case GetOut:
-                ret=new ReservationGET(reservationService.updateGetOut(idReservation,rs));
+                ret=new ReservationGET(reservationService.updateGetOut(idReservation,rs)
+                        ,childService,stopBusService,lineService);
                 break;
             default:
                 throw new BadRequestException("Update ReservationState enumChildGet invalid.");

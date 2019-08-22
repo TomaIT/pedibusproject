@@ -69,6 +69,11 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    public Set<Reservation> findAllByIdBusRideAndIdStopBus(String idBusRide, String idStopBus) {
+        return reservationRepository.findAllByIdBusRideAndIdStopBus(idBusRide,idStopBus);
+    }
+
+    @Override
     public Reservation findById(String id) {
         return this.reservationRepository.findById(id)
                 .orElseThrow(()->new NotFoundException("Reservation <findById>"));

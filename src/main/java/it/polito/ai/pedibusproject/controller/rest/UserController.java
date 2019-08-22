@@ -257,7 +257,7 @@ public class UserController {
         if(roles.contains(Role.ROLE_SYS_ADMIN)||roles.contains(Role.ROLE_ADMIN)||roles.contains(Role.ROLE_ESCORT)
                 ||(roles.contains(Role.ROLE_PARENT)&&idUser.equals(jwtTokenProvider.getUsername(jwtToken))))
             return this.reservationService.findAllByIdUser(idUser).stream()
-                    .map(ReservationGET::new).collect(Collectors.toSet());
+                    .map(x->new ReservationGET(x,childService,stopBusService,lineService)).collect(Collectors.toSet());
         throw new ForbiddenException();
     }
 

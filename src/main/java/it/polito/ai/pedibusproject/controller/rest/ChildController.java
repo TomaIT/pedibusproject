@@ -164,12 +164,12 @@ public class ChildController {
                 roles.contains(Role.ROLE_SYS_ADMIN)
         )
             return this.reservationService.findAllByIdChild(idChild).stream()
-                    .map(ReservationGET::new).collect(Collectors.toSet());
+                    .map(x->new ReservationGET(x,childService,stopBusService,lineService)).collect(Collectors.toSet());
         String username=jwtTokenProvider.getUsername(jwtToken);
         if(roles.contains(Role.ROLE_PARENT)&&
                 childService.findByIdUser(username).stream().map(Child::getId).anyMatch(x->x.equals(idChild)))
             return this.reservationService.findAllByIdChild(idChild).stream()
-                    .map(ReservationGET::new).collect(Collectors.toSet());
+                    .map(x->new ReservationGET(x,childService,stopBusService,lineService)).collect(Collectors.toSet());
         throw new ForbiddenException();
     }
 }
