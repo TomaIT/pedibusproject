@@ -3,6 +3,7 @@ package it.polito.ai.pedibusproject.controller.model.get;
 import it.polito.ai.pedibusproject.database.model.Line;
 import it.polito.ai.pedibusproject.database.model.StopBus;
 import it.polito.ai.pedibusproject.exceptions.InternalServerErrorException;
+import it.polito.ai.pedibusproject.service.interfaces.LineService;
 import lombok.Data;
 
 import java.util.TreeSet;
@@ -27,8 +28,8 @@ public class LineGET {
         this.deletedTime=line.getDeletedTime();
     }
 
-    public void addStopBus(StopBus stopBus){
-        StopBusGET temp=new StopBusGET(stopBus);
+    public void addStopBus(StopBus stopBus, LineService lineService){
+        StopBusGET temp=new StopBusGET(stopBus,lineService);
         switch (temp.getStopBusType()){
             case Outward:
                 this.outStopBuses.add(temp);

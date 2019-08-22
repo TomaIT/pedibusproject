@@ -1,7 +1,9 @@
 package it.polito.ai.pedibusproject.controller.model.get;
 
+import it.polito.ai.pedibusproject.database.model.Line;
 import it.polito.ai.pedibusproject.database.model.StopBus;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
+import it.polito.ai.pedibusproject.service.interfaces.LineService;
 import lombok.Data;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
@@ -12,13 +14,18 @@ public class StopBusGET implements Comparable<StopBusGET>  {
     private String name;
     private Long hours; //Minutes from 00:00
     private GeoJsonPoint location;
+    private String lineName;
+    private String idLine;
 
-    public StopBusGET(StopBus stopBus){
+    public StopBusGET(StopBus stopBus, LineService lineService){
         this.id=stopBus.getId();
         this.stopBusType=stopBus.getStopBusType();
         this.name=stopBus.getName();
         this.hours=stopBus.getHours();
         this.location=stopBus.getLocation();
+        Line temp=lineService.findByIdStopBus(id);
+        this.lineName=temp.getName();
+        this.idLine=temp.getId();
     }
 
     @Override

@@ -45,6 +45,6 @@ public class BusRideGET {
         this.idReservations=reservationService.findAllByIdBusRide(busRide.getId()).stream().map(Reservation::getId).collect(Collectors.toSet());
         this.timestampLastStopBus=busRide.getTimestampLastStopBus();
         this.idLastStopBus=busRide.getIdLastStopBus();
-        busRide.getStopBuses().forEach(x->this.stopBuses.add(new StopBusGET(x)));
+        busRide.getStopBuses().forEach(x->this.stopBuses.add(new StopBusGET(x,lineService)));
     }
 }

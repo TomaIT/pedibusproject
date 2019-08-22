@@ -26,6 +26,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -83,6 +84,15 @@ public class LineServiceImpl implements LineService {
     public Line findByName(String name) {
         return this.lineRepository.findByNameAndIsDeleted(name,false)
                 .orElseThrow(()->new NotFoundException("Line <findByName>"));
+    }
+
+    @Override
+    public Line findByIdStopBus(String idStopBus) {
+        Optional<Line> a=this.lineRepository.findByIdOutStopBusesContains(idStopBus);
+        Optional<Line> b=this.lineRepository.findByIdRetStopBusesContains(idStopBus);
+        if(a.isPresent())return a.get();
+        if(b.isPresent())return b.get();
+        throw new NotFoundException("Line <findByIdStopBus>");
     }
 
     private UpdateResult myUpdateFunctionFirst(String id, Update update){

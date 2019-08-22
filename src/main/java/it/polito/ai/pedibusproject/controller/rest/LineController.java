@@ -51,8 +51,8 @@ public class LineController {
                            @PathVariable("idLine") String idLine) {
         Line temp=this.lineService.findById(idLine);
         LineGET ret=new LineGET(temp);
-        temp.getIdRetStopBuses().forEach(x->ret.addStopBus(stopBusService.findById(x)));
-        temp.getIdOutStopBuses().forEach(x->ret.addStopBus(stopBusService.findById(x)));
+        temp.getIdRetStopBuses().forEach(x->ret.addStopBus(stopBusService.findById(x),lineService));
+        temp.getIdOutStopBuses().forEach(x->ret.addStopBus(stopBusService.findById(x),lineService));
         return ret;
     }
 

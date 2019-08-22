@@ -8,6 +8,7 @@ import it.polito.ai.pedibusproject.controller.model.get.StopBusGET;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
 import it.polito.ai.pedibusproject.exceptions.InternalServerErrorException;
 import it.polito.ai.pedibusproject.service.interfaces.ChildService;
+import it.polito.ai.pedibusproject.service.interfaces.LineService;
 import it.polito.ai.pedibusproject.service.interfaces.StopBusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,12 +25,15 @@ import java.util.stream.Collectors;
 public class StopBusController {
     private StopBusService stopBusService;
     private ChildService childService;
+    private LineService lineService;
 
     @Autowired
     public StopBusController(StopBusService stopBusService,
-                             ChildService childService){
+                             ChildService childService,
+                             LineService lineService){
         this.stopBusService=stopBusService;
         this.childService=childService;
+        this.lineService=lineService;
     }
 
     @GetMapping(value = "/withType/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -42,7 +46,7 @@ public class StopBusController {
     public Set<StopBusGET> getStopBusesWithType(@RequestHeader (name="Authorization") String jwtToken,
                               @PathVariable("type") StopBusType stopBusType) {
         return this.stopBusService.findAllByStopBusType(stopBusType).stream()
-                .map(StopBusGET::new).collect(Collectors.toSet());
+                .map(x->new StopBusGET(x,lineService)).collect(Collectors.toSet());
     }
 
     @GetMapping(value = "/{idStopBus}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -55,7 +59,7 @@ public class StopBusController {
     public StopBusGET getLine(@RequestHeader (name="Authorization") String jwtToken,
                               @PathVariable("idStopBus") String idStopBus) {
         return new StopBusGET(
-                this.stopBusService.findById(idStopBus)
+                this.stopBusService.findById(idStopBus),lineService
         );
     }
 
@@ -70,9 +74,9 @@ public class StopBusController {
                                                @PathVariable("idStopBus") String idStopBus) {
         switch (stopBusService.findById(idStopBus).getStopBusType()){
             case Outward:
-                return childService.findAllByIdStopBusOutDef(idStopBus).stream().map(x->new ChildGET(x,stopBusService)).collect(Collectors.toSet());
+                return childService.findAllByIdStopBusOutDef(idStopBus).stream().map(x->new ChildGET(x,stopBusService,lineService)).collect(Collectors.toSet());
             case Return:
-                return childService.findAllByIdStopBusRetDef(idStopBus).stream().map(x->new ChildGET(x,stopBusService)).collect(Collectors.toSet());
+                return childService.findAllByIdStopBusRetDef(idStopBus).stream().map(x->new ChildGET(x,stopBusService,lineService)).collect(Collectors.toSet());
             default:
                 throw new InternalServerErrorException("StopBusType unrecognized.");
         }

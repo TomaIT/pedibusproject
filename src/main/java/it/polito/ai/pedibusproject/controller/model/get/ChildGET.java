@@ -2,7 +2,10 @@ package it.polito.ai.pedibusproject.controller.model.get;
 
 import it.polito.ai.pedibusproject.database.model.Child;
 import it.polito.ai.pedibusproject.database.model.Gender;
+import it.polito.ai.pedibusproject.database.model.StopBus;
+import it.polito.ai.pedibusproject.service.interfaces.LineService;
 import it.polito.ai.pedibusproject.service.interfaces.StopBusService;
+import javafx.scene.paint.Stop;
 import lombok.Data;
 
 import java.util.Date;
@@ -17,12 +20,12 @@ public class ChildGET {
     private Gender gender;
     private String blobBase64; //Photo ??
     private String idStopBusOutDef;
-    private String nameStopBusOutDef;
+    private StopBusGET stopBusOutDef;
     private String idStopBusRetDef;
-    private String nameStopBusRetDef;
+    private StopBusGET stopBusRetDef;
     private Boolean isDeleted;
 
-    public ChildGET(Child child, StopBusService stopBusService){
+    public ChildGET(Child child, StopBusService stopBusService, LineService lineService){
         this.id=child.getId();
         this.idUser=child.getIdUser();
         this.firstname=child.getFirstname();
@@ -34,8 +37,8 @@ public class ChildGET {
         this.idStopBusRetDef=child.getIdStopBusRetDef();
         this.isDeleted=child.getIsDeleted();
         if(idStopBusOutDef!=null)
-        this.nameStopBusOutDef=stopBusService.findById(idStopBusOutDef).getName();
+        this.stopBusOutDef=new StopBusGET(stopBusService.findById(idStopBusOutDef),lineService);
         if(idStopBusRetDef!=null)
-        this.nameStopBusRetDef=stopBusService.findById(idStopBusRetDef).getName();
+        this.stopBusRetDef=new StopBusGET(stopBusService.findById(idStopBusRetDef),lineService);
     }
 }

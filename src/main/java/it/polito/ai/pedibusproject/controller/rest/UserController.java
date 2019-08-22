@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiResponses;
 import it.polito.ai.pedibusproject.controller.model.get.*;
 import it.polito.ai.pedibusproject.controller.model.post.UserPOST;
 import it.polito.ai.pedibusproject.controller.model.put.UserPUT;
+import it.polito.ai.pedibusproject.database.model.Line;
 import it.polito.ai.pedibusproject.database.model.Role;
 import it.polito.ai.pedibusproject.database.model.User;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
@@ -37,6 +38,7 @@ public class UserController {
     private MessageService messageService;
     private JwtTokenProvider jwtTokenProvider;
     private StopBusService stopBusService;
+    private LineService lineService;
 
     @Autowired
     public UserController(UserService userService,
@@ -46,7 +48,8 @@ public class UserController {
                           AvailabilityService availabilityService,
                           MessageService messageService,
                           JwtTokenProvider jwtTokenProvider,
-                          StopBusService stopBusService) {
+                          StopBusService stopBusService,
+                          LineService lineService) {
         this.userService=userService;
         this.confirmationTokenService=confirmationTokenService;
         this.childService=childService;
@@ -55,6 +58,7 @@ public class UserController {
         this.messageService=messageService;
         this.jwtTokenProvider=jwtTokenProvider;
         this.stopBusService=stopBusService;
+        this.lineService=lineService;
     }
 
 
@@ -236,7 +240,7 @@ public class UserController {
         if(roles.contains(Role.ROLE_SYS_ADMIN)||roles.contains(Role.ROLE_ADMIN)||roles.contains(Role.ROLE_ESCORT)
         ||(roles.contains(Role.ROLE_PARENT)&&idUser.equals(jwtTokenProvider.getUsername(jwtToken))))
             return this.childService.findByIdUser(idUser).stream()
-                    .map(x->new ChildGET(x,stopBusService)).collect(Collectors.toSet());
+                    .map(x->new ChildGET(x,stopBusService,lineService)).collect(Collectors.toSet());
         throw new ForbiddenException();
     }
 

@@ -16,6 +16,8 @@ public interface LineService {
 
     Line findByName(String name);
 
+    Line findByIdStopBus(String idStopBus);
+
     //In realtà non cancella ma setta lo stato della linea a cancellato,
     //inoltre cancella tutte le busride -> prenotazioni e availability, associate
     void deleteById(String id);

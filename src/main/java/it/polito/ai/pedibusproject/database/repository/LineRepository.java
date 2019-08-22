@@ -10,4 +10,6 @@ public interface LineRepository extends MongoRepository<Line,String> {
     Set<Line> findByIsDeleted(Boolean isDeleted);
     Set<Line> findByName(String name);
     Optional<Line> findByNameAndIsDeleted(String name,Boolean isDeleted);
+    Optional<Line> findByIdOutStopBusesContains(String idStopBus);
+    Optional<Line> findByIdRetStopBusesContains(String idStopBus);
 }
