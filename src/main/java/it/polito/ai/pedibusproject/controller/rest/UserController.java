@@ -65,6 +65,9 @@ public class UserController {
     })
     public UserGET postUser(@RequestHeader (name="Authorization") String jwtToken,
                             @RequestBody @Valid UserPOST userPOST) {
+        if(userPOST.getRoles().contains(Role.ROLE_SYS_ADMIN)&&
+                !jwtTokenProvider.getRoles(jwtToken).contains(Role.ROLE_SYS_ADMIN))
+            throw new ForbiddenException();
         User temp= this.userService.create(userPOST.getEmail(),userPOST.getRoles());
         this.confirmationTokenService.create(temp.getUsername());
         return new UserGET(temp);
