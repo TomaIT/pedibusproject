@@ -1,0 +1,18 @@
+{
+  "name": "Coccinelle_spaventate",
+  "emailAdmin": "pedibus.application@gmail.com",
+  "outwardLine": [
+    {"description": "Piazza Solferino", "lat": "45.321067", "lon": "8.426096", "time": "482"},
+    {"description": "Parco dei bambili", "lat": "45.315703", "lon": "8.425260", "time": "485"},
+    {"description": "Corso Salamano angolo via Marco Polo", "lat": "45.315370", "lon": "8.426918", "time": "490"},
+    {"description": "Piazza Sardegna", "lat": "45.314123", "lon": "8.426910", "time": "498"},
+    {"description": "Istituto Comprensivo 'Bernardino Lanino'", "lat": "45.316021", "lon": "8.430456", "time": "510"}
+  ],
+  "returnLine": [
+    {"description": "Piazza Solferino", "lat": "45.321067", "lon": "8.426096", "time": "986"},
+    {"description": "Parco dei bambili", "lat": "45.315703", "lon": "8.425260", "time": "979"},
+    {"description": "Corso Salamano angolo via Marco Polo", "lat": "45.315370", "lon": "8.426918", "time": "970"},
+    {"description": "Piazza Sardegna", "lat": "45.314123", "lon": "8.426910", "time": "968"},
+    {"description": "Istituto Comprensivo 'Bernardino Lanino'", "lat": "45.316021", "lon": "8.430456", "time": "960"}
+  ]
+}
