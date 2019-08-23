@@ -80,10 +80,10 @@ public class BusRideServiceImpl implements BusRideService {
                           Integer month, Integer day) {
         Line line = this.lineService.findById(idLine);
         TreeSet<StopBus> stopBuses = this.lineService.findByIdAndStopBusType(idLine, stopBusType);
-        stopBuses.forEach(System.out::println);
+
         BusRide busRide = new BusRide(line.getId(), stopBusType, stopBuses, year, month, day);
-System.out.println();
-        busRide.getStopBuses().forEach(System.out::println);
+
+
         if(busRide.getStartTime().getTime()-minDelayBeforeCreateBusRideSec<(new Date()).getTime())
             throw new BadRequestException("BusRide <create> data is too close or in the past");
         return mySave(busRide);
