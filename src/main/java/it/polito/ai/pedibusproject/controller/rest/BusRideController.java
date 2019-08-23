@@ -103,6 +103,23 @@ public class BusRideController {
                 .collect(Collectors.toSet());
     }
 
+    @GetMapping(value = "/{idBusRide}/reservations",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Ritorna prenotazioni per quella corsa e quella fermata.")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public Set<ReservationGET> getReservationsForIdBusRide(
+            @RequestHeader (name="Authorization") String jwtToken,
+            @PathVariable("idBusRide")String idBusRide) {
+
+        return reservationService.findAllByIdBusRide(idBusRide).stream()
+                .map(x->new ReservationGET(x,childService,stopBusService,lineService))
+                .collect(Collectors.toSet());
+    }
+
     @GetMapping(value = "/{idStopBus}/{startDate}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna le N corse contenenti idStopBus e a partire da startDate.")
