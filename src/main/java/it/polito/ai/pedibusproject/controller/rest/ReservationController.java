@@ -126,6 +126,10 @@ public class ReservationController {
                 ret=new ReservationGET(reservationService.updateGetOut(idReservation,rs)
                         ,childService,stopBusService,lineService);
                 break;
+            case Absent:
+                ret=new ReservationGET(reservationService.updateAbsent(idReservation,rs)
+                        ,childService,stopBusService,lineService);
+                break;
             default:
                 throw new BadRequestException("Update ReservationState enumChildGet invalid.");
         }

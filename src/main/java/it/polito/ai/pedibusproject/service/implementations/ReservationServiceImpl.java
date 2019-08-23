@@ -146,6 +146,26 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    public Reservation updateAbsent(String id,ReservationState reservationState) {
+        Optional<Reservation> r = this.reservationRepository.findById(id);
+        if(!r.isPresent())
+            throw new BadRequestException("Reservation <updateAbsent> Reservation not found");
+        Optional<BusRide> br = this.busRideRepository.findById(r.get().getIdBusRide());
+        if(!br.isPresent())
+            throw new BadRequestException("Reservation <updateAbsent> idBusRide not found");
+        if(!br.get().getStopBuses().stream().map(StopBus::getId).anyMatch(x -> x.equals(reservationState.getIdStopBus())))
+            throw new BadRequestException("Reservation <updateAbsent> idStopBus not found in BusRide");
+
+        Update update = new Update();
+        update.set("getIn", null);
+        UpdateResult updateResult=myUpdateFunctionFirst(id,update);
+        if(updateResult.getMatchedCount()==0)
+            throw new NotFoundException("Reservation <updateAbsent>");
+        return this.reservationRepository.findById(id)
+                .orElseThrow(()->new NotFoundException("Reservation <updateAbsent>"));
+    }
+
+    @Override
     public void deleteById(String id) {
         this.reservationRepository.deleteById(id);
     }

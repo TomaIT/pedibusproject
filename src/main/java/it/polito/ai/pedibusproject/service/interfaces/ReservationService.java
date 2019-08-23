@@ -14,5 +14,6 @@ public interface ReservationService {
     Reservation create(String idBusRide,String idChild,String idStopBus,String idUser);
     Reservation updateGetIn(String id,ReservationState reservationState);
     Reservation updateGetOut(String id,ReservationState reservationState);
+    Reservation updateAbsent(String id,ReservationState reservationState);
     void deleteById(String id);
 }
