@@ -50,4 +50,5 @@ public interface UserService extends UserDetailsService {
     User removeLine(String username, String idLine);
 
     User disableById(String idUser);
+    User undisableById(String idUser);
 }

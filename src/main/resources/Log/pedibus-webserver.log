@@ -773,3 +773,457 @@ java.lang.ClassCastException: it.polito.ai.pedibusproject.controller.model.get.B
 2019-08-23 12:21:22.443  INFO 147864 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
 2019-08-23 12:21:22.444  INFO 147864 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2019-08-23 12:21:22.452  INFO 147864 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 8 ms
+2019-08-23 12:27:53.035  INFO 155528 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Starting PedibusprojectApplication on ITTURWNCATC9VVV with PID 155528 (C:\Users\nz4vrg\IdeaProjects\pedibusproject\target\classes started by nz4vrg in C:\Users\nz4vrg\IdeaProjects\pedibusproject)
+2019-08-23 12:27:53.038  INFO 155528 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : No active profile set, falling back to default profiles: default
+2019-08-23 12:27:53.087  INFO 155528 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2019-08-23 12:27:53.087  INFO 155528 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2019-08-23 12:27:54.622  INFO 155528 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data repositories in DEFAULT mode.
+2019-08-23 12:27:54.764  INFO 155528 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 137ms. Found 10 repository interfaces.
+2019-08-23 12:27:55.123  INFO 155528 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.hateoas.config.HateoasConfiguration' of type [org.springframework.hateoas.config.HateoasConfiguration$$EnhancerBySpringCGLIB$$759e56b4] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-08-23 12:27:55.469  INFO 155528 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2019-08-23 12:27:55.495  INFO 155528 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2019-08-23 12:27:55.495  INFO 155528 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.21]
+2019-08-23 12:27:55.653  INFO 155528 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2019-08-23 12:27:55.653  INFO 155528 --- [restartedMain] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 2565 ms
+2019-08-23 12:27:56.239  INFO 155528 --- [restartedMain] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=MULTIPLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms', maxWaitQueueSize=500}
+2019-08-23 12:27:56.239  INFO 155528 --- [restartedMain] org.mongodb.driver.cluster               : Adding discovered server localhost:27017 to client view of cluster
+2019-08-23 12:27:56.289  INFO 155528 --- [cluster-ClusterId{value='5d5fbfac692b685f8861bace', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:1, serverValue:99}] to localhost:27017
+2019-08-23 12:27:56.293  INFO 155528 --- [cluster-ClusterId{value='5d5fbfac692b685f8861bace', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, version=ServerVersion{versionList=[4, 0, 8]}, minWireVersion=0, maxWireVersion=7, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=2572900}
+2019-08-23 12:27:56.294  INFO 155528 --- [cluster-ClusterId{value='5d5fbfac692b685f8861bace', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Discovered cluster type of STANDALONE
+2019-08-23 12:27:56.461  INFO 155528 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2019-08-23 12:27:56.570  INFO 155528 --- [restartedMain] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:2, serverValue:100}] to localhost:27017
+2019-08-23 12:27:57.225  INFO 155528 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService
+2019-08-23 12:27:57.226  INFO 155528 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'threadPoolTaskExecutor'
+2019-08-23 12:27:57.666  INFO 155528 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3b53b123, org.springframework.security.web.context.SecurityContextPersistenceFilter@62e2af3c, org.springframework.security.web.header.HeaderWriterFilter@50a5da2d, org.springframework.web.filter.CorsFilter@261134c4, org.springframework.security.web.authentication.logout.LogoutFilter@7d4902e9, it.polito.ai.pedibusproject.security.JwtTokenFilter@26c3f679, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@6bc90f0f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5e479c8b, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2b408050, org.springframework.security.web.session.SessionManagementFilter@4bc4e7b, org.springframework.security.web.access.ExceptionTranslationFilter@b8dcce7, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@15ab4174]
+2019-08-23 12:27:57.774  INFO 155528 --- [restartedMain] d.s.w.p.DocumentationPluginsBootstrapper : Context refreshed
+2019-08-23 12:27:57.787  INFO 155528 --- [restartedMain] d.s.w.p.DocumentationPluginsBootstrapper : Found 1 custom documentation plugin(s)
+2019-08-23 12:27:57.798  INFO 155528 --- [restartedMain] s.d.s.w.s.ApiListingReferenceScanner     : Scanning for api listing references
+2019-08-23 12:27:58.015  INFO 155528 --- [restartedMain] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getAvailabilitiesUsingGET_1
+2019-08-23 12:27:58.147  INFO 155528 --- [restartedMain] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getLineUsingGET_1
+2019-08-23 12:27:58.158  INFO 155528 --- [restartedMain] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getLineUsingGET_2
+2019-08-23 12:27:58.313  INFO 155528 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2019-08-23 12:27:58.316  INFO 155528 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Started PedibusprojectApplication in 5.683 seconds (JVM running for 6.968)
+2019-08-23 12:27:58.420  INFO 155528 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: reservations
+2019-08-23 12:27:58.495  INFO 155528 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: users
+2019-08-23 12:27:58.581  INFO 155528 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: messages
+2019-08-23 12:27:58.662  INFO 155528 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: recoverytokens
+2019-08-23 12:27:58.754  INFO 155528 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: confirmationtokens
+2019-08-23 12:27:58.840  INFO 155528 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: busrides
+2019-08-23 12:27:58.896  INFO 155528 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: lines
+2019-08-23 12:27:58.962  INFO 155528 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: children
+2019-08-23 12:27:59.013  INFO 155528 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: stopbuses
+2019-08-23 12:27:59.328  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Piazza Solferino
+2019-08-23 12:27:59.331  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Parco dei bambini
+2019-08-23 12:27:59.332  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Corso Salamano angolo via Marco Polo
+2019-08-23 12:27:59.334  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Piazza Sardegna
+2019-08-23 12:27:59.335  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Istituto Comprensivo 'Bernardino Lanino'
+2019-08-23 12:27:59.338  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Piazza Solferino
+2019-08-23 12:27:59.340  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Parco dei bambini
+2019-08-23 12:27:59.342  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Corso Salamano angolo via Marco Polo
+2019-08-23 12:27:59.343  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Piazza Sardegna
+2019-08-23 12:27:59.345  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Istituto Comprensivo 'Bernardino Lanino'
+2019-08-23 12:27:59.469  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Line Bruchi_canterini
+2019-08-23 12:27:59.619  INFO 155528 --- [restartedMain] i.p.a.p.s.i.ConfirmationTokenServiceImpl : http://127.0.0.1:8080/confirmation/c17408d7-ca9e-4d0d-bc15-c9fa6f23c5ed
+2019-08-23 12:28:00.269  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Created BusRides for Line <Bruchi_canterini>
+2019-08-23 12:28:00.275  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Via Giov. Bosco
+2019-08-23 12:28:00.275  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI V. Lamporo
+2019-08-23 12:28:00.276  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI V. Carrozzino
+2019-08-23 12:28:00.277  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Scalise
+2019-08-23 12:28:00.278  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Montebello
+2019-08-23 12:28:00.279  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Eritrea
+2019-08-23 12:28:00.280  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Istituto Comprensivo 'Bernardino Lanino'
+2019-08-23 12:28:00.280  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Via Giov. Bosco
+2019-08-23 12:28:00.281  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI V. Lamporo
+2019-08-23 12:28:00.282  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI V. Carrozzino
+2019-08-23 12:28:00.282  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Scalise
+2019-08-23 12:28:00.283  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Montebello
+2019-08-23 12:28:00.284  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Eritrea
+2019-08-23 12:28:00.285  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Istituto Comprensivo 'Bernardino Lanino'
+2019-08-23 12:28:00.287  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Line Coccinelle_spaventate
+2019-08-23 12:28:00.731  INFO 155528 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Created BusRides for Line <Coccinelle_spaventate>
+2019-08-23 12:28:19.800  INFO 155528 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2019-08-23 12:28:19.801  INFO 155528 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2019-08-23 12:28:19.809  INFO 155528 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 8 ms
+2019-08-23 12:28:25.668  WARN 155528 --- [http-nio-8080-exec-4] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.UnauthorizedException: 401 UNAUTHORIZED "Unauthorized: Username or Password invalid"]
+2019-08-23 12:29:49.695  INFO 155528 --- [http-nio-8080-exec-1] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:3, serverValue:101}] to localhost:27017
+2019-08-23 12:30:34.814  INFO 155528 --- [http-nio-8080-exec-3] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:4, serverValue:102}] to localhost:27017
+2019-08-23 12:33:02.991  WARN 155528 --- [http-nio-8080-exec-1] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.BadRequestException: 400 BAD_REQUEST "Bad Request: Reservation <create> idStopBus not found in BusRide"]
+2019-08-23 12:40:13.647  WARN 155528 --- [http-nio-8080-exec-9] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.BadRequestException: 400 BAD_REQUEST "Bad Request: Reservation <create> idStopBus not found in BusRide"]
+2019-08-23 12:41:47.084  WARN 155528 --- [http-nio-8080-exec-8] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.DuplicateKeyException: 409 CONFLICT "Duplicate Key: Reservation <create> already exist"]
+2019-08-23 12:42:03.535  WARN 155528 --- [http-nio-8080-exec-4] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.DuplicateKeyException: 409 CONFLICT "Duplicate Key: Reservation <create> already exist"]
+2019-08-23 12:43:46.534  WARN 155528 --- [http-nio-8080-exec-6] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.NotFoundException: 404 NOT_FOUND "Not Found: Line"]
+2019-08-23 12:44:15.942  WARN 155528 --- [http-nio-8080-exec-2] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.DuplicateKeyException: 409 CONFLICT "Duplicate Key: Reservation <create> already exist"]
+2019-08-23 12:53:32.751  WARN 155528 --- [http-nio-8080-exec-4] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.DuplicateKeyException: 409 CONFLICT "Duplicate Key: Reservation <create> already exist"]
+2019-08-23 12:53:37.534  WARN 155528 --- [http-nio-8080-exec-3] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.DuplicateKeyException: 409 CONFLICT "Duplicate Key: Reservation <create> already exist"]
+2019-08-23 13:24:24.823  WARN 155528 --- [http-nio-8080-exec-7] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.DuplicateKeyException: 409 CONFLICT "Duplicate Key: Reservation <create> already exist"]
+2019-08-23 13:35:37.337  INFO 155528 --- [http-nio-8080-exec-1] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:5, serverValue:103}] to localhost:27017
+2019-08-23 13:58:32.053  WARN 155528 --- [http-nio-8080-exec-5] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.UnauthorizedException: 401 UNAUTHORIZED "Unauthorized: Username or Password invalid"]
+2019-08-23 13:58:43.843  WARN 155528 --- [http-nio-8080-exec-7] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.UnauthorizedException: 401 UNAUTHORIZED "Unauthorized: Username or Password invalid"]
+2019-08-23 13:58:44.507  WARN 155528 --- [http-nio-8080-exec-10] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.UnauthorizedException: 401 UNAUTHORIZED "Unauthorized: Username or Password invalid"]
+2019-08-23 13:58:44.931  WARN 155528 --- [http-nio-8080-exec-9] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.UnauthorizedException: 401 UNAUTHORIZED "Unauthorized: Username or Password invalid"]
+2019-08-23 13:58:45.132  WARN 155528 --- [http-nio-8080-exec-2] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.UnauthorizedException: 401 UNAUTHORIZED "Unauthorized: Username or Password invalid"]
+2019-08-23 13:58:45.284  WARN 155528 --- [http-nio-8080-exec-3] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.UnauthorizedException: 401 UNAUTHORIZED "Unauthorized: Username or Password invalid"]
+2019-08-23 13:58:45.483  WARN 155528 --- [http-nio-8080-exec-8] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.UnauthorizedException: 401 UNAUTHORIZED "Unauthorized: Username or Password invalid"]
+2019-08-23 13:58:45.883  WARN 155528 --- [http-nio-8080-exec-6] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.UnauthorizedException: 401 UNAUTHORIZED "Unauthorized: Username or Password invalid"]
+2019-08-23 13:58:46.251  WARN 155528 --- [http-nio-8080-exec-4] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.UnauthorizedException: 401 UNAUTHORIZED "Unauthorized: Username or Password invalid"]
+2019-08-23 13:58:46.635  WARN 155528 --- [http-nio-8080-exec-1] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.UnauthorizedException: 401 UNAUTHORIZED "Unauthorized: Username or Password invalid"]
+2019-08-23 13:58:46.995  WARN 155528 --- [http-nio-8080-exec-5] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.UnauthorizedException: 401 UNAUTHORIZED "Unauthorized: Username or Password invalid"]
+2019-08-23 13:58:47.155  WARN 155528 --- [http-nio-8080-exec-7] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.UnauthorizedException: 401 UNAUTHORIZED "Unauthorized: Username or Password invalid"]
+2019-08-23 13:58:47.302  WARN 155528 --- [http-nio-8080-exec-10] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.UnauthorizedException: 401 UNAUTHORIZED "Unauthorized: Username or Password invalid"]
+2019-08-23 13:58:47.419  WARN 155528 --- [http-nio-8080-exec-9] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.UnauthorizedException: 401 UNAUTHORIZED "Unauthorized: Username or Password invalid"]
+2019-08-23 13:58:47.579  WARN 155528 --- [http-nio-8080-exec-2] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.UnauthorizedException: 401 UNAUTHORIZED "Unauthorized: Username or Password invalid"]
+2019-08-23 13:58:47.819  WARN 155528 --- [http-nio-8080-exec-3] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.UnauthorizedException: 401 UNAUTHORIZED "Unauthorized: Username or Password invalid"]
+2019-08-23 13:58:47.995  WARN 155528 --- [http-nio-8080-exec-8] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.UnauthorizedException: 401 UNAUTHORIZED "Unauthorized: Username or Password invalid"]
+2019-08-23 13:58:48.138  WARN 155528 --- [http-nio-8080-exec-6] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.UnauthorizedException: 401 UNAUTHORIZED "Unauthorized: Username or Password invalid"]
+2019-08-23 13:58:58.521  WARN 155528 --- [http-nio-8080-exec-1] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.NotFoundException: 404 NOT_FOUND "Not Found: User"]
+2019-08-23 16:18:11.454  INFO 155528 --- [http-nio-8080-exec-6] i.p.a.p.s.i.ConfirmationTokenServiceImpl : http://127.0.0.1:8080/confirmation/f45c236e-9b53-4497-92af-6839ac90ee9e
+2019-08-23 16:18:13.166 ERROR 155528 --- [Async-2] i.p.a.p.utility.EmailSender              : sendEmail <SimpleMailMessage: from=pedibus.application@gmail.com; replyTo=null; to=nanni1606@gmail.com; cc=; bcc=; sentDate=null; subject=Confirm Registration; text=Please complete your registration: http://127.0.0.1:8080/confirmation/f45c236e-9b53-4497-92af-6839ac90ee9e>
+Mail server connection failed; nested exception is com.sun.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000;
+  nested exception is:
+	java.net.ConnectException: Connection refused: connect. Failed messages: com.sun.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000;
+  nested exception is:
+	java.net.ConnectException: Connection refused: connect
+2019-08-23 16:23:59.262  INFO 155528 --- [http-nio-8080-exec-1] i.p.a.p.s.i.ConfirmationTokenServiceImpl : http://127.0.0.1:8080/confirmation/fe6e4b9e-fafc-4dbe-9bf1-c235899a2e26
+2019-08-23 16:24:01.140 ERROR 155528 --- [Async-3] i.p.a.p.utility.EmailSender              : sendEmail <SimpleMailMessage: from=pedibus.application@gmail.com; replyTo=null; to=nanni1606@gmail.com; cc=; bcc=; sentDate=null; subject=Confirm Registration; text=Please complete your registration: http://127.0.0.1:8080/confirmation/fe6e4b9e-fafc-4dbe-9bf1-c235899a2e26>
+Mail server connection failed; nested exception is com.sun.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000;
+  nested exception is:
+	java.net.ConnectException: Connection refused: connect. Failed messages: com.sun.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000;
+  nested exception is:
+	java.net.ConnectException: Connection refused: connect
+2019-08-23 16:24:16.106  INFO 155528 --- [http-nio-8080-exec-8] i.p.a.p.s.i.ConfirmationTokenServiceImpl : http://127.0.0.1:8080/confirmation/3e3d8313-1087-49a1-ae90-3ed056c00172
+2019-08-23 16:24:17.482 ERROR 155528 --- [Async-4] i.p.a.p.utility.EmailSender              : sendEmail <SimpleMailMessage: from=pedibus.application@gmail.com; replyTo=null; to=nanni1606@gmail.com; cc=; bcc=; sentDate=null; subject=Confirm Registration; text=Please complete your registration: http://127.0.0.1:8080/confirmation/3e3d8313-1087-49a1-ae90-3ed056c00172>
+Mail server connection failed; nested exception is com.sun.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000;
+  nested exception is:
+	java.net.ConnectException: Connection refused: connect. Failed messages: com.sun.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000;
+  nested exception is:
+	java.net.ConnectException: Connection refused: connect
+2019-08-23 16:24:18.962  INFO 155528 --- [http-nio-8080-exec-9] i.p.a.p.s.i.ConfirmationTokenServiceImpl : http://127.0.0.1:8080/confirmation/cffd172c-49c0-48bd-ba92-0bc9a0f77a07
+2019-08-23 16:24:20.348 ERROR 155528 --- [Async-3] i.p.a.p.utility.EmailSender              : sendEmail <SimpleMailMessage: from=pedibus.application@gmail.com; replyTo=null; to=nanni1606@gmail.com; cc=; bcc=; sentDate=null; subject=Confirm Registration; text=Please complete your registration: http://127.0.0.1:8080/confirmation/cffd172c-49c0-48bd-ba92-0bc9a0f77a07>
+Mail server connection failed; nested exception is com.sun.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000;
+  nested exception is:
+	java.net.ConnectException: Connection refused: connect. Failed messages: com.sun.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000;
+  nested exception is:
+	java.net.ConnectException: Connection refused: connect
+2019-08-23 16:31:10.737  INFO 158588 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Starting PedibusprojectApplication on ITTURWNCATC9VVV with PID 158588 (C:\Users\nz4vrg\IdeaProjects\pedibusproject\target\classes started by nz4vrg in C:\Users\nz4vrg\IdeaProjects\pedibusproject)
+2019-08-23 16:31:10.740  INFO 158588 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : No active profile set, falling back to default profiles: default
+2019-08-23 16:31:10.785  INFO 158588 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2019-08-23 16:31:10.785  INFO 158588 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2019-08-23 16:31:12.236  INFO 158588 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data repositories in DEFAULT mode.
+2019-08-23 16:31:12.398  INFO 158588 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 156ms. Found 10 repository interfaces.
+2019-08-23 16:31:12.830  INFO 158588 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.hateoas.config.HateoasConfiguration' of type [org.springframework.hateoas.config.HateoasConfiguration$$EnhancerBySpringCGLIB$$4ee111f] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-08-23 16:31:13.201  INFO 158588 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2019-08-23 16:31:13.228  INFO 158588 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2019-08-23 16:31:13.228  INFO 158588 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.21]
+2019-08-23 16:31:13.388  INFO 158588 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2019-08-23 16:31:13.388  INFO 158588 --- [restartedMain] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 2603 ms
+2019-08-23 16:31:14.065  INFO 158588 --- [restartedMain] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=MULTIPLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms', maxWaitQueueSize=500}
+2019-08-23 16:31:14.065  INFO 158588 --- [restartedMain] org.mongodb.driver.cluster               : Adding discovered server localhost:27017 to client view of cluster
+2019-08-23 16:31:14.118  INFO 158588 --- [cluster-ClusterId{value='5d5ff8b2692b686b7cb7a769', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:1, serverValue:104}] to localhost:27017
+2019-08-23 16:31:14.123  INFO 158588 --- [cluster-ClusterId{value='5d5ff8b2692b686b7cb7a769', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, version=ServerVersion{versionList=[4, 0, 8]}, minWireVersion=0, maxWireVersion=7, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=3187318}
+2019-08-23 16:31:14.125  INFO 158588 --- [cluster-ClusterId{value='5d5ff8b2692b686b7cb7a769', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Discovered cluster type of STANDALONE
+2019-08-23 16:31:14.291  INFO 158588 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2019-08-23 16:31:14.397  INFO 158588 --- [restartedMain] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:2, serverValue:105}] to localhost:27017
+2019-08-23 16:31:15.331  INFO 158588 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService
+2019-08-23 16:31:15.333  INFO 158588 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'threadPoolTaskExecutor'
+2019-08-23 16:31:15.760  INFO 158588 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@6969b1c5, org.springframework.security.web.context.SecurityContextPersistenceFilter@64765bda, org.springframework.security.web.header.HeaderWriterFilter@2bc78d12, org.springframework.web.filter.CorsFilter@1afd4f15, org.springframework.security.web.authentication.logout.LogoutFilter@2054cbdc, it.polito.ai.pedibusproject.security.JwtTokenFilter@7dd80025, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@a2cd6c7, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@2598861c, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@485d5f6f, org.springframework.security.web.session.SessionManagementFilter@76f021d1, org.springframework.security.web.access.ExceptionTranslationFilter@6bd1fad1, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@346c904e]
+2019-08-23 16:31:15.860  INFO 158588 --- [restartedMain] d.s.w.p.DocumentationPluginsBootstrapper : Context refreshed
+2019-08-23 16:31:15.875  INFO 158588 --- [restartedMain] d.s.w.p.DocumentationPluginsBootstrapper : Found 1 custom documentation plugin(s)
+2019-08-23 16:31:15.886  INFO 158588 --- [restartedMain] s.d.s.w.s.ApiListingReferenceScanner     : Scanning for api listing references
+2019-08-23 16:31:16.096  INFO 158588 --- [restartedMain] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getAvailabilitiesUsingGET_1
+2019-08-23 16:31:16.238  INFO 158588 --- [restartedMain] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getLineUsingGET_1
+2019-08-23 16:31:16.250  INFO 158588 --- [restartedMain] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getLineUsingGET_2
+2019-08-23 16:31:16.422  INFO 158588 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2019-08-23 16:31:16.424  INFO 158588 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Started PedibusprojectApplication in 6.198 seconds (JVM running for 7.313)
+2019-08-23 16:31:16.511  INFO 158588 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: reservations
+2019-08-23 16:31:16.566  INFO 158588 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: users
+2019-08-23 16:31:16.616  INFO 158588 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: messages
+2019-08-23 16:31:16.676  INFO 158588 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: recoverytokens
+2019-08-23 16:31:16.750  INFO 158588 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: confirmationtokens
+2019-08-23 16:31:16.783  INFO 158588 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2019-08-23 16:31:16.784  INFO 158588 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2019-08-23 16:31:16.791  INFO 158588 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 7 ms
+2019-08-23 16:31:16.803  INFO 158588 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: lines
+2019-08-23 16:31:16.859  INFO 158588 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: busrides
+2019-08-23 16:31:16.917  INFO 158588 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: children
+2019-08-23 16:31:16.928  INFO 158588 --- [http-nio-8080-exec-1] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:3, serverValue:106}] to localhost:27017
+2019-08-23 16:31:16.967  INFO 158588 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: stopbuses
+2019-08-23 16:31:16.975 ERROR 158588 --- [http-nio-8080-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception
+
+it.polito.ai.pedibusproject.exceptions.NotFoundException: 404 NOT_FOUND "Not Found: User"
+	at it.polito.ai.pedibusproject.service.implementations.UserServiceImpl.lambda$loadUserByUsername$1(UserServiceImpl.java:95) ~[classes/:na]
+	at java.util.Optional.orElseThrow(Optional.java:290) ~[na:1.8.0_201]
+	at it.polito.ai.pedibusproject.service.implementations.UserServiceImpl.loadUserByUsername(UserServiceImpl.java:95) ~[classes/:na]
+	at it.polito.ai.pedibusproject.security.JwtTokenProvider.getAuthentication(JwtTokenProvider.java:57) ~[classes/:na]
+	at it.polito.ai.pedibusproject.security.JwtTokenFilter.doFilter(JwtTokenFilter.java:28) ~[classes/:na]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:116) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:96) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:109) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:74) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:109) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:105) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:56) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:109) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:215) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:178) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:357) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:270) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:99) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:109) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:92) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:109) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:93) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:109) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:200) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:109) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:202) ~[tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:490) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:139) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:408) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:853) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1587) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149) [na:1.8.0_201]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624) [na:1.8.0_201]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at java.lang.Thread.run(Thread.java:748) [na:1.8.0_201]
+
+2019-08-23 16:31:16.984 ERROR 158588 --- [http-nio-8080-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] threw exception
+
+it.polito.ai.pedibusproject.exceptions.NotFoundException: 404 NOT_FOUND "Not Found: User"
+	at it.polito.ai.pedibusproject.service.implementations.UserServiceImpl.lambda$loadUserByUsername$1(UserServiceImpl.java:95) ~[classes/:na]
+	at java.util.Optional.orElseThrow(Optional.java:290) ~[na:1.8.0_201]
+	at it.polito.ai.pedibusproject.service.implementations.UserServiceImpl.loadUserByUsername(UserServiceImpl.java:95) ~[classes/:na]
+	at it.polito.ai.pedibusproject.security.JwtTokenProvider.getAuthentication(JwtTokenProvider.java:57) ~[classes/:na]
+	at it.polito.ai.pedibusproject.security.JwtTokenFilter.doFilter(JwtTokenFilter.java:28) ~[classes/:na]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:116) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:103) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:103) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:105) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:103) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:215) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:178) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:357) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:270) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.ApplicationDispatcher.invoke(ApplicationDispatcher.java:712) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.ApplicationDispatcher.processRequest(ApplicationDispatcher.java:461) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.ApplicationDispatcher.doForward(ApplicationDispatcher.java:384) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.ApplicationDispatcher.forward(ApplicationDispatcher.java:312) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.StandardHostValve.custom(StandardHostValve.java:394) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.StandardHostValve.status(StandardHostValve.java:253) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.StandardHostValve.throwable(StandardHostValve.java:348) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:173) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:408) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:853) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1587) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149) [na:1.8.0_201]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624) [na:1.8.0_201]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at java.lang.Thread.run(Thread.java:748) [na:1.8.0_201]
+
+2019-08-23 16:31:16.985 ERROR 158588 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost]           : Exception Processing ErrorPage[errorCode=0, location=/error]
+
+it.polito.ai.pedibusproject.exceptions.NotFoundException: 404 NOT_FOUND "Not Found: User"
+	at it.polito.ai.pedibusproject.service.implementations.UserServiceImpl.lambda$loadUserByUsername$1(UserServiceImpl.java:95) ~[classes/:na]
+	at java.util.Optional.orElseThrow(Optional.java:290) ~[na:1.8.0_201]
+	at it.polito.ai.pedibusproject.service.implementations.UserServiceImpl.loadUserByUsername(UserServiceImpl.java:95) ~[classes/:na]
+	at it.polito.ai.pedibusproject.security.JwtTokenProvider.getAuthentication(JwtTokenProvider.java:57) ~[classes/:na]
+	at it.polito.ai.pedibusproject.security.JwtTokenFilter.doFilter(JwtTokenFilter.java:28) ~[classes/:na]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:116) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:103) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:103) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:105) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:103) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:215) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:178) ~[spring-security-web-5.1.5.RELEASE.jar:5.1.5.RELEASE]
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:357) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:270) ~[spring-web-5.1.8.RELEASE.jar:5.1.8.RELEASE]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166) ~[tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.ApplicationDispatcher.invoke(ApplicationDispatcher.java:712) ~[tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.ApplicationDispatcher.processRequest(ApplicationDispatcher.java:461) ~[tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.ApplicationDispatcher.doForward(ApplicationDispatcher.java:384) ~[tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.ApplicationDispatcher.forward(ApplicationDispatcher.java:312) ~[tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.StandardHostValve.custom(StandardHostValve.java:394) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.StandardHostValve.status(StandardHostValve.java:253) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.StandardHostValve.throwable(StandardHostValve.java:348) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:173) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:408) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:853) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1587) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149) [na:1.8.0_201]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624) [na:1.8.0_201]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) [tomcat-embed-core-9.0.21.jar:9.0.21]
+	at java.lang.Thread.run(Thread.java:748) [na:1.8.0_201]
+
+2019-08-23 16:31:17.241  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Piazza Solferino
+2019-08-23 16:31:17.242  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Parco dei bambini
+2019-08-23 16:31:17.244  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Corso Salamano angolo via Marco Polo
+2019-08-23 16:31:17.246  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Piazza Sardegna
+2019-08-23 16:31:17.247  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Istituto Comprensivo 'Bernardino Lanino'
+2019-08-23 16:31:17.248  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Piazza Solferino
+2019-08-23 16:31:17.249  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Parco dei bambini
+2019-08-23 16:31:17.250  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Corso Salamano angolo via Marco Polo
+2019-08-23 16:31:17.251  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Piazza Sardegna
+2019-08-23 16:31:17.252  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Istituto Comprensivo 'Bernardino Lanino'
+2019-08-23 16:31:17.360  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Line Bruchi_canterini
+2019-08-23 16:31:17.511  INFO 158588 --- [restartedMain] i.p.a.p.s.i.ConfirmationTokenServiceImpl : http://127.0.0.1:8080/confirmation/6733b424-2d47-45bc-a3da-75612ca8130a
+2019-08-23 16:31:18.167  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Created BusRides for Line <Bruchi_canterini>
+2019-08-23 16:31:18.172  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Via Giov. Bosco
+2019-08-23 16:31:18.174  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI V. Lamporo
+2019-08-23 16:31:18.174  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI V. Carrozzino
+2019-08-23 16:31:18.175  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Scalise
+2019-08-23 16:31:18.176  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Montebello
+2019-08-23 16:31:18.177  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Eritrea
+2019-08-23 16:31:18.178  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Istituto Comprensivo 'Bernardino Lanino'
+2019-08-23 16:31:18.178  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Via Giov. Bosco
+2019-08-23 16:31:18.179  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI V. Lamporo
+2019-08-23 16:31:18.179  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI V. Carrozzino
+2019-08-23 16:31:18.180  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Scalise
+2019-08-23 16:31:18.181  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Montebello
+2019-08-23 16:31:18.181  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Eritrea
+2019-08-23 16:31:18.182  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Istituto Comprensivo 'Bernardino Lanino'
+2019-08-23 16:31:18.184  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Line Coccinelle_spaventate
+2019-08-23 16:31:18.552  INFO 158588 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Created BusRides for Line <Coccinelle_spaventate>
+2019-08-23 16:31:19.277 ERROR 158588 --- [Async-1] i.p.a.p.utility.EmailSender              : sendEmail <SimpleMailMessage: from=pedibus.application@gmail.com; replyTo=null; to=pedibus.application@gmail.com; cc=; bcc=; sentDate=null; subject=Confirm Registration; text=Please complete your registration: http://127.0.0.1:8080/confirmation/6733b424-2d47-45bc-a3da-75612ca8130a>
+Mail server connection failed; nested exception is com.sun.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000;
+  nested exception is:
+	java.net.ConnectException: Connection refused: connect. Failed messages: com.sun.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000;
+  nested exception is:
+	java.net.ConnectException: Connection refused: connect
+2019-08-23 16:32:22.996  WARN 158588 --- [http-nio-8080-exec-10] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.UnauthorizedException: 401 UNAUTHORIZED "Unauthorized: Username or Password invalid"]
+2019-08-23 16:32:32.341  INFO 166760 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Starting PedibusprojectApplication on ITTURWNCATC9VVV with PID 166760 (C:\Users\nz4vrg\IdeaProjects\pedibusproject\target\classes started by nz4vrg in C:\Users\nz4vrg\IdeaProjects\pedibusproject)
+2019-08-23 16:32:32.345  INFO 166760 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : No active profile set, falling back to default profiles: default
+2019-08-23 16:32:32.406  INFO 166760 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2019-08-23 16:32:32.407  INFO 166760 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2019-08-23 16:32:34.432  INFO 166760 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data repositories in DEFAULT mode.
+2019-08-23 16:32:34.587  INFO 166760 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 150ms. Found 10 repository interfaces.
+2019-08-23 16:32:34.942  INFO 166760 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.hateoas.config.HateoasConfiguration' of type [org.springframework.hateoas.config.HateoasConfiguration$$EnhancerBySpringCGLIB$$968e1a79] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-08-23 16:32:35.261  INFO 166760 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2019-08-23 16:32:35.289  INFO 166760 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2019-08-23 16:32:35.289  INFO 166760 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.21]
+2019-08-23 16:32:35.453  INFO 166760 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2019-08-23 16:32:35.454  INFO 166760 --- [restartedMain] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 3047 ms
+2019-08-23 16:32:36.024  INFO 166760 --- [restartedMain] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=MULTIPLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms', maxWaitQueueSize=500}
+2019-08-23 16:32:36.025  INFO 166760 --- [restartedMain] org.mongodb.driver.cluster               : Adding discovered server localhost:27017 to client view of cluster
+2019-08-23 16:32:36.071  INFO 166760 --- [cluster-ClusterId{value='5d5ff904692b688b68261d78', description='null'}-localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:1, serverValue:107}] to localhost:27017
+2019-08-23 16:32:36.074  INFO 166760 --- [cluster-ClusterId{value='5d5ff904692b688b68261d78', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, version=ServerVersion{versionList=[4, 0, 8]}, minWireVersion=0, maxWireVersion=7, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=2539353}
+2019-08-23 16:32:36.076  INFO 166760 --- [cluster-ClusterId{value='5d5ff904692b688b68261d78', description='null'}-localhost:27017] org.mongodb.driver.cluster               : Discovered cluster type of STANDALONE
+2019-08-23 16:32:36.224  INFO 166760 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2019-08-23 16:32:36.325  INFO 166760 --- [restartedMain] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:2, serverValue:108}] to localhost:27017
+2019-08-23 16:32:37.375  INFO 166760 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService
+2019-08-23 16:32:37.377  INFO 166760 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'threadPoolTaskExecutor'
+2019-08-23 16:32:37.788  INFO 166760 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@28da38d7, org.springframework.security.web.context.SecurityContextPersistenceFilter@410cf37d, org.springframework.security.web.header.HeaderWriterFilter@2ae37b64, org.springframework.web.filter.CorsFilter@6808ed23, org.springframework.security.web.authentication.logout.LogoutFilter@6f3bba05, it.polito.ai.pedibusproject.security.JwtTokenFilter@3a01344c, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@b5491df, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@61692017, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@42bdc4b4, org.springframework.security.web.session.SessionManagementFilter@70281ae, org.springframework.security.web.access.ExceptionTranslationFilter@2422f48c, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@1eb0911d]
+2019-08-23 16:32:37.906  INFO 166760 --- [restartedMain] d.s.w.p.DocumentationPluginsBootstrapper : Context refreshed
+2019-08-23 16:32:37.922  INFO 166760 --- [restartedMain] d.s.w.p.DocumentationPluginsBootstrapper : Found 1 custom documentation plugin(s)
+2019-08-23 16:32:37.934  INFO 166760 --- [restartedMain] s.d.s.w.s.ApiListingReferenceScanner     : Scanning for api listing references
+2019-08-23 16:32:38.134  INFO 166760 --- [restartedMain] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getAvailabilitiesUsingGET_1
+2019-08-23 16:32:38.259  INFO 166760 --- [restartedMain] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getLineUsingGET_1
+2019-08-23 16:32:38.271  INFO 166760 --- [restartedMain] .d.s.w.r.o.CachingOperationNameGenerator : Generating unique operation named: getLineUsingGET_2
+2019-08-23 16:32:38.474  INFO 166760 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2019-08-23 16:32:38.477  INFO 166760 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Started PedibusprojectApplication in 6.626 seconds (JVM running for 7.929)
+2019-08-23 16:32:38.587  INFO 166760 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: users
+2019-08-23 16:32:38.668  INFO 166760 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: recoverytokens
+2019-08-23 16:32:38.763  INFO 166760 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: confirmationtokens
+2019-08-23 16:32:38.829  INFO 166760 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: lines
+2019-08-23 16:32:38.888  INFO 166760 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: busrides
+2019-08-23 16:32:38.946  INFO 166760 --- [restartedMain] i.p.a.p.PedibusprojectApplication        : Dropped collection: stopbuses
+2019-08-23 16:32:39.303  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Piazza Solferino
+2019-08-23 16:32:39.305  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Parco dei bambini
+2019-08-23 16:32:39.306  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Corso Salamano angolo via Marco Polo
+2019-08-23 16:32:39.308  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Piazza Sardegna
+2019-08-23 16:32:39.310  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Istituto Comprensivo 'Bernardino Lanino'
+2019-08-23 16:32:39.311  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Piazza Solferino
+2019-08-23 16:32:39.312  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Parco dei bambini
+2019-08-23 16:32:39.313  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Corso Salamano angolo via Marco Polo
+2019-08-23 16:32:39.315  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Piazza Sardegna
+2019-08-23 16:32:39.316  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Istituto Comprensivo 'Bernardino Lanino'
+2019-08-23 16:32:39.452  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Line Bruchi_canterini
+2019-08-23 16:32:39.614  INFO 166760 --- [restartedMain] i.p.a.p.s.i.ConfirmationTokenServiceImpl : http://127.0.0.1:8080/confirmation/bcc05579-1c2d-48c6-87a6-e073f987ae25
+2019-08-23 16:32:40.232  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Created BusRides for Line <Bruchi_canterini>
+2019-08-23 16:32:40.236  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Via Giov. Bosco
+2019-08-23 16:32:40.237  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI V. Lamporo
+2019-08-23 16:32:40.238  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI V. Carrozzino
+2019-08-23 16:32:40.238  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Scalise
+2019-08-23 16:32:40.239  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Montebello
+2019-08-23 16:32:40.239  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Eritrea
+2019-08-23 16:32:40.240  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Istituto Comprensivo 'Bernardino Lanino'
+2019-08-23 16:32:40.241  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Via Giov. Bosco
+2019-08-23 16:32:40.242  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI V. Lamporo
+2019-08-23 16:32:40.242  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI V. Carrozzino
+2019-08-23 16:32:40.243  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Scalise
+2019-08-23 16:32:40.244  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Montebello
+2019-08-23 16:32:40.244  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus VERCELLI Eritrea
+2019-08-23 16:32:40.245  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Stop Bus Istituto Comprensivo 'Bernardino Lanino'
+2019-08-23 16:32:40.246  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Create Line Coccinelle_spaventate
+2019-08-23 16:32:40.691  INFO 166760 --- [restartedMain] i.p.a.pedibusproject.utility.LoaderLine  : Created BusRides for Line <Coccinelle_spaventate>
+2019-08-23 16:32:41.322 ERROR 166760 --- [Async-1] i.p.a.p.utility.EmailSender              : sendEmail <SimpleMailMessage: from=pedibus.application@gmail.com; replyTo=null; to=pedibus.application@gmail.com; cc=; bcc=; sentDate=null; subject=Confirm Registration; text=Please complete your registration: http://127.0.0.1:8080/confirmation/bcc05579-1c2d-48c6-87a6-e073f987ae25>
+Mail server connection failed; nested exception is com.sun.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000;
+  nested exception is:
+	java.net.ConnectException: Connection refused: connect. Failed messages: com.sun.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000;
+  nested exception is:
+	java.net.ConnectException: Connection refused: connect
+2019-08-23 16:35:29.157  INFO 166760 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2019-08-23 16:35:29.157  INFO 166760 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2019-08-23 16:35:29.166  INFO 166760 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 9 ms
+2019-08-23 16:53:48.452  INFO 166760 --- [http-nio-8080-exec-8] i.p.a.p.s.i.ConfirmationTokenServiceImpl : http://127.0.0.1:8080/confirmation/c3f24cd9-3064-46f8-8311-9c5b5fe1b122
+2019-08-23 16:53:50.107 ERROR 166760 --- [Async-2] i.p.a.p.utility.EmailSender              : sendEmail <SimpleMailMessage: from=pedibus.application@gmail.com; replyTo=null; to=nanni1606@gmail.com; cc=; bcc=; sentDate=null; subject=Confirm Registration; text=Please complete your registration: http://127.0.0.1:8080/confirmation/c3f24cd9-3064-46f8-8311-9c5b5fe1b122>
+Mail server connection failed; nested exception is com.sun.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000;
+  nested exception is:
+	java.net.ConnectException: Connection refused: connect. Failed messages: com.sun.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000;
+  nested exception is:
+	java.net.ConnectException: Connection refused: connect
+2019-08-23 16:55:06.464  INFO 166760 --- [http-nio-8080-exec-4] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:4, serverValue:109}] to localhost:27017
+2019-08-23 16:55:06.464  INFO 166760 --- [http-nio-8080-exec-3] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:3, serverValue:110}] to localhost:27017
+2019-08-23 16:55:49.633  WARN 166760 --- [http-nio-8080-exec-10] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.UnauthorizedException: 401 UNAUTHORIZED "Unauthorized: Username or Password invalid"]
+2019-08-23 16:58:39.049  INFO 166760 --- [http-nio-8080-exec-1] i.p.a.p.s.i.ConfirmationTokenServiceImpl : http://127.0.0.1:8080/confirmation/5000d35d-b5a0-4e42-b357-c4ecf018990e
+2019-08-23 16:58:40.712 ERROR 166760 --- [Async-3] i.p.a.p.utility.EmailSender              : sendEmail <SimpleMailMessage: from=pedibus.application@gmail.com; replyTo=null; to=giovanni.tomasino.it@gmail.com; cc=; bcc=; sentDate=null; subject=Confirm Registration; text=Please complete your registration: http://127.0.0.1:8080/confirmation/5000d35d-b5a0-4e42-b357-c4ecf018990e>
+Mail server connection failed; nested exception is com.sun.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000;
+  nested exception is:
+	java.net.ConnectException: Connection refused: connect. Failed messages: com.sun.mail.util.MailConnectException: Couldn't connect to host, port: smtp.gmail.com, 587; timeout 5000;
+  nested exception is:
+	java.net.ConnectException: Connection refused: connect

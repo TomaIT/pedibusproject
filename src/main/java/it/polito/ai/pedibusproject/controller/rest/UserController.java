@@ -227,6 +227,19 @@ public class UserController {
         return new UserGET(userService.disableById(idUser));
     }
 
+    @PutMapping(value = "/{idUser}/undisable",consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Riabilita utente idUser")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public UserGET undisableUser(@RequestHeader (name="Authorization") String jwtToken,
+                               @PathVariable("idUser")String idUser) {
+        return new UserGET(userService.undisableById(idUser));
+    }
+
     @GetMapping(value = "/{idUser}/children",produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna i bambini dell'utente idUser")
     @ResponseStatus(HttpStatus.OK)
