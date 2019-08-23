@@ -4,6 +4,7 @@ import com.mongodb.client.result.UpdateResult;
 import it.polito.ai.pedibusproject.database.model.*;
 import it.polito.ai.pedibusproject.database.repository.AvailabilityRepository;
 import it.polito.ai.pedibusproject.database.repository.BusRideRepository;
+import it.polito.ai.pedibusproject.database.repository.StopBusRepository;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
 import it.polito.ai.pedibusproject.exceptions.DuplicateKeyException;
 import it.polito.ai.pedibusproject.exceptions.InternalServerErrorException;
@@ -36,6 +37,7 @@ public class BusRideServiceImpl implements BusRideService {
     private ReservationService reservationService;
     private MessageService messageService;
     private AvailabilityRepository availabilityRepository;
+    private StopBusRepository stopBusRepository;
     @Value("${spring.mail.username}")
     private String sysAdmin;
     @Value("${busride.time.delay.before.create.busride.seconds}")
@@ -46,13 +48,15 @@ public class BusRideServiceImpl implements BusRideService {
     public BusRideServiceImpl(BusRideRepository busRideRepository, LineService lineService,
                               MongoTemplate mongoTemplate,ReservationService reservationService,
                               MessageService messageService,
-                              AvailabilityRepository availabilityRepository) {
+                              AvailabilityRepository availabilityRepository,
+                              StopBusRepository stopBusRepository) {
         this.busRideRepository = busRideRepository;
         this.lineService = lineService;
         this.mongoTemplate=mongoTemplate;
         this.reservationService=reservationService;
         this.messageService=messageService;
         this.availabilityRepository=availabilityRepository;
+        this.stopBusRepository=stopBusRepository;
     }
 
     public BusRide mySave(BusRide busRide){
@@ -157,6 +161,14 @@ public class BusRideServiceImpl implements BusRideService {
     @Override
     public TreeSet<BusRide> findAll() {
         return new TreeSet<>(this.busRideRepository.findAll());
+    }
+
+    @Override
+    public TreeSet<BusRide> findAllByStopBusesContainsAndStartTimeAfter(String idStopBus, Date startTime) {
+        StopBus temp=this.stopBusRepository.findById(idStopBus)
+                .orElseThrow(()->new NotFoundException("StopBus <findAllBusRidesByStopBusesContainsAndStartTimeAfter>"));
+        return new TreeSet<>(this.busRideRepository
+                .findAllByStopBusesContainsAndStartTimeAfter(temp,startTime));
     }
 
     @Override

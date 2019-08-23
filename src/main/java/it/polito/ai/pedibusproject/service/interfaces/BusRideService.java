@@ -3,6 +3,7 @@ package it.polito.ai.pedibusproject.service.interfaces;
 import it.polito.ai.pedibusproject.database.model.BusRide;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
 
+import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -26,6 +27,8 @@ public interface BusRideService {
     BusRide updateLastStopBus(String id,Long timestampLastStopBus,String idLastStopBus);
 
     TreeSet<BusRide> findAll();
+
+    TreeSet<BusRide> findAllByStopBusesContainsAndStartTimeAfter(String idStopBus, Date startTime);
 
     //Cancella busride prenotazioni e availability associate,
     //creando un messaggio di comunicazione per tutte le prenotazioni e availability annullate

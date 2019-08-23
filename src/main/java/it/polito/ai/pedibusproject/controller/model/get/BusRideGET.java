@@ -14,7 +14,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 @Data
-public class BusRideGET {
+public class BusRideGET implements Comparable<BusRideGET> {
     private String id;
     private String idLine;
     private String lineName;
@@ -46,5 +46,16 @@ public class BusRideGET {
         this.timestampLastStopBus=busRide.getTimestampLastStopBus();
         this.idLastStopBus=busRide.getIdLastStopBus();
         busRide.getStopBuses().forEach(x->this.stopBuses.add(new StopBusGET(x,lineService)));
+    }
+
+    @Override
+    public int compareTo(BusRideGET o) {
+        if(this.idLine.equals(o.idLine)){
+            if(this.startTime.equals(o.startTime)){
+                return this.id.compareTo(o.id);
+            }
+            return this.startTime.compareTo(o.startTime);
+        }
+        return this.idLine.compareTo(o.idLine);
     }
 }

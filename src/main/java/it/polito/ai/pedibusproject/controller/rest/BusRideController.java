@@ -26,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.xml.crypto.Data;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -102,6 +103,25 @@ public class BusRideController {
                 .collect(Collectors.toSet());
     }
 
+    @GetMapping(value = "/{idStopBus}/{startDate}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Ritorna le N corse contenenti idStopBus e a partire da startDate.")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public Set<BusRideGET> getBusRidesFromStartDate(
+            @RequestHeader (name="Authorization") String jwtToken,
+            @PathVariable("idStopBus")String idStopBus,
+            @PathVariable("startDate")Date startDate,
+            @RequestParam (name = "N", defaultValue = "5", required = false) Integer N) {
+        TreeSet<BusRide> temp=busRideService.findAllByStopBusesContainsAndStartTimeAfter(idStopBus,startDate);
+        while (temp.size()>N) temp.pollLast();
+        return temp.stream().map(x -> new BusRideGET(x, reservationService, lineService))
+                .collect(Collectors.toCollection(TreeSet::new));
+    }
+
     public static ResponseEntity<Resource> getResponseEntityForDownload(
             String fileName, MediaType mediaType, ByteArrayResource byteArrayResource){
         HttpHeaders headers = new HttpHeaders();
@@ -134,7 +154,6 @@ public class BusRideController {
 
         return BusRideController.getResponseEntityForDownload(
                 fileName,MediaType.APPLICATION_OCTET_STREAM,new ByteArrayResource(out));
-        //TODOthrow new NotImplementedException();
     }
 
     @GetMapping(value = "/{idBusRide}/availabilities",produces = MediaType.APPLICATION_JSON_VALUE)
