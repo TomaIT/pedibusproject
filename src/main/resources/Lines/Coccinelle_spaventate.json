@@ -2,21 +2,21 @@
   "name": "Coccinelle_spaventate",
   "emailAdmin": "pedibus.application@gmail.com",
   "outwardLine": [
-	{"description": "VERCELLI Via Thaon de Revel/Giov. Bosco", "lat": "45.305506", "lon": "8.444725", "time": "480"},
-    {"description": "VERCELLI V. Thaon di Revel/Lamporo", "lat": "45.305784", "lon": "8.444369", "time": "482"},
-    {"description": "VERCELLI V. Thaon di Revel/Carrozzino", "lat": "45.308431", "lon": "8.442098", "time": "488"},
-    {"description": "VERCELLI C.so Giovanni Paolo II/Scalise", "lat": "45.310414", "lon": "8.440279", "time": "492"},
-    {"description": "VERCELLI C.so Giovanni Paolo II/Montebello", "lat": "45.313636", "lon": "8.436202", "time": "497"},
-    {"description": "VERCELLI C.so Giovanni Paolo II/Eritrea", "lat": "45.315982", "lon": "8.433273", "time": "503"},
+	{"description": "VERCELLI Via Giov. Bosco", "lat": "45.305506", "lon": "8.444725", "time": "480"},
+    {"description": "VERCELLI V. Lamporo", "lat": "45.305784", "lon": "8.444369", "time": "482"},
+    {"description": "VERCELLI V. Carrozzino", "lat": "45.308431", "lon": "8.442098", "time": "488"},
+    {"description": "VERCELLI Scalise", "lat": "45.310414", "lon": "8.440279", "time": "492"},
+    {"description": "VERCELLI Montebello", "lat": "45.313636", "lon": "8.436202", "time": "497"},
+    {"description": "VERCELLI Eritrea", "lat": "45.315982", "lon": "8.433273", "time": "503"},
     {"description": "Istituto Comprensivo 'Bernardino Lanino'", "lat": "45.316021", "lon": "8.430456", "time": "510"}
   ],
   "returnLine": [
-    {"description": "VERCELLI Via Thaon de Revel/Giov. Bosco", "lat": "45.305506", "lon": "8.444725", "time": "990"},
-    {"description": "VERCELLI V. Thaon di Revel/Lamporo", "lat": "45.305784", "lon": "8.444369", "time": "983"},
-    {"description": "VERCELLI V. Thaon di Revel/Carrozzino", "lat": "45.308431", "lon": "8.442098", "time": "977"},
-    {"description": "VERCELLI C.so Giovanni Paolo II/Scalise", "lat": "45.310414", "lon": "8.440279", "time": "972"},
-    {"description": "VERCELLI C.so Giovanni Paolo II/Montebello", "lat": "45.313636", "lon": "8.436202", "time": "968"},
-    {"description": "VERCELLI C.so Giovanni Paolo II/Eritrea", "lat": "45.315982", "lon": "8.433273", "time": "962"},
+    {"description": "VERCELLI Via Giov. Bosco", "lat": "45.305506", "lon": "8.444725", "time": "990"},
+    {"description": "VERCELLI V. Lamporo", "lat": "45.305784", "lon": "8.444369", "time": "983"},
+    {"description": "VERCELLI V. Carrozzino", "lat": "45.308431", "lon": "8.442098", "time": "977"},
+    {"description": "VERCELLI Scalise", "lat": "45.310414", "lon": "8.440279", "time": "972"},
+    {"description": "VERCELLI Montebello", "lat": "45.313636", "lon": "8.436202", "time": "968"},
+    {"description": "VERCELLI Eritrea", "lat": "45.315982", "lon": "8.433273", "time": "962"},
     {"description": "Istituto Comprensivo 'Bernardino Lanino'", "lat": "45.316021", "lon": "8.430456", "time": "960"}
   ]
 }

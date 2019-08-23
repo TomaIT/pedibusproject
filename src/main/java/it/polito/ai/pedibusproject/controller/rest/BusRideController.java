@@ -116,7 +116,9 @@ public class BusRideController {
             @PathVariable("idStopBus")String idStopBus,
             @PathVariable("startDate")Date startDate,
             @RequestParam (name = "N", defaultValue = "5", required = false) Integer N) {
+        System.out.println(idStopBus +" "+ stopBusService.findById(idStopBus).getName());
         TreeSet<BusRide> temp=busRideService.findAllByStopBusesContainsAndStartTimeAfter(idStopBus,startDate);
+        System.out.println(temp.size());
         while (temp.size()>N) temp.pollLast();
         return temp.stream().map(x -> new BusRideGET(x, reservationService, lineService))
                 .collect(Collectors.toCollection(TreeSet::new));

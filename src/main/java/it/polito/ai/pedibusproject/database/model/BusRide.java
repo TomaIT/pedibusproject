@@ -57,7 +57,7 @@ public class BusRide implements Comparable<BusRide> {
     public BusRide(String idLine, StopBusType stopBusType, TreeSet<StopBus> stopBuses,
                    Integer year,Integer month,Integer day){
         this.idLine=idLine;
-        this.stopBuses=stopBuses;
+        this.stopBuses.addAll(stopBuses);
         this.stopBusType=stopBusType;
         this.year=year;
         this.month=month;
