@@ -134,6 +134,7 @@ public class UserController {
         return new UserGET(userService.addRole(idUser,role));
     }
 
+    //TODO fix bug remove Role.ROLE_ADMIN and lines...
     @PutMapping(value = "/{idUser}/removeRole",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Rimuove ruolo all'utente idUser.")
