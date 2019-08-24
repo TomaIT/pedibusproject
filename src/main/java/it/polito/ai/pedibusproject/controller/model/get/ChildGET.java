@@ -5,7 +5,6 @@ import it.polito.ai.pedibusproject.database.model.Gender;
 import it.polito.ai.pedibusproject.database.model.StopBus;
 import it.polito.ai.pedibusproject.service.interfaces.LineService;
 import it.polito.ai.pedibusproject.service.interfaces.StopBusService;
-import javafx.scene.paint.Stop;
 import lombok.Data;
 
 import java.util.Date;
