@@ -118,6 +118,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         Update update = new Update();
         update.set("getIn", reservationState);
+        update.set("absent", null);
         UpdateResult updateResult=myUpdateFunctionFirst(id,update);
         if(updateResult.getMatchedCount()==0)
             throw new NotFoundException("Reservation <updateGetIn>");
@@ -157,6 +158,7 @@ public class ReservationServiceImpl implements ReservationService {
             throw new BadRequestException("Reservation <updateAbsent> idStopBus not found in BusRide");
 
         Update update = new Update();
+        update.set("absent", reservationState);
         update.set("getIn", null);
         UpdateResult updateResult=myUpdateFunctionFirst(id,update);
         if(updateResult.getMatchedCount()==0)
