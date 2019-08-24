@@ -134,10 +134,10 @@ public class UserController {
         return new UserGET(userService.addRole(idUser,role));
     }
 
-    //TODO fix bug remove Role.ROLE_ADMIN and lines...
     @PutMapping(value = "/{idUser}/removeRole",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Rimuove ruolo all'utente idUser.")
+    @ApiOperation(value = "Rimuove ruolo all'utente idUser. Per il ruolo admin, toglie anche tutte le linee se il jwt ha i privilegi necessari," +
+            "altrimenti forbidden")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Bad Request"),
@@ -149,6 +149,19 @@ public class UserController {
                                    @RequestParam @Valid Role role) {
         if(role.equals(Role.ROLE_SYS_ADMIN)&&!jwtTokenProvider.getRoles(jwtToken).contains(Role.ROLE_SYS_ADMIN))
             throw new ForbiddenException();
+        if(role.equals(Role.ROLE_ADMIN)&&!jwtTokenProvider.getRoles(jwtToken).contains(Role.ROLE_SYS_ADMIN)){
+            User a=userService.loadUserByUsername(jwtTokenProvider.getUsername(jwtToken));
+            User b=userService.loadUserByUsername(idUser);
+            boolean isPermitted=true;
+            for(String i:b.getIdLines()){
+                if(!a.getIdLines().contains(i)){
+                    isPermitted=false;
+                    break;
+                }
+            }
+            if(!isPermitted) throw new ForbiddenException();
+            b.getIdLines().forEach(x->userService.removeLine(idUser,x));
+        }
         return new UserGET(userService.removeRole(idUser,role));
     }
 
