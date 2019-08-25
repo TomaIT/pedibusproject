@@ -4,19 +4,17 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import it.polito.ai.pedibusproject.controller.model.get.ChildGET;
+import it.polito.ai.pedibusproject.controller.model.get.EnumChildGET;
 import it.polito.ai.pedibusproject.controller.model.get.ReservationGET;
 import it.polito.ai.pedibusproject.controller.model.post.ChildPOST;
-import it.polito.ai.pedibusproject.database.model.Child;
-import it.polito.ai.pedibusproject.database.model.Gender;
-import it.polito.ai.pedibusproject.database.model.Role;
+import it.polito.ai.pedibusproject.controller.model.put.ReservationPUT;
+import it.polito.ai.pedibusproject.database.model.*;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
+import it.polito.ai.pedibusproject.exceptions.DuplicateKeyException;
 import it.polito.ai.pedibusproject.exceptions.ForbiddenException;
 import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
 import it.polito.ai.pedibusproject.security.JwtTokenProvider;
-import it.polito.ai.pedibusproject.service.interfaces.ChildService;
-import it.polito.ai.pedibusproject.service.interfaces.LineService;
-import it.polito.ai.pedibusproject.service.interfaces.ReservationService;
-import it.polito.ai.pedibusproject.service.interfaces.StopBusService;
+import it.polito.ai.pedibusproject.service.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -37,17 +36,19 @@ public class ChildController {
     private ReservationService reservationService;
     private StopBusService stopBusService;
     private LineService lineService;
+    private BusRideService busRideService;
 
     @Autowired
     public ChildController(ChildService childService, JwtTokenProvider jwtTokenProvider,
                            ReservationService reservationService,
                            StopBusService stopBusService,
-                           LineService lineService){
+                           LineService lineService,BusRideService busRideService){
         this.childService=childService;
         this.reservationService=reservationService;
         this.jwtTokenProvider=jwtTokenProvider;
         this.stopBusService=stopBusService;
         this.lineService=lineService;
+        this.busRideService=busRideService;
     }
 
     @GetMapping(value = "/genders",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -122,9 +123,36 @@ public class ChildController {
     public ReservationGET postChildTakenWithoutReservation(@RequestHeader (name="Authorization") String jwtToken,
                                      @PathVariable("idChild")String idChild,
                                      @PathVariable("idBusRide")String idBusRide,
-                                     @PathVariable("idStopBus")String idStopbus) {
-        //TODO
-        throw new NotImplementedException();
+                                     @PathVariable("idStopBus")String idStopBus,
+                                     @RequestBody @Valid ReservationPUT reservationPUT) {
+        //Prova prima a creare la reservation (SUPPONENDO CHE ESSA NON ESISTA)
+        StopBusType stopBusType=this.busRideService.findById(idBusRide).getStopBusType();
+        String username = jwtTokenProvider.getUsername(jwtToken);
+        Reservation reservation=new Reservation(idBusRide,idChild,idStopBus,username);
+        ReservationState rs=new ReservationState(
+                reservationPUT.getIdStopBus(),
+                (new Date()).getTime(),
+                username);
+        switch (reservationPUT.getEnumChildGet()){
+            case GetIn:
+                reservation.setGetIn(rs);
+                break;
+            case Absent:
+                reservation.setAbsent(rs);
+                break;
+            case GetOut:
+                reservation.setGetOut(rs);
+                break;
+            default:
+                throw new BadRequestException("Update ReservationState enumChildGet invalid.");
+        }
+        try {
+            return new ReservationGET(reservationService.create(reservation),childService,stopBusService,lineService);
+        }catch (DuplicateKeyException e){//Allora reservation esiste... proviamo ad aggiornarla solo se Outward
+            if(!stopBusType.equals(StopBusType.Outward)) throw e;
+            //TODO
+            throw new NotImplementedException("La prenotazione ha un conflitto, questa funzionalità è ancora da implementare");
+        }
     }
 
     @PutMapping(value = "/{idChild}",consumes = MediaType.APPLICATION_JSON_VALUE,

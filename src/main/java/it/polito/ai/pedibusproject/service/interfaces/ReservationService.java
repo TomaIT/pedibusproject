@@ -12,6 +12,7 @@ public interface ReservationService {
     Set<Reservation> findAllByIdBusRideAndIdStopBus(String idBusRide,String idStopBus);
     Reservation findById(String id);
     Reservation create(String idBusRide,String idChild,String idStopBus,String idUser);
+    Reservation create(Reservation reservation);
 
     Reservation updateGetIn(String id,ReservationState reservationState);
 
