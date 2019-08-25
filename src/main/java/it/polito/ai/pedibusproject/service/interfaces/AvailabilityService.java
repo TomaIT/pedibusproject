@@ -9,7 +9,11 @@ public interface AvailabilityService {
     Availability findById(String id);
     Availability create(String idBusRide, String idStopBus, String idUser, AvailabilityState state);
 
-    // TODO controllo dell'availabilityState, lo stato deve seguire questo passaggio Available->Checked->Confirmed
+    // TODO controllo dell'availabilityState, lo stato deve seguire questo passaggio:
+    //  Available->Checked
+    //  Checked->ReadChecked
+    //  ReadChecked->Confirmed
+    //  Confirmed->Available
     Availability update(String id, String idStopBus, AvailabilityState state);
 
     void deleteById(String id);

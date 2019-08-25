@@ -113,7 +113,7 @@ public class ChildController {
 
     @PostMapping(value = "/{idChild}/{idBusRide}/{idStopBus}/isTakenWithoutReservation",consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Crea bambino")
+    @ApiOperation(value = "Segna il bambino (non prenotato) come preso. (SOLO Outward e GetIn).")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Bad Request"),
@@ -127,29 +127,21 @@ public class ChildController {
                                      @RequestBody @Valid ReservationPUT reservationPUT) {
         //Prova prima a creare la reservation (SUPPONENDO CHE ESSA NON ESISTA)
         StopBusType stopBusType=this.busRideService.findById(idBusRide).getStopBusType();
+        if(!stopBusType.equals(StopBusType.Outward) || !reservationPUT.getEnumChildGet().equals(EnumChildGET.GetIn)){
+            throw new BadRequestException("This method is only to Outward and GetIn");
+        }
         String username = jwtTokenProvider.getUsername(jwtToken);
         Reservation reservation=new Reservation(idBusRide,idChild,idStopBus,username);
         ReservationState rs=new ReservationState(
                 reservationPUT.getIdStopBus(),
                 (new Date()).getTime(),
                 username);
-        switch (reservationPUT.getEnumChildGet()){
-            case GetIn:
-                reservation.setGetIn(rs);
-                break;
-            case Absent:
-                reservation.setAbsent(rs);
-                break;
-            case GetOut:
-                reservation.setGetOut(rs);
-                break;
-            default:
-                throw new BadRequestException("Update ReservationState enumChildGet invalid.");
-        }
+
+        reservation.setGetIn(rs);
+
         try {
             return new ReservationGET(reservationService.create(reservation),childService,stopBusService,lineService);
         }catch (DuplicateKeyException e){//Allora reservation esiste... proviamo ad aggiornarla solo se Outward
-            if(!stopBusType.equals(StopBusType.Outward)) throw e;
             //TODO
             throw new NotImplementedException("La prenotazione ha un conflitto, questa funzionalità è ancora da implementare");
         }
