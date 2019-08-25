@@ -1264,3 +1264,5 @@ Mail server connection failed; nested exception is com.sun.mail.util.MailConnect
 2019-08-23 18:42:43.288  INFO 163024 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
 2019-08-23 18:42:43.288  INFO 163024 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2019-08-23 18:42:43.296  INFO 163024 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 7 ms
+2019-08-23 18:44:31.207  INFO 163024 --- [http-nio-8080-exec-6] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:3, serverValue:113}] to localhost:27017
+2019-08-23 18:44:56.989  INFO 163024 --- [http-nio-8080-exec-10] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:4, serverValue:114}] to localhost:27017
