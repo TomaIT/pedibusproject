@@ -43,9 +43,21 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         this.mongoTemplate=mongoTemplate;
     }
 
-    private UpdateResult myUpdateFunctionFirst(String id, Update update){
+    private UpdateResult myUpdateFunctionFirst(String id, Update update, AvailabilityState oldState_1,AvailabilityState oldState_2){
         Criteria criteria=new Criteria().andOperator(
-                Criteria.where("_id").is(id)
+                Criteria.where("_id").is(id).andOperator(
+                        Criteria.where("state").is(oldState_1).orOperator(Criteria.where("state").is(oldState_2))
+                )
+        );
+        Query query = new Query(criteria);
+        return mongoTemplate.updateFirst(query, update, Availability.class);
+    }
+
+    private UpdateResult myUpdateFunctionFirst(String id, Update update, AvailabilityState oldState){
+        Criteria criteria=new Criteria().andOperator(
+                Criteria.where("_id").is(id).andOperator(
+                        Criteria.where("state").is(oldState)
+                )
         );
         Query query = new Query(criteria);
         return mongoTemplate.updateFirst(query, update, Availability.class);
@@ -98,9 +110,28 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         Update update = new Update();
         update.set("idStopBus", idStopBus);
         update.set("state", state);
-        UpdateResult updateResult=myUpdateFunctionFirst(id,update);
+
+        UpdateResult updateResult;
+        switch (state){
+            case Available:
+                //TODO non sono sicuro che il null funzioni... testare (proprio come per reservation)
+                updateResult=myUpdateFunctionFirst(id,update,AvailabilityState.Confirmed,null);
+                break;
+            case Checked:
+                updateResult=myUpdateFunctionFirst(id,update,AvailabilityState.Available);
+                break;
+            case ReadChecked:
+                updateResult=myUpdateFunctionFirst(id,update,AvailabilityState.Checked);
+                break;
+            case Confirmed:
+                updateResult=myUpdateFunctionFirst(id,update,AvailabilityState.ReadChecked);
+                break;
+            default:
+                throw new BadRequestException("Availability <update> state is wrong.");
+        }
+
         if(updateResult.getMatchedCount()==0)
-            throw new NotFoundException("Availability <update>");
+            throw new NotFoundException("Availability <update> or oldState is wrong");
         return this.availabilityRepository.findById(id)
                 .orElseThrow(()->new NotFoundException("Availability <update>"));
     }
