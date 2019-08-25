@@ -19,6 +19,7 @@ public interface ReservationService {
     Reservation updateGetOut(String id,ReservationState reservationState);
 
     //Non è chiaro a cosa serva, da spiegare bene :D
+    // Ora va a settare il campo absent, per poter distingue un child il cui stato non è ancora stato settato da uno assente nel frontend
     Reservation updateAbsent(String id,ReservationState reservationState);
 
     void deleteById(String id);
