@@ -103,7 +103,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(String email,String password, String firstname, String surname, Date birth, String street, String phoneNumber) {
         Update update = new Update();
-        update.set("password", passwordEncoder.encode(password));
+        if(password!=null) {
+            update.set("password", passwordEncoder.encode(password));
+        }
         update.set("firstname", firstname);
         update.set("surname", surname);
         update.set("birth", birth);

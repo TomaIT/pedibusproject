@@ -219,8 +219,10 @@ public class UserController {
     public UserGET putUserById(@RequestHeader (name="Authorization") String jwtToken,
                             @PathVariable("idUser")String idUser,
                             @RequestBody @Valid UserPUT userPUT) {
-        if(!userPUT.getPassword().equals(userPUT.getVerifyPassword()))
-            throw new BadRequestException("Update User password mismatch");
+        if(!(userPUT.getPassword()==null && userPUT.getVerifyPassword()==null)) {
+            if (!userPUT.getPassword().equals(userPUT.getVerifyPassword()))
+                throw new BadRequestException("Update User password mismatch");
+        }
         if(!jwtTokenProvider.getUsername(jwtToken).equals(idUser))
             throw new ForbiddenException();
         return new UserGET(
