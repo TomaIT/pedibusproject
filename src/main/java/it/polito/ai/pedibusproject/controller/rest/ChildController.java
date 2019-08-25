@@ -141,9 +141,10 @@ public class ChildController {
 
         try {
             return new ReservationGET(reservationService.create(reservation),childService,stopBusService,lineService);
-        }catch (DuplicateKeyException e){//Allora reservation esiste... proviamo ad aggiornarla solo se Outward
-            //TODO
-            throw new NotImplementedException("La prenotazione ha un conflitto, questa funzionalità è ancora da implementare");
+        }catch (DuplicateKeyException e){//Allora reservation esiste... Modifichiamola per la corsa nuova...
+            return new ReservationGET(
+                    this.reservationService.updateGetIn(reservation.getId(),idBusRide,idStopBus,username,rs),
+                    childService,stopBusService,lineService);
         }
     }
 

@@ -16,6 +16,10 @@ public interface ReservationService {
 
     Reservation updateGetIn(String id,ReservationState reservationState);
 
+    //Only Outward
+    Reservation updateGetIn(String id,String idBusRide,String idStopBus,
+                            String idUser,ReservationState reservationState);
+
     //TODO controllo che getIn sia già stato settato
     Reservation updateGetOut(String id,ReservationState reservationState);
 

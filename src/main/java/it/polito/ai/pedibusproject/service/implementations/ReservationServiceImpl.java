@@ -1,10 +1,7 @@
 package it.polito.ai.pedibusproject.service.implementations;
 
 import com.mongodb.client.result.UpdateResult;
-import it.polito.ai.pedibusproject.database.model.BusRide;
-import it.polito.ai.pedibusproject.database.model.Reservation;
-import it.polito.ai.pedibusproject.database.model.ReservationState;
-import it.polito.ai.pedibusproject.database.model.StopBus;
+import it.polito.ai.pedibusproject.database.model.*;
 import it.polito.ai.pedibusproject.database.repository.BusRideRepository;
 import it.polito.ai.pedibusproject.database.repository.ChildRepository;
 import it.polito.ai.pedibusproject.database.repository.ReservationRepository;
@@ -146,6 +143,42 @@ public class ReservationServiceImpl implements ReservationService {
         update.set("getIn", reservationState);
         update.set("absent", null);
         UpdateResult updateResult=myUpdateFunctionFirst(id,update);
+        if(updateResult.getMatchedCount()==0)
+            throw new NotFoundException("Reservation <updateGetIn>");
+        return this.reservationRepository.findById(id)
+                .orElseThrow(()->new NotFoundException("Reservation <updateGetIn>"));
+    }
+
+    @Override
+    public Reservation updateGetIn(String id, String idBusRide, String idStopBus,
+                                   String idUser, ReservationState reservationState) {
+        Optional<BusRide> br = this.busRideRepository.findById(idBusRide);
+        if(!br.isPresent())
+            throw new BadRequestException("Reservation <updateGetIn> idBusRide not found");
+        if(br.get().getStopBuses().stream().map(StopBus::getId)
+                .noneMatch(x -> x.equals(reservationState.getIdStopBus())))
+            throw new BadRequestException("Reservation <updateGetIn> idStopBus not found in BusRide");
+        if(!br.get().getStopBusType().equals(StopBusType.Outward))
+            throw new BadRequestException("Reservation <updateGetIn> new idBusRide not is Outward");
+        if(br.get().getStopBuses().stream().map(StopBus::getId)
+                .noneMatch(x -> x.equals(idStopBus)))
+            throw new BadRequestException("Reservation <updateGetIn> idStopBus not found in BusRide");
+
+
+
+        Update update = new Update();
+        update.set("getIn", reservationState);
+        update.set("absent", null);
+        update.set("idBusRide", idBusRide);
+        update.set("idStopBus", idStopBus);
+        update.set("idUser", idUser);
+
+
+        Criteria criteria=new Criteria().andOperator(
+                Criteria.where("_id").is(id).andOperator(Criteria.where("getIn").is(null)));
+        Query query = new Query(criteria);
+        UpdateResult updateResult=mongoTemplate.updateFirst(query, update, Reservation.class);
+
         if(updateResult.getMatchedCount()==0)
             throw new NotFoundException("Reservation <updateGetIn>");
         return this.reservationRepository.findById(id)
