@@ -2,10 +2,7 @@ package it.polito.ai.pedibusproject.service.implementations;
 
 import com.mongodb.client.result.UpdateResult;
 import it.polito.ai.pedibusproject.database.model.*;
-import it.polito.ai.pedibusproject.database.repository.ChildRepository;
-import it.polito.ai.pedibusproject.database.repository.ReservationRepository;
-import it.polito.ai.pedibusproject.database.repository.StopBusRepository;
-import it.polito.ai.pedibusproject.database.repository.UserRepository;
+import it.polito.ai.pedibusproject.database.repository.*;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
 import it.polito.ai.pedibusproject.exceptions.NotFoundException;
 import it.polito.ai.pedibusproject.service.interfaces.ChildService;
@@ -17,8 +14,10 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ChildServiceImpl implements ChildService {
@@ -27,16 +26,18 @@ public class ChildServiceImpl implements ChildService {
     private UserRepository userRepository;
     private StopBusRepository stopBusRepository;
     private ReservationRepository reservationRepository;
+    private BusRideRepository busRideRepository;
 
     @Autowired
     public ChildServiceImpl(ChildRepository childRepository, MongoTemplate mongoTemplate,
                             UserRepository userRepository, StopBusRepository stopBusRepository,
-                            ReservationRepository reservationRepository){
+                            ReservationRepository reservationRepository, BusRideRepository busRideRepository){
         this.childRepository=childRepository;
         this.mongoTemplate=mongoTemplate;
         this.userRepository=userRepository;
         this.stopBusRepository=stopBusRepository;
         this.reservationRepository=reservationRepository;
+        this.busRideRepository=busRideRepository;
     }
 
     private UpdateResult myUpdateFunctionFirst(String id, Update update){
@@ -65,6 +66,32 @@ public class ChildServiceImpl implements ChildService {
     @Override
     public Set<Child> findAllByIdStopBusRetDef(String idStopBusRetDef) {
         return this.childRepository.findAllByIdStopBusRetDef(idStopBusRetDef);
+    }
+
+    @Override
+    public Set<Child> findAllAvailableToBeTaken(String idBusRide, String idStopBus) {
+        // TODO: test....
+        BusRide busRide=busRideRepository.findById(idBusRide).orElseThrow(()->new NotFoundException("BusRide <findAllChildrenAvailableToBeTaken>"));
+        //Controllo sia Outward altrimenti BadRequest
+        if(!busRide.getStopBusType().equals(StopBusType.Outward))
+            throw new BadRequestException("Child <findAllAvailableToBeTaken> this methos is valid only to StopBusType.Outward");
+
+        Set<BusRide> busRides=this.busRideRepository.findAllByStopBusTypeAndYearAndMonthAndDay(
+                busRide.getStopBusType(),busRide.getYear(),busRide.getMonth(),busRide.getDay()).stream()
+                .filter(x->!x.getId().equals(idBusRide)).collect(Collectors.toSet());
+
+
+        Set<Child> children= new HashSet<>(childRepository.findAll());
+        Set<Reservation> reservationsThisBusRide=reservationRepository.findAllByIdBusRide(idBusRide);
+        Set<Reservation> reservationsAlreadyChecked=new HashSet<>();
+
+        busRides.forEach(x->reservationsAlreadyChecked.addAll(reservationRepository.findAllByIdBusRideAndGetInIsNotNull(x.getId())));
+
+        Set<String> childrenToRemove=new HashSet<>();
+        childrenToRemove.addAll(reservationsThisBusRide.stream().map(Reservation::getIdChild).collect(Collectors.toSet()));
+        childrenToRemove.addAll(reservationsAlreadyChecked.stream().map(Reservation::getIdChild).collect(Collectors.toSet()));
+
+        return children.stream().filter(x->childrenToRemove.contains(x.getId())).collect(Collectors.toSet());
     }
 
     private void checkIdStopsBus(String idStopBusOutDef, String idStopBusRetDef) {
