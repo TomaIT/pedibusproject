@@ -19,6 +19,7 @@ public class Reservation {
     private String idUser;
     private ReservationState getIn=null;
     private ReservationState getOut=null;
+    private ReservationState absent=null;
 
     public Reservation(String idBusRide,String idChild,String idStopBus,String idUser){
         this.idBusRide=idBusRide;

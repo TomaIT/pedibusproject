@@ -4,18 +4,17 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import it.polito.ai.pedibusproject.controller.model.get.ChildGET;
+import it.polito.ai.pedibusproject.controller.model.get.EnumChildGET;
 import it.polito.ai.pedibusproject.controller.model.get.ReservationGET;
 import it.polito.ai.pedibusproject.controller.model.post.ChildPOST;
-import it.polito.ai.pedibusproject.database.model.Child;
-import it.polito.ai.pedibusproject.database.model.Gender;
-import it.polito.ai.pedibusproject.database.model.Role;
+import it.polito.ai.pedibusproject.controller.model.put.ReservationPUT;
+import it.polito.ai.pedibusproject.database.model.*;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
+import it.polito.ai.pedibusproject.exceptions.DuplicateKeyException;
 import it.polito.ai.pedibusproject.exceptions.ForbiddenException;
+import it.polito.ai.pedibusproject.exceptions.NotImplementedException;
 import it.polito.ai.pedibusproject.security.JwtTokenProvider;
-import it.polito.ai.pedibusproject.service.interfaces.ChildService;
-import it.polito.ai.pedibusproject.service.interfaces.LineService;
-import it.polito.ai.pedibusproject.service.interfaces.ReservationService;
-import it.polito.ai.pedibusproject.service.interfaces.StopBusService;
+import it.polito.ai.pedibusproject.service.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -36,17 +36,19 @@ public class ChildController {
     private ReservationService reservationService;
     private StopBusService stopBusService;
     private LineService lineService;
+    private BusRideService busRideService;
 
     @Autowired
     public ChildController(ChildService childService, JwtTokenProvider jwtTokenProvider,
                            ReservationService reservationService,
                            StopBusService stopBusService,
-                           LineService lineService){
+                           LineService lineService,BusRideService busRideService){
         this.childService=childService;
         this.reservationService=reservationService;
         this.jwtTokenProvider=jwtTokenProvider;
         this.stopBusService=stopBusService;
         this.lineService=lineService;
+        this.busRideService=busRideService;
     }
 
     @GetMapping(value = "/genders",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -107,6 +109,42 @@ public class ChildController {
                 childPOST.getGender(),childPOST.getBlobBase64(),childPOST.getIdStopBusOutDef(),childPOST.getIdStopBusRetDef()),
                 stopBusService,lineService
         );
+    }
+
+    @PostMapping(value = "/{idChild}/{idBusRide}/{idStopBus}/isTakenWithoutReservation",consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Segna il bambino (non prenotato) come preso. (SOLO Outward e GetIn).")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public ReservationGET postChildTakenWithoutReservation(@RequestHeader (name="Authorization") String jwtToken,
+                                     @PathVariable("idChild")String idChild,
+                                     @PathVariable("idBusRide")String idBusRide,
+                                     @PathVariable("idStopBus")String idStopBus,
+                                     @RequestBody @Valid ReservationPUT reservationPUT) {
+        //Prova prima a creare la reservation (SUPPONENDO CHE ESSA NON ESISTA)
+        StopBusType stopBusType=this.busRideService.findById(idBusRide).getStopBusType();
+        if(!stopBusType.equals(StopBusType.Outward) || !reservationPUT.getEnumChildGet().equals(EnumChildGET.GetIn)){
+            throw new BadRequestException("This method is only to Outward and GetIn");
+        }
+        String username = jwtTokenProvider.getUsername(jwtToken);
+        Reservation reservation=new Reservation(idBusRide,idChild,idStopBus,username);
+        ReservationState rs=new ReservationState(
+                reservationPUT.getIdStopBus(),
+                (new Date()).getTime(),
+                username);
+
+        reservation.setGetIn(rs);
+
+        try {
+            return new ReservationGET(reservationService.create(reservation),childService,stopBusService,lineService);
+        }catch (DuplicateKeyException e){//Allora reservation esiste... proviamo ad aggiornarla solo se Outward
+            //TODO
+            throw new NotImplementedException("La prenotazione ha un conflitto, questa funzionalità è ancora da implementare");
+        }
     }
 
     @PutMapping(value = "/{idChild}",consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -171,5 +209,23 @@ public class ChildController {
             return this.reservationService.findAllByIdChild(idChild).stream()
                     .map(x->new ReservationGET(x,childService,stopBusService,lineService)).collect(Collectors.toSet());
         throw new ForbiddenException();
+    }
+
+    @GetMapping(value = "/{idBusRide}/{idStopBus}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Ritorna tutti i bambini 'prendibili', per quella fermata e quella corsa, " +
+            "esso avviene solo se tale bambino non ha prenotazioni in quello SLOT, " +
+            "oppure se ha prenotazioni ma non sono ancora state 'usate' (getIN==NULL). " +
+            "Questo metodo è valido solo per Outward. (SONO ESCLUSI I BAMBINI GIà PRENOTATI PER QUELLA CORSA)")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "Not Found Child"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public Set<ChildGET> getAllChildrenAvailableInThisBusRide(@RequestHeader (name="Authorization") String jwtToken,
+                                                     @PathVariable("idBusRide")String idBusRide,
+                                                     @PathVariable("idStopBus")String idStopBus) {
+        return this.childService.findAllAvailableToBeTaken(idBusRide,idStopBus).stream()
+                .map(x->new ChildGET(x,stopBusService,lineService)).collect(Collectors.toSet());
+        //throw new NotImplementedException();
     }
 }

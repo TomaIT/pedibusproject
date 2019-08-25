@@ -17,16 +17,20 @@ public class UserPUT {
     @Size(min = 8,max = 32)
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$",flags = Pattern.Flag.UNICODE_CASE)
     private String verifyPassword;
+    @NotNull
     @Size(min = 1,max = 128)
     private String firstname;
+    @NotNull
     @Size(min = 1,max = 128)
     private String surname;
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Valid
     private Date birth;
+    @NotNull
     @Size(min = 1,max = 128)
     private String street;
+    @NotNull
     @Size(min = 10,max = 10)
     private String phoneNumber;
 }

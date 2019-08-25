@@ -17,6 +17,7 @@ public class ReservationGET {
     private String idUser;
     private ReservationState getIn;
     private ReservationState getOut;
+    private ReservationState absent;
 
     public ReservationGET(Reservation reservation, ChildService childService,
                           StopBusService stopBusService, LineService lineService){
@@ -27,6 +28,7 @@ public class ReservationGET {
         this.idUser=reservation.getIdUser();
         this.getIn=reservation.getGetIn();
         this.getOut=reservation.getGetOut();
+        this.absent=reservation.getAbsent();
         this.child=new ChildGET(childService.findById(idChild),stopBusService,lineService);
     }
 }

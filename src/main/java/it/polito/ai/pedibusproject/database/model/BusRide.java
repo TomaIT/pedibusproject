@@ -130,7 +130,7 @@ public class BusRide implements Comparable<BusRide> {
         headerCell.setCellStyle(headerStyle);
 
 
-        //TODO
+        //TODO questo metodo non è completo...
         Set<Reservation> reservations=reservationService.findAllByIdBusRide(id);
 
         r=2;

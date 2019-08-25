@@ -106,6 +106,32 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    public Reservation create(Reservation reservation) {
+        //Controlli
+        if(!childRepository.existsById(reservation.getIdChild()))
+            throw new BadRequestException("Reservation <create> idChild not found");
+        /*if(!busRideRepository.existsById(idBusRide))
+            throw new BadRequestException("Reservation <create> idBusRide not found");
+        if(!stopBusRepository.existsById(idStopBus))
+            throw new BadRequestException("Reservation <create> idStopBus not found");*/
+        Optional<BusRide> br = this.busRideRepository.findById(reservation.getIdBusRide());
+        if(!br.isPresent())
+            throw new BadRequestException("Reservation <create> idBusRide not found");
+        if(!br.get().getStopBuses().stream().map(StopBus::getId).anyMatch(y -> y.equals(reservation.getIdStopBus())))
+            throw new BadRequestException("Reservation <create> idStopBus not found in BusRide");
+
+        if(br.get().getStartTime().getTime()<=(new Date()).getTime())
+            throw new BadRequestException("Reservation <create> BusRide startTime has already passed.");
+        //Fine controlli
+
+        try {
+            return this.reservationRepository.insert(reservation);
+        }catch (org.springframework.dao.DuplicateKeyException e){
+            throw new DuplicateKeyException("Reservation <create> already exist");
+        }
+    }
+
+    @Override
     public Reservation updateGetIn(String id,ReservationState reservationState) {
         Optional<Reservation> r = this.reservationRepository.findById(id);
         if(!r.isPresent())
@@ -118,6 +144,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         Update update = new Update();
         update.set("getIn", reservationState);
+        update.set("absent", null);
         UpdateResult updateResult=myUpdateFunctionFirst(id,update);
         if(updateResult.getMatchedCount()==0)
             throw new NotFoundException("Reservation <updateGetIn>");
@@ -157,6 +184,7 @@ public class ReservationServiceImpl implements ReservationService {
             throw new BadRequestException("Reservation <updateAbsent> idStopBus not found in BusRide");
 
         Update update = new Update();
+        update.set("absent", reservationState);
         update.set("getIn", null);
         UpdateResult updateResult=myUpdateFunctionFirst(id,update);
         if(updateResult.getMatchedCount()==0)

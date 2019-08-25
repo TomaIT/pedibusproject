@@ -15,6 +15,8 @@ public interface ChildService {
     Set<Child> findAllByIdStopBusOutDef(String idStopBusOutDef);
     Set<Child> findAllByIdStopBusRetDef(String idStopBusRetDef);
 
+    Set<Child> findAllAvailableToBeTaken(String idBusRide,String idStopBus);
+
     Child create(String idUser, String firstname, String surname, Date birth,Gender gender,String blobBase64,String idStopBusOutDef,String idStopBusRetDef);
     Child update(String id,String firstname, String surname, Date birth,Gender gender,String blobBase64,String idStopBusOutDef,String idStopBusRetDef);
     //Delete Reservations...
