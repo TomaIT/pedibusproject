@@ -24,6 +24,7 @@ public interface UserService extends UserDetailsService {
     User loadUserByUsername(String username);
 
     Set<User> findByRole(Role role);
+    Set<User> findByIdLine(String idLine);
 
     User updateUser(String email,String password,String firstname, String surname,
                     Date birth,String street,String phoneNumber);

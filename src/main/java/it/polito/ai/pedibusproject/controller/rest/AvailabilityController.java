@@ -7,13 +7,12 @@ import io.swagger.annotations.ApiResponses;
 import it.polito.ai.pedibusproject.controller.model.get.AvailabilityGET;
 import it.polito.ai.pedibusproject.controller.model.post.AvailabilityPOST;
 import it.polito.ai.pedibusproject.controller.model.put.AvailabilityPUT;
-import it.polito.ai.pedibusproject.database.model.Availability;
-import it.polito.ai.pedibusproject.database.model.AvailabilityState;
-import it.polito.ai.pedibusproject.database.model.Role;
+import it.polito.ai.pedibusproject.database.model.*;
 import it.polito.ai.pedibusproject.exceptions.ForbiddenException;
 import it.polito.ai.pedibusproject.security.JwtTokenProvider;
 import it.polito.ai.pedibusproject.service.interfaces.AvailabilityService;
 import it.polito.ai.pedibusproject.service.interfaces.BusRideService;
+import it.polito.ai.pedibusproject.service.interfaces.MessageService;
 import it.polito.ai.pedibusproject.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,17 +34,19 @@ public class AvailabilityController {
     private JwtTokenProvider jwtTokenProvider;
     private BusRideService busRideService;
     private UserService userService;
+    private MessageService messageService;
 
 
     @Autowired
     public AvailabilityController(AvailabilityService availabilityService,
                                   JwtTokenProvider jwtTokenProvider,
                                   BusRideService busRideService,
-                                  UserService userService) {
+                                  UserService userService,MessageService messageService) {
         this.availabilityService = availabilityService;
         this.jwtTokenProvider=jwtTokenProvider;
         this.busRideService=busRideService;
         this.userService=userService;
+        this.messageService=messageService;
     }
 
     @GetMapping(value = "/states",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -154,20 +156,39 @@ public class AvailabilityController {
                                            @PathVariable("idAvailability")String idAvailability) {
         List roles=jwtTokenProvider.getRoles(jwtToken);
         String username=jwtTokenProvider.getUsername(jwtToken);
+        Availability av=availabilityService.findById(idAvailability);
 
 
         if(roles.contains(Role.ROLE_SYS_ADMIN)){
+            this.messageService.create(username,av.getIdUser(),"Disponibiltà Cancellata",
+                    "La sua disponibilità ("+av+") è stata cancellata.",
+                    (new Date()).getTime());
             this.availabilityService.deleteById(idAvailability);
             return;
         }
 
         if(roles.contains(Role.ROLE_ADMIN)&& userService.isAdminOfLine(username,
-                busRideService.findById(availabilityService.findById(idAvailability).getIdBusRide()).getIdLine())) {
+                busRideService.findById(av.getIdBusRide()).getIdLine())) {
+            this.messageService.create(username,av.getIdUser(),"Disponibiltà Cancellata",
+                    "La sua disponibilità ("+av+") è stata cancellata.",
+                    (new Date()).getTime());
             this.availabilityService.deleteById(idAvailability);
             return;
         }
 
-        if(roles.contains(Role.ROLE_ESCORT)&&availabilityService.findById(idAvailability).getIdUser().equals(username)) {
+        if(roles.contains(Role.ROLE_ESCORT)&&av.getIdUser().equals(username)) {
+            if(av.getState()!=AvailabilityState.Confirmed)
+                throw new ForbiddenException();
+            BusRide br=busRideService.findById(av.getId());
+            Set<User> usersTo=userService.findByRole(Role.ROLE_SYS_ADMIN);
+            usersTo.addAll(userService.findByIdLine(br.getIdLine()));
+
+            usersTo.forEach(y->
+                    this.messageService.create(username,y.getUsername(),"Disponibiltà Cancellata",
+                    "La disponibilità di "+av.getIdUser()+" per la corsa '"+
+                            br.getStopBuses().first().getName()+" -> "+br.getStopBuses().last().getName()
+                            +" "+br.getStartTime()+"', è stata cancellata.",
+                    (new Date()).getTime()));
             this.availabilityService.deleteById(idAvailability);
             return;
         }

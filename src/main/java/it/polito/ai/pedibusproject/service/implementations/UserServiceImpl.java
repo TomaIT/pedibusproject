@@ -101,6 +101,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Set<User> findByIdLine(String idLine) {
+        return userRepository.findAllByIdLinesContains(idLine);
+    }
+
+    @Override
     public User updateUser(String email,String password, String firstname, String surname, Date birth, String street, String phoneNumber) {
         Update update = new Update();
         if(password!=null) {
