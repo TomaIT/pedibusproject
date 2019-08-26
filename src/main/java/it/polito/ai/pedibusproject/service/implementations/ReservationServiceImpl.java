@@ -17,9 +17,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -117,8 +116,13 @@ public class ReservationServiceImpl implements ReservationService {
         if(!br.get().getStopBuses().stream().map(StopBus::getId).anyMatch(y -> y.equals(reservation.getIdStopBus())))
             throw new BadRequestException("Reservation <create> idStopBus not found in BusRide");
 
-        if(br.get().getStartTime().getTime()<=(new Date()).getTime())
-            throw new BadRequestException("Reservation <create> BusRide startTime has already passed.");
+        /*if(br.get().getStartTime().getTime()<=(new Date()).getTime())
+            throw new BadRequestException("Reservation <create> BusRide startTime has already passed.");*/
+        if(br.get().getIdLastStopBus() != null) {
+            List<String> idStobBuses = br.get().getStopBuses().stream().map(StopBus::getId).collect(Collectors.toList());
+            if (idStobBuses.indexOf(reservation.getIdStopBus()) <= idStobBuses.indexOf(br.get().getIdLastStopBus()))
+                throw new BadRequestException("Reservation <create> Pedibus has already passed by this StopBus");
+        }
         //Fine controlli
 
         try {
