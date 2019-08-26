@@ -91,7 +91,7 @@ public class ChildServiceImpl implements ChildService {
         childrenToRemove.addAll(reservationsThisBusRide.stream().map(Reservation::getIdChild).collect(Collectors.toSet()));
         childrenToRemove.addAll(reservationsAlreadyChecked.stream().map(Reservation::getIdChild).collect(Collectors.toSet()));
 
-        return children.stream().filter(x->childrenToRemove.contains(x.getId())).collect(Collectors.toSet());
+        return children.stream().filter(x->!childrenToRemove.contains(x.getId())).collect(Collectors.toSet());
     }
 
     private void checkIdStopsBus(String idStopBusOutDef, String idStopBusRetDef) {
