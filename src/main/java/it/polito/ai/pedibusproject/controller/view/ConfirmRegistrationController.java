@@ -61,7 +61,7 @@ public class ConfirmRegistrationController {
                 confirmUserView.getStreet(),confirmUserView.getPhoneNumber());
 
         //TODO angular login
-        return "tempLogin";
+        return "redirect:http://localhost:4200/login";
 
     }
 }

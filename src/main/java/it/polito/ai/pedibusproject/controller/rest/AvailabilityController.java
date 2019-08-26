@@ -116,25 +116,26 @@ public class AvailabilityController {
     public AvailabilityGET putAvailability(@RequestHeader (name="Authorization") String jwtToken,
                                         @PathVariable("idAvailability")String idAvailability,
                                         @RequestBody @Valid AvailabilityPUT availabilityPUT) {
-        List roles=jwtTokenProvider.getRoles(jwtToken);
+        List<Role> roles=jwtTokenProvider.getRoles(jwtToken);
         String username=jwtTokenProvider.getUsername(jwtToken);
 
         if(roles.contains(Role.ROLE_SYS_ADMIN))
             return new AvailabilityGET(
-                    this.availabilityService.update(idAvailability,
+                    this.availabilityService.update(username,roles,idAvailability,
                             availabilityPUT.getIdStopBus(), availabilityPUT.getState())
             );
 
         if(roles.contains(Role.ROLE_ADMIN)&& userService.isAdminOfLine(username,
                 busRideService.findById(availabilityService.findById(idAvailability).getIdBusRide()).getIdLine()))
             return new AvailabilityGET(
-                    this.availabilityService.update(idAvailability,
+                    this.availabilityService.update(username,roles,idAvailability,
                             availabilityPUT.getIdStopBus(), availabilityPUT.getState())
             );
 
-        if(roles.contains(Role.ROLE_ESCORT)&&availabilityService.findById(idAvailability).getIdUser().equals(username))
+        if(roles.contains(Role.ROLE_ESCORT)&&availabilityService
+                .findById(idAvailability).getIdUser().equals(username))
             return new AvailabilityGET(
-                    this.availabilityService.update(idAvailability,
+                    this.availabilityService.update(username,roles,idAvailability,
                             availabilityPUT.getIdStopBus(), availabilityPUT.getState())
             );
 

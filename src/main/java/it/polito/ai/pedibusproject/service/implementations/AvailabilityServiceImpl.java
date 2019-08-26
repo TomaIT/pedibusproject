@@ -1,17 +1,14 @@
 package it.polito.ai.pedibusproject.service.implementations;
 
 import com.mongodb.client.result.UpdateResult;
-import it.polito.ai.pedibusproject.database.model.Availability;
-import it.polito.ai.pedibusproject.database.model.AvailabilityState;
-import it.polito.ai.pedibusproject.database.model.BusRide;
-import it.polito.ai.pedibusproject.database.model.StopBus;
+import it.polito.ai.pedibusproject.database.model.*;
 import it.polito.ai.pedibusproject.database.repository.AvailabilityRepository;
 import it.polito.ai.pedibusproject.database.repository.BusRideRepository;
+import it.polito.ai.pedibusproject.database.repository.LineRepository;
 import it.polito.ai.pedibusproject.database.repository.UserRepository;
-import it.polito.ai.pedibusproject.exceptions.BadRequestException;
-import it.polito.ai.pedibusproject.exceptions.DuplicateKeyException;
-import it.polito.ai.pedibusproject.exceptions.NotFoundException;
+import it.polito.ai.pedibusproject.exceptions.*;
 import it.polito.ai.pedibusproject.service.interfaces.AvailabilityService;
+import it.polito.ai.pedibusproject.service.interfaces.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -21,6 +18,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -30,27 +28,24 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     private BusRideRepository busRideRepository;
     private UserRepository userRepository;
     private MongoTemplate mongoTemplate;
+    private MessageService messageService;
+    private LineRepository lineRepository;
+    @Value("${spring.mail.username}")
+    private String sysAdmin;
     @Value("${availability.time.expired.before.busride.start.seconds}")
     private long timeBeforeStartBusRideSec;
 
     @Autowired
     public AvailabilityServiceImpl(AvailabilityRepository availabilityRepository,
                                    BusRideRepository busRideRepository, UserRepository userRepository,
-                                   MongoTemplate mongoTemplate) {
+                                   MongoTemplate mongoTemplate, MessageService messageService,
+                                   LineRepository lineRepository) {
         this.availabilityRepository = availabilityRepository;
         this.busRideRepository = busRideRepository;
         this.userRepository = userRepository;
         this.mongoTemplate=mongoTemplate;
-    }
-
-    private UpdateResult myUpdateFunctionFirst(String id, Update update, AvailabilityState oldState_1,AvailabilityState oldState_2){
-        Criteria criteria=new Criteria().andOperator(
-                Criteria.where("_id").is(id).andOperator(
-                        Criteria.where("state").is(oldState_1).orOperator(Criteria.where("state").is(oldState_2))
-                )
-        );
-        Query query = new Query(criteria);
-        return mongoTemplate.updateFirst(query, update, Availability.class);
+        this.messageService=messageService;
+        this.lineRepository=lineRepository;
     }
 
     private UpdateResult myUpdateFunctionFirst(String id, Update update, AvailabilityState oldState){
@@ -84,6 +79,9 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         if(!this.userRepository.existsById(idUser))
             throw new BadRequestException("Availability <create> not found User");
 
+        if(!state.equals(AvailabilityState.Available))
+            throw new BadRequestException("Availability <create> only Available state is accetable.");
+
         try {
             return this.availabilityRepository.insert(new Availability(idBusRide, idStopBus, idUser, state));
         }catch (org.springframework.dao.DuplicateKeyException e){
@@ -91,8 +89,46 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         }
     }
 
+
+    private void sendMessage_I(BusRide br, Availability av) {
+        String lineName=this.lineRepository.findById(br.getIdLine())
+                .orElseThrow(()->new InternalServerErrorException("Availability <update>")).getName();
+
+
+        Set<User> usersTo=userRepository.findAllByRolesContains(Role.ROLE_SYS_ADMIN);
+        usersTo.addAll(userRepository.findAllByIdLinesContains(br.getIdLine()));
+
+
+        usersTo.forEach(y->
+            this.messageService.create(av.getIdUser(),y.getUsername(),
+                    "Disponibilità Confermata",
+                    "La diponibilità di "+av.getIdUser()+" è stata confermata per la corsa:  "+
+                            lineName+" - "+
+                            br.getStartTime().toString()+".\n"+
+                            "In particolare sarà addetto alla tratta: "+br.getStopBuses().stream()
+                            .filter(x->x.getId().equals(av.getIdStopBus())).findFirst()
+                            .orElseThrow(()->new InternalServerErrorException("Availability <update>"))
+                            .getName()+" -> "+br.getStopBuses().last().getName(),
+                    (new Date()).getTime())
+        );
+    }
+
+    private void sendMessage_II(BusRide br,Availability av,String idAdmin) {
+        String lineName=this.lineRepository.findById(br.getIdLine())
+                .orElseThrow(()->new InternalServerErrorException("Availability <update>")).getName();
+        this.messageService.create(idAdmin,av.getIdUser(),
+                "Turno Chiuso",
+                "La sua diponibilità per ( "+lineName+" - "+ br.getStartTime().toString()+
+                        " ) è stata confermata definitivamente da: "+idAdmin+".\n"+
+                        "In particolare sarà addetto alla tratta: "+br.getStopBuses().stream()
+                        .filter(x->x.getId().equals(av.getIdStopBus())).findFirst()
+                        .orElseThrow(()->new InternalServerErrorException("Availability <update>"))
+                        .getName()+" -> "+br.getStopBuses().last().getName(),
+                (new Date()).getTime());
+    }
+
     @Override
-    public Availability update(String id, String idStopBus, AvailabilityState state) {
+    public Availability update(String idUser, List<Role> roles, String id, String idStopBus, AvailabilityState state) {
 
         // AGGIUNTO I CONTROLLI SU idStopBus
         Optional<Availability> av = this.availabilityRepository.findById(id);
@@ -114,16 +150,23 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         UpdateResult updateResult;
         switch (state){
             case Available:
-                //TODO non sono sicuro che il null funzioni... testare (proprio come per reservation)
-                updateResult=myUpdateFunctionFirst(id,update,AvailabilityState.Confirmed,null);
+                if(!(roles.contains(Role.ROLE_SYS_ADMIN)||roles.contains(Role.ROLE_ADMIN)))
+                    throw new ForbiddenException();
+                updateResult=myUpdateFunctionFirst(id,update,AvailabilityState.Confirmed);
                 break;
             case Checked:
+                if(!(roles.contains(Role.ROLE_SYS_ADMIN)||roles.contains(Role.ROLE_ADMIN)))
+                    throw new ForbiddenException();
                 updateResult=myUpdateFunctionFirst(id,update,AvailabilityState.Available);
                 break;
             case ReadChecked:
+                if(!roles.contains(Role.ROLE_ESCORT))
+                    throw new ForbiddenException();
                 updateResult=myUpdateFunctionFirst(id,update,AvailabilityState.Checked);
                 break;
             case Confirmed:
+                if(!(roles.contains(Role.ROLE_SYS_ADMIN)||roles.contains(Role.ROLE_ADMIN)))
+                    throw new ForbiddenException();
                 updateResult=myUpdateFunctionFirst(id,update,AvailabilityState.ReadChecked);
                 break;
             default:
@@ -132,6 +175,16 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
         if(updateResult.getMatchedCount()==0)
             throw new NotFoundException("Availability <update> or oldState is wrong");
+
+
+        if(state.equals(AvailabilityState.ReadChecked)){
+            sendMessage_I(br.get(),av.get());
+        }
+        if(state.equals(AvailabilityState.Confirmed)){
+            sendMessage_II(br.get(),av.get(),idUser);
+        }
+
+
         return this.availabilityRepository.findById(id)
                 .orElseThrow(()->new NotFoundException("Availability <update>"));
     }

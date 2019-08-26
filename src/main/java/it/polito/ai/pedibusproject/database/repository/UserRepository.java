@@ -8,4 +8,5 @@ import java.util.Set;
 
 public interface UserRepository extends MongoRepository<User, String> {
     Set<User> findAllByRolesContains(Role role);
+    Set<User> findAllByIdLinesContains(String idLine);
 }
