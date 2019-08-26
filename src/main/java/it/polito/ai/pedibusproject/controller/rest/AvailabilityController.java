@@ -10,10 +10,7 @@ import it.polito.ai.pedibusproject.controller.model.put.AvailabilityPUT;
 import it.polito.ai.pedibusproject.database.model.*;
 import it.polito.ai.pedibusproject.exceptions.ForbiddenException;
 import it.polito.ai.pedibusproject.security.JwtTokenProvider;
-import it.polito.ai.pedibusproject.service.interfaces.AvailabilityService;
-import it.polito.ai.pedibusproject.service.interfaces.BusRideService;
-import it.polito.ai.pedibusproject.service.interfaces.MessageService;
-import it.polito.ai.pedibusproject.service.interfaces.UserService;
+import it.polito.ai.pedibusproject.service.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,18 +32,21 @@ public class AvailabilityController {
     private BusRideService busRideService;
     private UserService userService;
     private MessageService messageService;
+    private LineService lineService;
 
 
     @Autowired
     public AvailabilityController(AvailabilityService availabilityService,
                                   JwtTokenProvider jwtTokenProvider,
                                   BusRideService busRideService,
-                                  UserService userService,MessageService messageService) {
+                                  UserService userService,MessageService messageService,
+                                  LineService lineService) {
         this.availabilityService = availabilityService;
         this.jwtTokenProvider=jwtTokenProvider;
         this.busRideService=busRideService;
         this.userService=userService;
         this.messageService=messageService;
+        this.lineService=lineService;
     }
 
     @GetMapping(value = "/states",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -74,14 +74,14 @@ public class AvailabilityController {
         Availability temp=this.availabilityService.findById(idAvailability);
 
         if(roles.contains(Role.ROLE_SYS_ADMIN))
-            return new AvailabilityGET(temp);
+            return new AvailabilityGET(temp,busRideService,lineService);
         if(roles.contains(Role.ROLE_ADMIN)&&
                 userService.isAdminOfLine(username,
                         busRideService.findById(temp.getIdBusRide()).getIdLine()))
-            return new AvailabilityGET(temp);
+            return new AvailabilityGET(temp,busRideService,lineService);
 
         if(roles.contains(Role.ROLE_ESCORT)&&temp.getIdUser().equals(username))
-            return new AvailabilityGET(temp);
+            return new AvailabilityGET(temp,busRideService,lineService);
 
         throw new ForbiddenException();
     }
@@ -102,6 +102,7 @@ public class AvailabilityController {
         return new AvailabilityGET(
                 this.availabilityService.create(availabilityPOST.getIdBusRide(),
                         availabilityPOST.getIdStopBus(),username, availabilityPOST.getState())
+                ,busRideService,lineService
         );
     }
 
@@ -125,6 +126,7 @@ public class AvailabilityController {
             return new AvailabilityGET(
                     this.availabilityService.update(username,roles,idAvailability,
                             availabilityPUT.getIdStopBus(), availabilityPUT.getState())
+                    ,busRideService,lineService
             );
 
         if(roles.contains(Role.ROLE_ADMIN)&& userService.isAdminOfLine(username,
@@ -132,6 +134,7 @@ public class AvailabilityController {
             return new AvailabilityGET(
                     this.availabilityService.update(username,roles,idAvailability,
                             availabilityPUT.getIdStopBus(), availabilityPUT.getState())
+                    ,busRideService,lineService
             );
 
         if(roles.contains(Role.ROLE_ESCORT)&&availabilityService
@@ -139,6 +142,7 @@ public class AvailabilityController {
             return new AvailabilityGET(
                     this.availabilityService.update(username,roles,idAvailability,
                             availabilityPUT.getIdStopBus(), availabilityPUT.getState())
+                    ,busRideService,lineService
             );
 
         throw new ForbiddenException();
