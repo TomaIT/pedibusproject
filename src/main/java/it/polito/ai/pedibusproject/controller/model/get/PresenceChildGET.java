@@ -14,6 +14,7 @@ public class PresenceChildGET {
     private String idReservation=null;
     private boolean isGetIn=false;
     private boolean isGetOut=false;
+    private boolean isAbsent=false;
 
     public PresenceChildGET(Child child, Set<Reservation> reservations){
         this.idChild=child.getId();
@@ -25,6 +26,7 @@ public class PresenceChildGET {
             this.idReservation=temp.getId();
             this.isGetIn=temp.getGetIn()!=null;
             this.isGetOut=temp.getGetOut()!=null;
+            this.isAbsent=temp.getAbsent()!=null;
         }
     }
 
