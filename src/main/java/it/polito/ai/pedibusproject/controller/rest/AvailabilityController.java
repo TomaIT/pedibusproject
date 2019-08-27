@@ -163,42 +163,48 @@ public class AvailabilityController {
         Availability av=availabilityService.findById(idAvailability);
         BusRide br=busRideService.findById(av.getIdBusRide());
 
+        if(     av.getState().equals(AvailabilityState.Available)||
+                av.getState().equals(AvailabilityState.ReadChecked)){
 
-        if(roles.contains(Role.ROLE_SYS_ADMIN)){
-            this.messageService.create(username,av.getIdUser(),"Disponibilità Cancellata",
-                    "La sua disponibilità per la corsa '"+
-                            br.getStopBuses().first().getName()+" -> "+br.getStopBuses().last().getName()
-                            +" "+br.getStartTime()+"', è stata cancellata.",
-                    (new Date()).getTime());
-            this.availabilityService.deleteById(idAvailability);
-            return;
+            if(roles.contains(Role.ROLE_ESCORT)&&av.getIdUser().equals(username)) {
+                Set<User> usersTo=userService.findByRole(Role.ROLE_SYS_ADMIN);
+                usersTo.addAll(userService.findByIdLine(br.getIdLine()));
+
+                usersTo.forEach(y->
+                        this.messageService.create(username,y.getUsername(),"Disponibilità Cancellata",
+                                "La disponibilità di "+av.getIdUser()+" per la corsa:\n"+
+                                        "Linea: "+lineService.findById(br.getIdLine()).getName()+"\n"+
+                                        "Data: "+br.getStartTime()+"\n"+
+                                        "è stata cancellata.",
+                                (new Date()).getTime()));
+                this.availabilityService.deleteById(idAvailability);
+                return;
+            }
         }
 
-        if(roles.contains(Role.ROLE_ADMIN)&& userService.isAdminOfLine(username, br.getIdLine())) {
-            this.messageService.create(username,av.getIdUser(),"Disponibilità Cancellata",
-                    "La sua disponibilità per la corsa '"+
-                            br.getStopBuses().first().getName()+" -> "+br.getStopBuses().last().getName()
-                            +" "+br.getStartTime()+"', è stata cancellata.",
-                    (new Date()).getTime());
-            this.availabilityService.deleteById(idAvailability);
-            return;
-        }
+        if(     av.getState().equals(AvailabilityState.Checked)||
+                av.getState().equals(AvailabilityState.Confirmed)){
 
-
-        if(roles.contains(Role.ROLE_ESCORT)&&av.getIdUser().equals(username)) {
-            if(av.getState()==AvailabilityState.Confirmed)
-                throw new ForbiddenException();
-            Set<User> usersTo=userService.findByRole(Role.ROLE_SYS_ADMIN);
-            usersTo.addAll(userService.findByIdLine(br.getIdLine()));
-
-            usersTo.forEach(y->
-                    this.messageService.create(username,y.getUsername(),"Disponibilità Cancellata",
-                    "La disponibilità di "+av.getIdUser()+" per la corsa '"+
-                            br.getStopBuses().first().getName()+" -> "+br.getStopBuses().last().getName()
-                            +" "+br.getStartTime()+"', è stata cancellata.",
-                    (new Date()).getTime()));
-            this.availabilityService.deleteById(idAvailability);
-            return;
+            if(roles.contains(Role.ROLE_SYS_ADMIN)){
+                this.messageService.create(username,av.getIdUser(),"Disponibilità Cancellata",
+                        "La sua disponibilità per la corsa:\n"+
+                                "Linea: "+lineService.findById(br.getIdLine()).getName()+"\n"+
+                                "Data: "+br.getStartTime()+"\n"+
+                                "è stata cancellata.",
+                        (new Date()).getTime());
+                this.availabilityService.deleteById(idAvailability);
+                return;
+            }
+            if(roles.contains(Role.ROLE_ADMIN)&& userService.isAdminOfLine(username, br.getIdLine())) {
+                this.messageService.create(username,av.getIdUser(),"Disponibilità Cancellata",
+                        "La sua disponibilità per la corsa:\n"+
+                                "Linea: "+lineService.findById(br.getIdLine()).getName()+"\n"+
+                                "Data: "+br.getStartTime()+"\n"+
+                                "è stata cancellata.",
+                        (new Date()).getTime());
+                this.availabilityService.deleteById(idAvailability);
+                return;
+            }
         }
 
         throw new ForbiddenException();
