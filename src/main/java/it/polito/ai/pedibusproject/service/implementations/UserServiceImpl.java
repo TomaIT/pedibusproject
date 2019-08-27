@@ -234,4 +234,9 @@ public class UserServiceImpl implements UserService {
         return this.userRepository.findById(idUser)
                 .orElseThrow(()->new NotFoundException("User <undisableById>"));
     }
+
+    @Override
+    public Set<User> findAllByUsernameStartsWith(String username) {
+        return userRepository.findAllByUsernameStartsWith(username);
+    }
 }

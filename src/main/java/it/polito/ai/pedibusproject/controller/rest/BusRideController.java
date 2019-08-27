@@ -63,7 +63,7 @@ public class BusRideController {
         this.stopBusService=stopBusService;
     }
 
-    @GetMapping(value = "",produces = MediaType.APPLICATION_JSON_VALUE)
+   /* @GetMapping(value = "",produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna tutte le corse (solo per debug)")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
@@ -71,7 +71,7 @@ public class BusRideController {
     })
     public TreeSet<BusRide> getBusRides() {
         return this.busRideService.findAll();
-    }
+    }*/
 
     @GetMapping(value = "/{idBusRide}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna corsa idBusRide")
@@ -105,7 +105,7 @@ public class BusRideController {
 
     @GetMapping(value = "/{idBusRide}/reservations",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Ritorna prenotazioni per quella corsa e quella fermata.")
+    @ApiOperation(value = "Ritorna prenotazioni per quella corsa.")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "Not Found"),

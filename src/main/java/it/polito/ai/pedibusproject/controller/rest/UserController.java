@@ -102,6 +102,19 @@ public class UserController {
         return new UserGET(temp);
     }
 
+    @GetMapping(value = "",produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Ritorna tutti gli utenti che iniziano con il valore idUserStarting")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 500, message = "Internal Server Error")
+    })
+    public Set<UserGET> getUsersByStartWithId(@RequestHeader (name="Authorization") String jwtToken,
+                               @RequestParam("idUserStarting")String idUserStarting) {
+       return userService.findAllByUsernameStartsWith(idUserStarting).stream()
+               .map(UserGET::new).collect(Collectors.toSet());
+    }
+
 
     @GetMapping(value = "/{idUser}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Ritorna l'utente idUser (senza password)")
