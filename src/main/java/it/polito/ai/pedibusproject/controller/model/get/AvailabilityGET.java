@@ -11,7 +11,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class AvailabilityGET {
+public class AvailabilityGET implements Comparable<AvailabilityGET> {
     private String id;
     private String idBusRide;
     private String lineNameOfBusRide;
@@ -34,5 +34,11 @@ public class AvailabilityGET {
                 .filter(x->x.getId().equals(idStopBus)).findFirst()
                 .orElseThrow(()->new InternalServerErrorException("StopBus not present in BusRide")).getName();
         this.lineNameOfBusRide=lineService.findById(temp.getIdLine()).getName();
+    }
+
+    @Override
+    public int compareTo(AvailabilityGET o) {
+        if(this.startDateOfBusRide.equals(o.startDateOfBusRide)) return this.id.compareTo(o.id);
+        return this.startDateOfBusRide.compareTo(o.startDateOfBusRide);
     }
 }

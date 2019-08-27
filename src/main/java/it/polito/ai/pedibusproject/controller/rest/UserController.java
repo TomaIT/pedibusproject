@@ -21,8 +21,10 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -300,13 +302,19 @@ public class UserController {
             @ApiResponse(code = 404, message = "Not Found User"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Set<AvailabilityGET> getAvailabilitiesByUser(@RequestHeader (name="Authorization") String jwtToken,
-                                                        @PathVariable("idUser")String idUser) {
+    public TreeSet<AvailabilityGET> getAvailabilitiesByUser(@RequestHeader (name="Authorization") String jwtToken,
+                                                        @PathVariable("idUser")String idUser,
+                                                        @RequestParam(value = "startDate",required = false)Date startDate) {
+        if(startDate == null)startDate=new Date();
         List roles=jwtTokenProvider.getRoles(jwtToken);
         if(roles.contains(Role.ROLE_SYS_ADMIN)||roles.contains(Role.ROLE_ADMIN)||
-                (roles.contains(Role.ROLE_ESCORT)&&idUser.equals(jwtTokenProvider.getUsername(jwtToken))))
+                (roles.contains(Role.ROLE_ESCORT)&&idUser.equals(jwtTokenProvider.getUsername(jwtToken)))) {
+            Date finalStartDate = startDate;
             return this.availabilityService.findAllByIdUser(idUser).stream()
-                    .map(x->new AvailabilityGET(x,busRideService,lineService)).collect(Collectors.toSet());
+                    .map(x -> new AvailabilityGET(x, busRideService, lineService))
+                    .filter(x -> x.getStartDateOfBusRide().getTime() >= finalStartDate.getTime())
+                    .collect(Collectors.toCollection(TreeSet::new));
+        }
         throw new ForbiddenException();
     }
 
