@@ -161,6 +161,7 @@ public class AvailabilityController {
         List roles=jwtTokenProvider.getRoles(jwtToken);
         String username=jwtTokenProvider.getUsername(jwtToken);
         Availability av=availabilityService.findById(idAvailability);
+        BusRide br=busRideService.findById(av.getIdBusRide());
 
 
         if(roles.contains(Role.ROLE_SYS_ADMIN)){
@@ -171,8 +172,7 @@ public class AvailabilityController {
             return;
         }
 
-        if(roles.contains(Role.ROLE_ADMIN)&& userService.isAdminOfLine(username,
-                busRideService.findById(av.getIdBusRide()).getIdLine())) {
+        if(roles.contains(Role.ROLE_ADMIN)&& userService.isAdminOfLine(username, br.getIdLine())) {
             this.messageService.create(username,av.getIdUser(),"Disponibiltà Cancellata",
                     "La sua disponibilità ("+av+") è stata cancellata.",
                     (new Date()).getTime());
@@ -180,10 +180,10 @@ public class AvailabilityController {
             return;
         }
 
+
         if(roles.contains(Role.ROLE_ESCORT)&&av.getIdUser().equals(username)) {
-            if(av.getState()!=AvailabilityState.Confirmed)
+            if(av.getState()==AvailabilityState.Confirmed)
                 throw new ForbiddenException();
-            BusRide br=busRideService.findById(av.getId());
             Set<User> usersTo=userService.findByRole(Role.ROLE_SYS_ADMIN);
             usersTo.addAll(userService.findByIdLine(br.getIdLine()));
 
