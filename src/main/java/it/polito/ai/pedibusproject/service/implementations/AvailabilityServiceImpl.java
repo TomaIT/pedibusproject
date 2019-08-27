@@ -100,8 +100,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
 
         usersTo.forEach(y->
-            this.messageService.create(av.getIdUser(),y.getUsername(),
-                    "Disponibilità Confermata",
+            this.messageService.create(av.getIdUser(),y.getUsername(), "Disponibilità Confermata",
                     "La diponibilità di "+av.getIdUser()+" è stata confermata per la corsa:  "+
                             lineName+" - "+
                             br.getStartTime().toString()+".\n"+
@@ -116,8 +115,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     private void sendMessage_II(BusRide br,Availability av,String idAdmin) {
         String lineName=this.lineRepository.findById(br.getIdLine())
                 .orElseThrow(()->new InternalServerErrorException("Availability <update>")).getName();
-        this.messageService.create(idAdmin,av.getIdUser(),
-                "Turno Chiuso",
+        this.messageService.create(idAdmin,av.getIdUser(), "Turno Chiuso",
                 "La sua diponibilità per ( "+lineName+" - "+ br.getStartTime().toString()+
                         " ) è stata confermata definitivamente da: "+idAdmin+".\n"+
                         "In particolare sarà addetto alla tratta: "+br.getStopBuses().stream()

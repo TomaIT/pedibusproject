@@ -165,16 +165,20 @@ public class AvailabilityController {
 
 
         if(roles.contains(Role.ROLE_SYS_ADMIN)){
-            this.messageService.create(username,av.getIdUser(),"Disponibiltà Cancellata",
-                    "La sua disponibilità ("+av+") è stata cancellata.",
+            this.messageService.create(username,av.getIdUser(),"Disponibilità Cancellata",
+                    "La sua disponibilità per la corsa '"+
+                            br.getStopBuses().first().getName()+" -> "+br.getStopBuses().last().getName()
+                            +" "+br.getStartTime()+"', è stata cancellata.",
                     (new Date()).getTime());
             this.availabilityService.deleteById(idAvailability);
             return;
         }
 
         if(roles.contains(Role.ROLE_ADMIN)&& userService.isAdminOfLine(username, br.getIdLine())) {
-            this.messageService.create(username,av.getIdUser(),"Disponibiltà Cancellata",
-                    "La sua disponibilità ("+av+") è stata cancellata.",
+            this.messageService.create(username,av.getIdUser(),"Disponibilità Cancellata",
+                    "La sua disponibilità per la corsa '"+
+                            br.getStopBuses().first().getName()+" -> "+br.getStopBuses().last().getName()
+                            +" "+br.getStartTime()+"', è stata cancellata.",
                     (new Date()).getTime());
             this.availabilityService.deleteById(idAvailability);
             return;
@@ -188,7 +192,7 @@ public class AvailabilityController {
             usersTo.addAll(userService.findByIdLine(br.getIdLine()));
 
             usersTo.forEach(y->
-                    this.messageService.create(username,y.getUsername(),"Disponibiltà Cancellata",
+                    this.messageService.create(username,y.getUsername(),"Disponibilità Cancellata",
                     "La disponibilità di "+av.getIdUser()+" per la corsa '"+
                             br.getStopBuses().first().getName()+" -> "+br.getStopBuses().last().getName()
                             +" "+br.getStartTime()+"', è stata cancellata.",

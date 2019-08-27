@@ -2,15 +2,11 @@ package it.polito.ai.pedibusproject.service.implementations;
 
 import com.mongodb.client.result.UpdateResult;
 import it.polito.ai.pedibusproject.controller.model.get.LineEnumGET;
-import it.polito.ai.pedibusproject.database.model.Line;
-import it.polito.ai.pedibusproject.database.model.StopBus;
-import it.polito.ai.pedibusproject.database.model.StopBusType;
-import it.polito.ai.pedibusproject.database.repository.AvailabilityRepository;
-import it.polito.ai.pedibusproject.database.repository.BusRideRepository;
-import it.polito.ai.pedibusproject.database.repository.LineRepository;
-import it.polito.ai.pedibusproject.database.repository.ReservationRepository;
+import it.polito.ai.pedibusproject.database.model.*;
+import it.polito.ai.pedibusproject.database.repository.*;
 import it.polito.ai.pedibusproject.exceptions.BadRequestException;
 import it.polito.ai.pedibusproject.exceptions.DuplicateKeyException;
+import it.polito.ai.pedibusproject.exceptions.InternalServerErrorException;
 import it.polito.ai.pedibusproject.exceptions.NotFoundException;
 import it.polito.ai.pedibusproject.service.interfaces.LineService;
 import it.polito.ai.pedibusproject.service.interfaces.MessageService;
@@ -40,6 +36,7 @@ public class LineServiceImpl implements LineService {
     private ReservationRepository reservationRepository;
     private AvailabilityRepository availabilityRepository;
     private MessageService messageService;
+    private ChildRepository childRepository;
     @Value("${spring.mail.username}")
     private String sysAdmin;
 
@@ -50,7 +47,8 @@ public class LineServiceImpl implements LineService {
                            BusRideRepository busRideRepository,
                            ReservationRepository reservationRepository,
                            MessageService messageService,
-                           AvailabilityRepository availabilityRepository){
+                           AvailabilityRepository availabilityRepository,
+                           ChildRepository childRepository){
         this.lineRepository=lineRepository;
         this.stopBusService=stopBusService;
         this.mongoTemplate=mongoTemplate;
@@ -58,6 +56,7 @@ public class LineServiceImpl implements LineService {
         this.reservationRepository=reservationRepository;
         this.messageService=messageService;
         this.availabilityRepository=availabilityRepository;
+        this.childRepository=childRepository;
     }
 
     @Override
@@ -108,19 +107,26 @@ public class LineServiceImpl implements LineService {
         //Delete BusRides and Reservations
         busRideRepository.findAllByIdLine(id).forEach(x->{
             reservationRepository.findAllByIdBusRide(x.getId()).forEach(y->{
-                this.messageService.create(sysAdmin, y.getIdUser(),
-                        "Deleted Reservation",
-                        "La sua prenotazione ("+x.toString()+") è stata annullata," +
-                                " in quanto la linea e quindi la sua corsa è stata cancellata.\n" +
+                Child child=childRepository.findById(y.getIdChild())
+                        .orElseThrow(()->new InternalServerErrorException("Line <deleteById> child not found"));;
+                this.messageService.create(sysAdmin, y.getIdUser(), "Prenotazione Cancellata",
+                        "La sua prenotazione per:\n"+
+                                "Bambino: "+child.getFirstname()+" "+child.getSurname()+"\n"+
+                                "Linea: "+this.findById(id).getName() +"\n"+
+                                "Data: "+x.getStartTime()+"\n"+
+                                "è stata cancellata, in quanto la corsa per quel giorno è stata annullata.\n" +
                                 "Ci scusiamo per il disagio.",
                         System.currentTimeMillis());
                 reservationRepository.deleteById(y.getId());
             });
             availabilityRepository.findAllByIdBusRide(x.getId()).forEach(y->{
-                this.messageService.create(sysAdmin, y.getIdUser(),
-                        "Deleted Availability",
-                        "La sua disponiblità ("+x.toString()+") è stata annullata," +
-                                " in quanto la linea e quindi la sua corsa è stata cancellata.",
+                BusRide br=busRideRepository.findById(y.getIdBusRide())
+                        .orElseThrow(()->new InternalServerErrorException("BusRide <deleteById> busride not found"));
+                this.messageService.create(sysAdmin, y.getIdUser(), "Disponibilità Cancellata",
+                        "La sua disponibilità per la corsa:\n"+
+                                "Linea: "+this.findById(br.getIdLine()).getName()+"\n"+
+                                "Data: "+br.getStartTime()+"\n"+
+                                "è stata cancellata, in quanto la corsa per quel giorno è stata annullata.",
                         System.currentTimeMillis());
                 availabilityRepository.deleteById(y.getId());
             });

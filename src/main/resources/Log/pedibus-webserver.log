@@ -1551,3 +1551,6 @@ Authentication failed; nested exception is javax.mail.AuthenticationFailedExcept
 2019-08-27 12:46:00.596  INFO 208844 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
 2019-08-27 12:46:00.597  INFO 208844 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2019-08-27 12:46:00.611  INFO 208844 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 13 ms
+2019-08-27 13:04:02.617  INFO 208844 --- [http-nio-8080-exec-10] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:3, serverValue:53}] to localhost:27017
+2019-08-27 13:04:02.622  INFO 208844 --- [http-nio-8080-exec-9] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:4, serverValue:54}] to localhost:27017
+2019-08-27 13:12:23.925  INFO 208844 --- [http-nio-8080-exec-3] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:5, serverValue:55}] to localhost:27017
