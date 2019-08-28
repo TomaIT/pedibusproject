@@ -16,18 +16,14 @@ public class PresenceChildGET {
     private boolean isGetOut=false;
     private boolean isAbsent=false;
 
-    public PresenceChildGET(Child child, Set<Reservation> reservations){
+    public PresenceChildGET(Child child, Reservation reservation){
         this.idChild=child.getId();
         this.nameChild=child.getFirstname()+" "+child.getSurname();
-        Reservation temp=reservations.stream()
-                .filter(x->x.getIdChild().equals(this.idChild)).findFirst().orElse(null);
-        if(temp!=null){
-            this.isBooked=true;
-            this.idReservation=temp.getId();
-            this.isGetIn=temp.getGetIn()!=null;
-            this.isGetOut=temp.getGetOut()!=null;
-            this.isAbsent=temp.getAbsent()!=null;
-        }
+        this.isBooked=true;
+        this.idReservation=reservation.getId();
+        this.isGetIn=reservation.getGetIn()!=null;
+        this.isGetOut=reservation.getGetOut()!=null;
+        this.isAbsent=reservation.getAbsent()!=null;
     }
 
 }
