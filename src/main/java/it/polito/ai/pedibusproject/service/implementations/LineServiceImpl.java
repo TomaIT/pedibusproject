@@ -104,6 +104,7 @@ public class LineServiceImpl implements LineService {
 
     @Override
     public void deleteById(String id) {
+        Line line=this.findById(id);
         //Delete BusRides and Reservations
         busRideRepository.findAllByIdLine(id).forEach(x->{
             reservationRepository.findAllByIdBusRide(x.getId()).forEach(y->{
@@ -123,9 +124,8 @@ public class LineServiceImpl implements LineService {
                 BusRide br=busRideRepository.findById(y.getIdBusRide())
                         .orElseThrow(()->new InternalServerErrorException("BusRide <deleteById> busride not found"));
                 this.messageService.create(sysAdmin, y.getIdUser(), "Disponibilità Cancellata",
-                        "La sua disponibilità per la corsa:\n"+
-                                "Linea: "+this.findById(br.getIdLine()).getName()+"\n"+
-                                "Data: "+br.getStartTime()+"\n"+
+                        "La sua disponibilità per\n"+
+                                y.getMessage(br,line)+
                                 "è stata cancellata, in quanto la corsa per quel giorno è stata annullata.",
                         System.currentTimeMillis());
                 availabilityRepository.deleteById(y.getId());

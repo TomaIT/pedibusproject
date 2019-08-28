@@ -91,8 +91,8 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
 
     private void sendMessage_I(BusRide br, Availability av) {
-        String lineName=this.lineRepository.findById(br.getIdLine())
-                .orElseThrow(()->new InternalServerErrorException("Availability <update>")).getName();
+        Line line=this.lineRepository.findById(br.getIdLine())
+                .orElseThrow(()->new InternalServerErrorException("Availability <update>"));
 
 
         Set<User> usersTo=userRepository.findAllByRolesContains(Role.ROLE_SYS_ADMIN);
@@ -101,27 +101,20 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
         usersTo.forEach(y->
             this.messageService.create(av.getIdUser(),y.getUsername(), "Disponibilità Confermata",
-                    "La diponibilità di "+av.getIdUser()+" è stata confermata per la corsa:  "+
-                            lineName+" - "+
-                            br.getStartTime().toString()+".\n"+
-                            "In particolare sarà addetto alla tratta: "+br.getStopBuses().stream()
-                            .filter(x->x.getId().equals(av.getIdStopBus())).findFirst()
-                            .orElseThrow(()->new InternalServerErrorException("Availability <update>"))
-                            .getName()+" -> "+br.getStopBuses().last().getName(),
+                    "La disponibilità di "+av.getIdUser()+" è stata confermata.\n"+
+                    av.getMessage(br,line),
                     (new Date()).getTime())
         );
+
+
     }
 
     private void sendMessage_II(BusRide br,Availability av,String idAdmin) {
-        String lineName=this.lineRepository.findById(br.getIdLine())
-                .orElseThrow(()->new InternalServerErrorException("Availability <update>")).getName();
+        Line line=this.lineRepository.findById(br.getIdLine())
+                .orElseThrow(()->new InternalServerErrorException("Availability <update>"));
         this.messageService.create(idAdmin,av.getIdUser(), "Turno Chiuso",
-                "La sua diponibilità per ( "+lineName+" - "+ br.getStartTime().toString()+
-                        " ) è stata confermata definitivamente da: "+idAdmin+".\n"+
-                        "In particolare sarà addetto alla tratta: "+br.getStopBuses().stream()
-                        .filter(x->x.getId().equals(av.getIdStopBus())).findFirst()
-                        .orElseThrow(()->new InternalServerErrorException("Availability <update>"))
-                        .getName()+" -> "+br.getStopBuses().last().getName(),
+                "La sua diponibilità è stata confermata definitivamente da: "+idAdmin+".\n"+
+                        "In particolare sarà addetto alla corsa\n"+av.getMessage(br,line),
                 (new Date()).getTime());
     }
 

@@ -200,9 +200,8 @@ public class BusRideServiceImpl implements BusRideService {
             BusRide br=busRideRepository.findById(x.getIdBusRide())
                     .orElseThrow(()->new InternalServerErrorException("BusRide <deleteById> busride not found"));
             this.messageService.create(sysAdmin, x.getIdUser(), "Disponibilità Cancellata",
-                    "La sua disponibilità per la corsa:\n"+
-                            "Linea: "+lineService.findById(br.getIdLine()).getName()+"\n"+
-                            "Data: "+br.getStartTime()+"\n"+
+                    "La sua disponibilità per\n"+
+                            x.getMessage(br,lineService.findById(br.getIdLine()))+
                             "è stata cancellata, in quanto la corsa per quel giorno è stata annullata.",
                     System.currentTimeMillis());
             this.availabilityRepository.deleteById(x.getId());

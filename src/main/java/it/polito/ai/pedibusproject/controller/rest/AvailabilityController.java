@@ -172,9 +172,8 @@ public class AvailabilityController {
 
                 usersTo.forEach(y->
                         this.messageService.create(username,y.getUsername(),"Disponibilità Cancellata",
-                                "La disponibilità di "+av.getIdUser()+" per la corsa:\n"+
-                                        "Linea: "+lineService.findById(br.getIdLine()).getName()+"\n"+
-                                        "Data: "+br.getStartTime()+"\n"+
+                                "La disponibilità di "+av.getIdUser()+"\n"+
+                                        av.getMessage(br,lineService.findById(br.getIdLine()))+
                                         "è stata cancellata.",
                                 (new Date()).getTime()));
                 this.availabilityService.deleteById(idAvailability);
@@ -187,9 +186,8 @@ public class AvailabilityController {
 
             if(roles.contains(Role.ROLE_SYS_ADMIN)){
                 this.messageService.create(username,av.getIdUser(),"Disponibilità Cancellata",
-                        "La sua disponibilità per la corsa:\n"+
-                                "Linea: "+lineService.findById(br.getIdLine()).getName()+"\n"+
-                                "Data: "+br.getStartTime()+"\n"+
+                        "La sua disponibilità per\n"+
+                                av.getMessage(br,lineService.findById(br.getIdLine()))+
                                 "è stata cancellata.",
                         (new Date()).getTime());
                 this.availabilityService.deleteById(idAvailability);
@@ -197,9 +195,8 @@ public class AvailabilityController {
             }
             if(roles.contains(Role.ROLE_ADMIN)&& userService.isAdminOfLine(username, br.getIdLine())) {
                 this.messageService.create(username,av.getIdUser(),"Disponibilità Cancellata",
-                        "La sua disponibilità per la corsa:\n"+
-                                "Linea: "+lineService.findById(br.getIdLine()).getName()+"\n"+
-                                "Data: "+br.getStartTime()+"\n"+
+                        "La sua disponibilità per\n"+
+                                av.getMessage(br,lineService.findById(br.getIdLine()))+
                                 "è stata cancellata.",
                         (new Date()).getTime());
                 this.availabilityService.deleteById(idAvailability);
