@@ -33,6 +33,7 @@ public class AvailabilityController {
     private UserService userService;
     private MessageService messageService;
     private LineService lineService;
+    private ReservationService reservationService;
 
 
     @Autowired
@@ -40,13 +41,14 @@ public class AvailabilityController {
                                   JwtTokenProvider jwtTokenProvider,
                                   BusRideService busRideService,
                                   UserService userService,MessageService messageService,
-                                  LineService lineService) {
+                                  LineService lineService,ReservationService reservationService) {
         this.availabilityService = availabilityService;
         this.jwtTokenProvider=jwtTokenProvider;
         this.busRideService=busRideService;
         this.userService=userService;
         this.messageService=messageService;
         this.lineService=lineService;
+        this.reservationService=reservationService;
     }
 
     @GetMapping(value = "/states",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -74,14 +76,14 @@ public class AvailabilityController {
         Availability temp=this.availabilityService.findById(idAvailability);
 
         if(roles.contains(Role.ROLE_SYS_ADMIN))
-            return new AvailabilityGET(temp,busRideService,lineService);
+            return new AvailabilityGET(temp,busRideService,lineService,reservationService);
         if(roles.contains(Role.ROLE_ADMIN)&&
                 userService.isAdminOfLine(username,
                         busRideService.findById(temp.getIdBusRide()).getIdLine()))
-            return new AvailabilityGET(temp,busRideService,lineService);
+            return new AvailabilityGET(temp,busRideService,lineService,reservationService);
 
         if(roles.contains(Role.ROLE_ESCORT)&&temp.getIdUser().equals(username))
-            return new AvailabilityGET(temp,busRideService,lineService);
+            return new AvailabilityGET(temp,busRideService,lineService,reservationService);
 
         throw new ForbiddenException();
     }
@@ -102,7 +104,7 @@ public class AvailabilityController {
         return new AvailabilityGET(
                 this.availabilityService.create(availabilityPOST.getIdBusRide(),
                         availabilityPOST.getIdStopBus(),username, availabilityPOST.getState())
-                ,busRideService,lineService
+                ,busRideService,lineService,reservationService
         );
     }
 
@@ -126,7 +128,7 @@ public class AvailabilityController {
             return new AvailabilityGET(
                     this.availabilityService.update(username,roles,idAvailability,
                             availabilityPUT.getIdStopBus(), availabilityPUT.getState())
-                    ,busRideService,lineService
+                    ,busRideService,lineService,reservationService
             );
 
         if(roles.contains(Role.ROLE_ADMIN)&& userService.isAdminOfLine(username,
@@ -134,7 +136,7 @@ public class AvailabilityController {
             return new AvailabilityGET(
                     this.availabilityService.update(username,roles,idAvailability,
                             availabilityPUT.getIdStopBus(), availabilityPUT.getState())
-                    ,busRideService,lineService
+                    ,busRideService,lineService,reservationService
             );
 
         if(roles.contains(Role.ROLE_ESCORT)&&availabilityService
@@ -142,7 +144,7 @@ public class AvailabilityController {
             return new AvailabilityGET(
                     this.availabilityService.update(username,roles,idAvailability,
                             availabilityPUT.getIdStopBus(), availabilityPUT.getState())
-                    ,busRideService,lineService
+                    ,busRideService,lineService,reservationService
             );
 
         throw new ForbiddenException();

@@ -329,7 +329,7 @@ public class UserController {
                 (roles.contains(Role.ROLE_ESCORT)&&idUser.equals(jwtTokenProvider.getUsername(jwtToken)))) {
             Date finalStartDate = startDate;
             return this.availabilityService.findAllByIdUser(idUser).stream()
-                    .map(x -> new AvailabilityGET(x, busRideService, lineService))
+                    .map(x -> new AvailabilityGET(x, busRideService, lineService,reservationService))
                     .filter(x -> x.getStartDateOfBusRide().getTime() >= finalStartDate.getTime())
                     .collect(Collectors.toCollection(TreeSet::new));
         }

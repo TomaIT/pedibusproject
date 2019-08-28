@@ -185,7 +185,7 @@ public class BusRideController {
     public Set<AvailabilityGET> getAvailabilities(@RequestHeader (name="Authorization") String jwtToken,
                                                   @PathVariable("idBusRide")String idBusRide) {
         return this.availabilityService.findAllByIdBusRide(idBusRide).stream()
-                .map(x->new AvailabilityGET(x,busRideService,lineService)).collect(Collectors.toSet());
+                .map(x->new AvailabilityGET(x,busRideService,lineService,reservationService)).collect(Collectors.toSet());
     }
 
     @GetMapping(value = "/{idLine}/{stopBusType}/{year}/{month}/{day}",produces = MediaType.APPLICATION_JSON_VALUE)

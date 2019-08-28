@@ -6,6 +6,7 @@ import it.polito.ai.pedibusproject.database.model.BusRide;
 import it.polito.ai.pedibusproject.exceptions.InternalServerErrorException;
 import it.polito.ai.pedibusproject.service.interfaces.BusRideService;
 import it.polito.ai.pedibusproject.service.interfaces.LineService;
+import it.polito.ai.pedibusproject.service.interfaces.ReservationService;
 import lombok.Data;
 
 import java.util.Date;
@@ -14,6 +15,7 @@ import java.util.Date;
 public class AvailabilityGET implements Comparable<AvailabilityGET> {
     private String id;
     private String idBusRide;
+    private BusRideGET busRide;
     private String lineNameOfBusRide;
     private Date startDateOfBusRide;
     private String stopBusName;
@@ -22,7 +24,7 @@ public class AvailabilityGET implements Comparable<AvailabilityGET> {
     private AvailabilityState state;
 
     public AvailabilityGET(Availability availability, BusRideService busRideService,
-                           LineService lineService){
+                           LineService lineService, ReservationService reservationService){
         this.id=availability.getId();
         this.idBusRide=availability.getIdBusRide();
         this.idStopBus=availability.getIdStopBus();
@@ -34,6 +36,7 @@ public class AvailabilityGET implements Comparable<AvailabilityGET> {
                 .filter(x->x.getId().equals(idStopBus)).findFirst()
                 .orElseThrow(()->new InternalServerErrorException("StopBus not present in BusRide")).getName();
         this.lineNameOfBusRide=lineService.findById(temp.getIdLine()).getName();
+        this.busRide=new BusRideGET(temp,reservationService,lineService);
     }
 
     @Override
