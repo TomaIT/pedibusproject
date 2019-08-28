@@ -7,10 +7,8 @@ import it.polito.ai.pedibusproject.exceptions.InternalServerErrorException;
 import it.polito.ai.pedibusproject.service.interfaces.ChildService;
 import lombok.Data;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 public class PresenceStopBusGET implements Comparable<PresenceStopBusGET> {
@@ -26,19 +24,9 @@ public class PresenceStopBusGET implements Comparable<PresenceStopBusGET> {
         startTime.set(Calendar.MINUTE,stopBus.getHours().intValue());
         this.hours=startTime.getTime();
         this.presenceChildGETSet=new HashSet<>();
-        Set<Child> children=null;
-        switch (stopBus.getStopBusType()){
-            case Return:
-                children=childService.findAllByIdStopBusRetDef(stopBus.getId());
-                break;
-            case Outward:
-                children=childService.findAllByIdStopBusOutDef(stopBus.getId());
-                break;
-            default:
-                throw new InternalServerErrorException("StopBusType not determinate");
-        }
-        for(Child child:children){
-            this.presenceChildGETSet.add(new PresenceChildGET(child,reservations));
+        for(Reservation reservation:reservations.stream().filter(r -> r.getIdStopBus().equals(stopBus.getId())).collect(Collectors.toList())) {
+            Child child = childService.findById(reservation.getIdChild());
+            this.presenceChildGETSet.add(new PresenceChildGET(child, reservation));
         }
     }
 
