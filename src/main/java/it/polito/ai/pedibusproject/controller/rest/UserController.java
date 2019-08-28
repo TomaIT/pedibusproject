@@ -3,6 +3,7 @@ package it.polito.ai.pedibusproject.controller.rest;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import it.polito.ai.pedibusproject.controller.model.PageMy;
 import it.polito.ai.pedibusproject.controller.model.get.*;
 import it.polito.ai.pedibusproject.controller.model.post.UserPOST;
 import it.polito.ai.pedibusproject.controller.model.put.UserPUT;
@@ -16,6 +17,7 @@ import it.polito.ai.pedibusproject.service.interfaces.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -109,10 +111,13 @@ public class UserController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Set<UserGET> getUsersByStartWithId(@RequestHeader (name="Authorization") String jwtToken,
-                               @RequestParam("idUserStarting")String idUserStarting) {
-       return userService.findAllByUsernameStartsWith(idUserStarting).stream()
-               .map(UserGET::new).collect(Collectors.toSet());
+    public PageMy<UserGET> getUsersByStartWithId(
+            @RequestHeader (name="Authorization") String jwtToken,
+            @RequestParam(value = "idUserStarting", required = false, defaultValue = "")String idUserStarting,
+            @RequestParam(value = "page",required = false,defaultValue = "0")Integer page,
+            @RequestParam(value = "size",required = false,defaultValue = "4096")Integer size) {
+        return new PageMy<>(userService.findAllByUsernameStartsWith(idUserStarting,page,size)
+                .map(UserGET::new));
     }
 
 

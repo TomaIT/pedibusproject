@@ -236,7 +236,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Set<User> findAllByUsernameStartsWith(String username) {
-        return userRepository.findAllByUsernameStartsWith(username);
+    public Page<User> findAllByUsernameStartsWith(String username,int page,int size) {
+        return userRepository.findAllByUsernameStartsWithOrderByUsername(
+                username,PageRequest.of(page,size));
     }
 }

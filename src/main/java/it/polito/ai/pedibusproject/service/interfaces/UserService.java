@@ -53,5 +53,5 @@ public interface UserService extends UserDetailsService {
     User disableById(String idUser);
     User undisableById(String idUser);
 
-    Set<User> findAllByUsernameStartsWith(String username);
+    Page<User> findAllByUsernameStartsWith(String username,int page,int size);
 }
