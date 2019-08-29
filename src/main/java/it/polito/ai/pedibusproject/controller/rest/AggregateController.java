@@ -7,15 +7,15 @@ import it.polito.ai.pedibusproject.controller.model.get.AvailabilityGET;
 import it.polito.ai.pedibusproject.controller.model.get.PresenceBusRideGET;
 import it.polito.ai.pedibusproject.database.model.BusRide;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
-import it.polito.ai.pedibusproject.service.interfaces.BusRideService;
-import it.polito.ai.pedibusproject.service.interfaces.ChildService;
-import it.polito.ai.pedibusproject.service.interfaces.LineService;
-import it.polito.ai.pedibusproject.service.interfaces.ReservationService;
+import it.polito.ai.pedibusproject.database.model.User;
+import it.polito.ai.pedibusproject.security.JwtTokenProvider;
+import it.polito.ai.pedibusproject.service.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,16 +27,22 @@ public class AggregateController {
     private ChildService childService;
     private ReservationService reservationService;
     private LineService lineService;
+    private UserService userService;
+    private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
     public AggregateController(BusRideService busRideService,
                                ChildService childService,
                                ReservationService reservationService,
-                               LineService lineService){
+                               LineService lineService,
+                               UserService userService,
+                               JwtTokenProvider jwtTokenProvider){
         this.busRideService=busRideService;
         this.childService=childService;
         this.reservationService=reservationService;
         this.lineService=lineService;
+        this.userService=userService;
+        this.jwtTokenProvider=jwtTokenProvider;
     }
 
 
@@ -56,7 +62,9 @@ public class AggregateController {
                                                 @PathVariable("day")Integer day) {
         BusRide busRide=this.busRideService.findByIdLineAndStopBusTypeAndYearAndMonthAndDay(
                 idLine,stopBusType,year,month,day);
+        String username=jwtTokenProvider.getUsername(jwtToken);
+        List roles=jwtTokenProvider.getRoles(jwtToken);
 
-        return new PresenceBusRideGET(busRide,lineService,childService,reservationService);
+        return new PresenceBusRideGET(busRide,lineService,childService,reservationService,userService,username,roles);
     }
 }

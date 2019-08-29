@@ -10,6 +10,7 @@ public interface ReservationService {
     Set<Reservation> findAllByIdChild(String idChild);
     Set<Reservation> findAllByIdUser(String idUser);
     Set<Reservation> findAllByIdBusRideAndIdStopBus(String idBusRide,String idStopBus);
+    Set<Reservation> findAllByIdBusRideAndIdChild(String idBusRide, String idUser);
     Reservation findById(String id);
     Reservation create(String idBusRide,String idChild,String idStopBus,String idUser);
     Reservation create(Reservation reservation);
