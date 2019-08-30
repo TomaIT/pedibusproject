@@ -143,16 +143,17 @@ public class BusRideServiceImpl implements BusRideService {
         if(temp.getIdLastStopBus()==null){//Is Start Point
             if(!temp.getStopBuses().first().getId().equals(idLastStopBus))//It's not first stopBus
                 throw new BadRequestException("BusRide <updateLastStopBus> it's not the first StopBus");
-
-            if(!(timestampLastStopBus>=temp.getStartTime().getTime()-maxDelayBeforeStartBusRideSec &&
-                    timestampLastStopBus<=temp.getStartTime().getTime()+maxDelayBeforeStartBusRideSec)){
+            /*System.out.println(temp.getStartTime().getTime()-maxDelayBeforeStartBusRideSec*1000+"<="+
+                    timestampLastStopBus+"<="+(temp.getStartTime().getTime()+maxDelayBeforeStartBusRideSec*1000));*/
+            if(!(timestampLastStopBus>=temp.getStartTime().getTime()-maxDelayBeforeStartBusRideSec*1000 &&
+                    timestampLastStopBus<=temp.getStartTime().getTime()+maxDelayBeforeStartBusRideSec*1000)){
                 throw new BadRequestException("BusRide <updateLastStopBus> sei temporalmente troppo distante per poter far parire la corsa.");
             }
         }else{ //Controllo sequenzialità fermate
             TreeSet<StopBus> tempT=new TreeSet<>(temp.getStopBuses());
             while (!tempT.isEmpty()){
                 if(Objects.requireNonNull(tempT.pollLast()).getId().equals(idLastStopBus)){
-                    if(!temp.getIdLastStopBus().equals(tempT.last().getId()))
+                    if(tempT.isEmpty()||!temp.getIdLastStopBus().equals(tempT.last().getId()))
                         throw new BadRequestException("BusRide <updateLastStopBus> la nuova fermata non è successiva a quella vecchia.");
                     break;
                 }
