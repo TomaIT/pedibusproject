@@ -146,7 +146,7 @@ public class BusRideServiceImpl implements BusRideService {
 
             if(!(timestampLastStopBus>=temp.getStartTime().getTime()-maxDelayBeforeStartBusRideSec &&
                     timestampLastStopBus<=temp.getStartTime().getTime()+maxDelayBeforeStartBusRideSec)){
-                throw new BadRequestException("BusRide <updateLastStopBus> è sei temporalmente troppo distante per poter far parire la corsa.");
+                throw new BadRequestException("BusRide <updateLastStopBus> sei temporalmente troppo distante per poter far parire la corsa.");
             }
         }else{ //Controllo sequenzialità fermate
             TreeSet<StopBus> tempT=new TreeSet<>(temp.getStopBuses());
