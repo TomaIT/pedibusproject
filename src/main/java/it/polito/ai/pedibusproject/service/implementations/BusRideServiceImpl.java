@@ -143,10 +143,11 @@ public class BusRideServiceImpl implements BusRideService {
         if(temp.getIdLastStopBus()==null){//Is Start Point
             if(!temp.getStopBuses().first().getId().equals(idLastStopBus))//It's not first stopBus
                 throw new BadRequestException("BusRide <updateLastStopBus> it's not the first StopBus");
-            if(temp.getStartTime().getTime()+maxDelayBeforeStartBusRideSec>=timestampLastStopBus)
-                throw new BadRequestException("BusRide <updateLastStopBus> è troppo tardi per far partire la corsa.");
-            if(temp.getStartTime().getTime()-maxDelayBeforeStartBusRideSec<=timestampLastStopBus)
-                throw new BadRequestException("BusRide <updateLastStopBus> è troppo presto per far partire la corsa.");
+
+            if(!(timestampLastStopBus>=temp.getStartTime().getTime()-maxDelayBeforeStartBusRideSec &&
+                    timestampLastStopBus<=temp.getStartTime().getTime()+maxDelayBeforeStartBusRideSec)){
+                throw new BadRequestException("BusRide <updateLastStopBus> è sei temporalmente troppo distante per poter far parire la corsa.");
+            }
         }else{ //Controllo sequenzialità fermate
             TreeSet<StopBus> tempT=new TreeSet<>(temp.getStopBuses());
             while (!tempT.isEmpty()){
