@@ -263,6 +263,8 @@ public class UserController {
     })
     public UserGET disableUser(@RequestHeader (name="Authorization") String jwtToken,
                                @PathVariable("idUser")String idUser) {
+        if(jwtTokenProvider.getUsername(jwtToken).equals(idUser))
+            throw new BadRequestException("Un utente non può auto-bloccarsi.");
         return new UserGET(userService.disableById(idUser));
     }
 
