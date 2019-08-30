@@ -182,6 +182,13 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
     @Override
     public void deleteById(String id) {
+        Optional<Availability> av = this.availabilityRepository.findById(id);
+        if(!av.isPresent()) throw new NotFoundException("Availability <update> not exist");
+        String idBusRide = av.get().getIdBusRide();
+        Optional<BusRide> br = this.busRideRepository.findById(idBusRide);
+        if(!br.isPresent()) throw new BadRequestException("Availability <update> not found BusRide");
+        if(br.get().getStartTime().getTime()-timeBeforeStartBusRideSec<=(new Date()).getTime())
+            throw new BadRequestException("Availability <update> BusRide startTime is too close.");
         this.availabilityRepository.deleteById(id);
     }
 

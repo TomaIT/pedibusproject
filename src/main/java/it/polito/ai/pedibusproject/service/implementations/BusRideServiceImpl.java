@@ -179,6 +179,9 @@ public class BusRideServiceImpl implements BusRideService {
 
     @Override
     public void deleteById(String id) {
+        BusRide busRideToDelete=this.findById(id);
+        if(busRideToDelete.getIdLastStopBus()!=null)
+            throw new BadRequestException("BusRide <deleteById> the busRide is already started.");
         Set<Reservation> temp=this.reservationService.findAllByIdBusRide(id);
         temp.forEach(x-> {
             Child child=childRepository.findById(x.getIdChild())
