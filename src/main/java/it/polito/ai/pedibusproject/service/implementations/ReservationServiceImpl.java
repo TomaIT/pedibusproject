@@ -200,6 +200,8 @@ public class ReservationServiceImpl implements ReservationService {
         Optional<Reservation> r = this.reservationRepository.findById(id);
         if(!r.isPresent())
             throw new BadRequestException("Reservation <updateGetOut> Reservation not found");
+        if(r.get().getGetIn()==null)
+            throw new BadRequestException("Reservation <updateGetOut> impossible to set getOut if before is not setted getIn.");
         Optional<BusRide> br = this.busRideRepository.findById(r.get().getIdBusRide());
         if(!br.isPresent())
             throw new BadRequestException("Reservation <updateGetOut> idBusRide not found");
