@@ -24,10 +24,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Calendar;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 @Service
 public class BusRideServiceImpl implements BusRideService {
@@ -44,6 +41,8 @@ public class BusRideServiceImpl implements BusRideService {
     private String sysAdmin;
     @Value("${busride.time.delay.before.create.busride.seconds}")
     private long minDelayBeforeCreateBusRideSec;
+    @Value("${busride.time.delay.before.start.seconds}")
+    private long maxDelayBeforeStartBusRideSec;
 
 
     @Autowired
@@ -140,6 +139,24 @@ public class BusRideServiceImpl implements BusRideService {
         //Check
         BusRide temp=this.busRideRepository.findById(id)
                 .orElseThrow(()->new NotFoundException("BusRide"));
+
+        if(temp.getIdLastStopBus()==null){//Is Start Point
+            if(!temp.getStopBuses().first().getId().equals(idLastStopBus))//It's not first stopBus
+                throw new BadRequestException("BusRide <updateLastStopBus> it's not the first StopBus");
+            if(temp.getStartTime().getTime()+maxDelayBeforeStartBusRideSec>=timestampLastStopBus)
+                throw new BadRequestException("BusRide <updateLastStopBus> è troppo tardi per far partire la corsa.");
+            if(temp.getStartTime().getTime()-maxDelayBeforeStartBusRideSec<=timestampLastStopBus)
+                throw new BadRequestException("BusRide <updateLastStopBus> è troppo presto per far partire la corsa.");
+        }else{ //Controllo sequenzialità fermate
+            TreeSet<StopBus> tempT=new TreeSet<>(temp.getStopBuses());
+            while (!tempT.isEmpty()){
+                if(Objects.requireNonNull(tempT.pollLast()).getId().equals(idLastStopBus)){
+                    if(!temp.getIdLastStopBus().equals(tempT.last().getId()))
+                        throw new BadRequestException("BusRide <updateLastStopBus> la nuova fermata non è successiva a quella vecchia.");
+                    break;
+                }
+            }
+        }
         Line line=this.lineService.findById(temp.getIdLine());
         switch (temp.getStopBusType()){
             case Return:
