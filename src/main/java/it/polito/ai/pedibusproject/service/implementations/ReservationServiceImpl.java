@@ -147,6 +147,9 @@ public class ReservationServiceImpl implements ReservationService {
             throw new BadRequestException("Reservation <updateGetIn> idBusRide not found");
         if(!br.get().getStopBuses().stream().map(StopBus::getId).anyMatch(x -> x.equals(reservationState.getIdStopBus())))
             throw new BadRequestException("Reservation <updateGetIn> idStopBus not found in BusRide");
+        if(br.get().getStopBuses().stream().map(StopBus::getId).collect(Collectors.toList()).indexOf(r.get().getIdStopBus()) <=
+            br.get().getStopBuses().stream().map(StopBus::getId).collect(Collectors.toList()).indexOf(br.get().getIdLastStopBus()))
+            throw new BadRequestException("Reservation <updateGetIn> can not update reservation of already passed StopBus");
 
         Update update = new Update();
         update.set("getIn", reservationState);
@@ -161,6 +164,9 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public Reservation updateGetIn(String id, String idBusRide, String idStopBus,
                                    String idUser, ReservationState reservationState) {
+        Optional<Reservation> r = this.reservationRepository.findById(id);
+        if(!r.isPresent())
+            throw new BadRequestException("Reservation <updateGetIn> Reservation not found");
         Optional<BusRide> br = this.busRideRepository.findById(idBusRide);
         if(!br.isPresent())
             throw new BadRequestException("Reservation <updateGetIn> idBusRide not found");
@@ -172,7 +178,9 @@ public class ReservationServiceImpl implements ReservationService {
         if(br.get().getStopBuses().stream().map(StopBus::getId)
                 .noneMatch(x -> x.equals(idStopBus)))
             throw new BadRequestException("Reservation <updateGetIn> idStopBus not found in BusRide");
-
+        if(br.get().getStopBuses().stream().map(StopBus::getId).collect(Collectors.toList()).indexOf(r.get().getIdStopBus()) <=
+                br.get().getStopBuses().stream().map(StopBus::getId).collect(Collectors.toList()).indexOf(br.get().getIdLastStopBus()))
+            throw new BadRequestException("Reservation <updateGetIn> can not update reservation of already passed StopBus");
 
 
         Update update = new Update();
@@ -207,6 +215,9 @@ public class ReservationServiceImpl implements ReservationService {
             throw new BadRequestException("Reservation <updateGetOut> idBusRide not found");
         if(!br.get().getStopBuses().stream().map(StopBus::getId).anyMatch(x -> x.equals(reservationState.getIdStopBus())))
             throw new BadRequestException("Reservation <updateGetOut> idStopBus not found in BusRide");
+        if(br.get().getStopBuses().stream().map(StopBus::getId).collect(Collectors.toList()).indexOf(r.get().getIdStopBus()) <=
+                br.get().getStopBuses().stream().map(StopBus::getId).collect(Collectors.toList()).indexOf(br.get().getIdLastStopBus()))
+            throw new BadRequestException("Reservation <updateGetOut> can not update reservation of already passed StopBus");
 
         Update update = new Update();
         update.set("getOut", reservationState);
@@ -227,6 +238,9 @@ public class ReservationServiceImpl implements ReservationService {
             throw new BadRequestException("Reservation <updateAbsent> idBusRide not found");
         if(!br.get().getStopBuses().stream().map(StopBus::getId).anyMatch(x -> x.equals(reservationState.getIdStopBus())))
             throw new BadRequestException("Reservation <updateAbsent> idStopBus not found in BusRide");
+        if(br.get().getStopBuses().stream().map(StopBus::getId).collect(Collectors.toList()).indexOf(r.get().getIdStopBus()) <=
+                br.get().getStopBuses().stream().map(StopBus::getId).collect(Collectors.toList()).indexOf(br.get().getIdLastStopBus()))
+            throw new BadRequestException("Reservation <updateAbsent> can not update reservation of already passed StopBus");
 
         Update update = new Update();
         update.set("absent", reservationState);
