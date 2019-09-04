@@ -57,8 +57,8 @@ public class PedibusprojectApplication implements CommandLineRunner {
     }
     @Override
     public void run(String... args) throws Exception {
-        // cleanAllDB();
+        //cleanAllDB();
         this.createSysAdmin();
-        this.loaderLine.updateLines();
+        this.loaderLine.updateLinesAsStream();
     }
 }

@@ -1,5 +1,6 @@
 package it.polito.ai.pedibusproject.utility;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.ai.pedibusproject.database.model.*;
 import it.polito.ai.pedibusproject.exceptions.NotFoundException;
 import it.polito.ai.pedibusproject.service.interfaces.*;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.*;
 
 @Component
@@ -124,6 +127,45 @@ public class LoaderLine {
         } else {
             LOG.warn("Folder " + folderLines + " not exists");
         }
+
+    }
+
+    public void updateLinesAsStream(){
+        Set<Line> lines=this.lineService.findAll();
+
+        InputStream is=getClass().getClassLoader().getResourceAsStream("Lines/Lines.json");
+        ObjectMapper mapper=new ObjectMapper();
+        try {
+            String []fileNames=mapper.readValue(is,String[].class);
+            Arrays.stream(fileNames).forEach(y->{
+                InputStream isI=getClass().getClassLoader().getResourceAsStream("Lines/"+y);
+                InputDataLine inputDataLine = null;
+                try {
+                    inputDataLine = InputDataLine.loadData(isI);
+                } catch (IOException e) {
+                    LOG.error("updateLinesAsStream",e);
+                    return;
+                }
+                InputDataLine finalInputDataLine = inputDataLine;
+                Optional<Line> line = lines.stream()
+                        .filter(x->x.getName().equals(finalInputDataLine.getName())).findAny();
+
+                //TODO update Line
+                if(line.isPresent()){
+                    /*if(!line.get().getCreationTime().equals(file.lastModified())) {//Update
+                        this.lineService.deleteById(line.get().getId());
+                        LOG.info("Delete Line <" + line.get().getId()+", "+line.get().getName()+">");
+                        createLine(inputDataLine, file.lastModified());
+                    }*/
+                }else{//Create
+                    createLine(inputDataLine, (new Date()).getTime());
+                }
+
+            });
+        } catch (IOException e) {
+            LOG.error("updateLinesAsStream",e);
+        }
+
 
     }
 }
