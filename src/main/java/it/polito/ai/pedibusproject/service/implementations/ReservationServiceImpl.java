@@ -191,7 +191,7 @@ public class ReservationServiceImpl implements ReservationService {
         update.set("idUser", idUser);
 
 
-        //TODO: dubbio che .is(null) sia giusto...
+        //dubbio che .is(null) sia giusto...
         Criteria criteria=new Criteria().andOperator(
                 Criteria.where("_id").is(id).andOperator(Criteria.where("getIn").is(null)));
         Query query = new Query(criteria);

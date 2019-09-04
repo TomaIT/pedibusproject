@@ -18,12 +18,13 @@ public class AngularController {
     @GetMapping("/children") public String d(){ return "index"; }
     @GetMapping("/reservation") public String e(){ return "index"; }
     @GetMapping("/messages/{id}") public String f(){ return "index"; }
+    @GetMapping("/messages") public String j(){ return "index"; }
     @GetMapping("/children/register") public String g(){ return "index"; }
     @GetMapping("/children/update/{id}") public String h(){ return "index"; }
     @GetMapping("/attendees/manage/{idBusRide}/{idCurrentStopBus}") public String i(){ return "index"; }
     @GetMapping("/createAvailabilities") public String l(){ return "index"; }
     @GetMapping("/viewAvailabilities") public String m(){ return "index"; }
-    @GetMapping("/shiftManages") public String n(){ return "index"; }
+    @GetMapping("/shiftManage") public String n(){ return "index"; }
     @GetMapping("/shiftManage/{id}") public String o(){ return "index"; }
     @GetMapping("/manageUsers") public String p(){ return "index"; }
     @GetMapping("/manageUsers/{id}") public String q(){ return "index"; }

@@ -60,8 +60,7 @@ public class ConfirmRegistrationController {
                 confirmUserView.getFirstname(),confirmUserView.getSurname(),confirmUserView.getBirth(),
                 confirmUserView.getStreet(),confirmUserView.getPhoneNumber());
 
-        //TODO angular login
-        return "redirect:http://localhost:4200/login";
+        return "redirect:http://localhost:8080/login";
 
     }
 }

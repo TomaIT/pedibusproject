@@ -70,7 +70,6 @@ public class ChildServiceImpl implements ChildService {
 
     @Override
     public Set<Child> findAllAvailableToBeTaken(String idBusRide, String idStopBus) {
-        // TODO: test....
         BusRide busRide=busRideRepository.findById(idBusRide).orElseThrow(()->new NotFoundException("BusRide <findAllChildrenAvailableToBeTaken>"));
         //Controllo sia Outward altrimenti BadRequest
         if(!busRide.getStopBusType().equals(StopBusType.Outward))
@@ -115,8 +114,6 @@ public class ChildServiceImpl implements ChildService {
             throw new BadRequestException("Child <create> not found Parent");
 
         checkIdStopsBus(idStopBusOutDef, idStopBusRetDef);
-
-        // TODO: un utente può avere due figli con lo stesso nome e cognome <NON TI PIACE ?>
 
         return this.childRepository.insert(new Child(idUser,firstname,surname,birth,gender,blobBase64,idStopBusOutDef,idStopBusRetDef));
     }

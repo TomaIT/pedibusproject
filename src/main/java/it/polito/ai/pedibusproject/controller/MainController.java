@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 public class MainController {
     private static final Logger LOG = LoggerFactory.getLogger(MainController.class);
 
-    /*TODO (qui riportiamo quali sono le funzionalità ancora da testare MANTENERE AGGIORNATO)
+    /*(qui riportiamo quali sono le funzionalità ancora da testare MANTENERE AGGIORNATO)
 
     -Authentication Controller
 <DONE>        -post login
