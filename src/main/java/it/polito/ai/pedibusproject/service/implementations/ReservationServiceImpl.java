@@ -238,9 +238,10 @@ public class ReservationServiceImpl implements ReservationService {
             throw new BadRequestException("Reservation <updateAbsent> idBusRide not found");
         if(!br.get().getStopBuses().stream().map(StopBus::getId).anyMatch(x -> x.equals(reservationState.getIdStopBus())))
             throw new BadRequestException("Reservation <updateAbsent> idStopBus not found in BusRide");
+        //TODO VAI SAGGYYYYYYYYYYYYY :D
         if(br.get().getStopBuses().stream().map(StopBus::getId).collect(Collectors.toList()).indexOf(r.get().getIdStopBus()) <=
                 br.get().getStopBuses().stream().map(StopBus::getId).collect(Collectors.toList()).indexOf(br.get().getIdLastStopBus()))
-            throw new BadRequestException("Reservation <updateAbsent> can not update reservation of already passed StopBus");
+            throw new BadRequestException("Reservation <updateAbsent> cannot update reservation of already passed StopBus");
 
         Update update = new Update();
         update.set("absent", reservationState);
