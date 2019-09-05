@@ -15,7 +15,7 @@ public interface BusRideService {
     //Esclude sabato e domenica
     TreeSet<BusRide> createToIntervalDate(String idLine, StopBusType stopBusType,
                                           Integer year,Integer month,Integer day,
-                                          int intervalDays);
+                                          int intervalDays,boolean saturdayAtSchool);
 
     BusRide findById(String id);
 

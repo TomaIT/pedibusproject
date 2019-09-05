@@ -95,14 +95,14 @@ public class BusRideServiceImpl implements BusRideService {
     @Override
     public TreeSet<BusRide> createToIntervalDate(String idLine, StopBusType stopBusType,
                                                  Integer year, Integer month, Integer day,
-                                                 int intervalDays) {
+                                                 int intervalDays, boolean saturdayAtSchool) {
         Calendar c = BusRide.getCalendarOnlyDay(year,month,day);
         TreeSet<BusRide> busRides = new TreeSet<>();
         Line line = this.lineService.findById(idLine);
         TreeSet<StopBus> stopBuses = this.lineService.findByIdAndStopBusType(idLine, stopBusType);
         for (int i = 0; i<intervalDays;i++){
             //TODO holiday ?? https://publicholidays.it/school-holidays/piedmont/
-            if (!(c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)) {
+            if (!(c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) && !(!saturdayAtSchool && c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
                 TreeSet<StopBus> tempStopBuses = new TreeSet<>(stopBuses);
                 BusRide temp = mySave(new BusRide(line.getId(), stopBusType,
                         tempStopBuses,c.get(Calendar.YEAR), c.get(Calendar.MONTH),

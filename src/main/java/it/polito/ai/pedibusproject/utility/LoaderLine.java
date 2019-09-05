@@ -4,11 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polito.ai.pedibusproject.database.model.*;
 import it.polito.ai.pedibusproject.exceptions.NotFoundException;
 import it.polito.ai.pedibusproject.service.interfaces.*;
+import it.polito.ai.pedibusproject.utility.model.Holiday;
+import it.polito.ai.pedibusproject.utility.model.SchoolCalendar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import sun.reflect.generics.scope.Scope;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,14 +28,14 @@ public class LoaderLine {
     private String folderLines;
     private UserService userService;
     private ConfirmationTokenService confirmationTokenService;
-    @Value("${calendar.busride.start.year}")
+    /*@Value("${calendar.busride.start.year}")
     private Integer startYear;
     @Value("${calendar.busride.start.month}")
     private Integer startMonth;
     @Value("${calendar.busride.start.day}")
     private Integer startDay;
     @Value("${calendar.busride.start.intervalDays}")
-    private int intervalDays;
+    private int intervalDays;*/
     private BusRideService busRideService;
 
 
@@ -86,7 +89,57 @@ public class LoaderLine {
         }
     }
 
-    public Line createLine(InputDataLine inputDataLine,Long creationTime){
+    private Set<SchoolCalendar> loadSchoolCalendars() {
+        Set<SchoolCalendar> schoolCalendars = new HashSet<>();
+        InputStream is = getClass().getClassLoader().getResourceAsStream("Calendar/Calendar.json");
+        ObjectMapper mapper=new ObjectMapper();
+        try {
+            String[] fileNames = mapper.readValue(is,String[].class);
+            for(String filename: fileNames) {
+                InputStream isI=getClass().getClassLoader().getResourceAsStream("Calendar/"+filename);
+                try {
+                    schoolCalendars.add(SchoolCalendar.loadData(isI));
+                } catch (IOException e) {
+                    LOG.error("loadSchoolCalendar",e);
+                }
+            }
+        } catch (IOException e) {
+            LOG.error("loadSchoolCalendar",e);
+        }
+        return schoolCalendars;
+    }
+
+    private void createBusRideOfLine(String idLine, Set<SchoolCalendar> schoolCalendars) {
+        Calendar calendarStart = new GregorianCalendar();
+        Calendar calendarEnd = new GregorianCalendar();
+        int startYear, startMonth, startDay, intervalDays;
+        long intervalMilliseconds;
+
+        for(SchoolCalendar schoolCalendar: schoolCalendars) {
+            calendarStart.setTime(schoolCalendar.getStartDate());
+            startYear = calendarStart.get(Calendar.YEAR);
+            startMonth = calendarStart.get(Calendar.MONTH);
+            startDay = calendarStart.get(Calendar.DAY_OF_MONTH);
+            for(Holiday holiday: schoolCalendar.getHolidays()) {
+                calendarEnd.setTime(holiday.getStartDate());
+                calendarEnd.add(Calendar.DATE, -1);
+                intervalMilliseconds = calendarEnd.getTime().getTime() - calendarStart.getTime().getTime();
+                intervalDays = (int) ((((intervalMilliseconds / 1000) / 60) / 60) / 24) + 1;
+                this.busRideService.createToIntervalDate(idLine,StopBusType.Outward,startYear,startMonth,startDay,intervalDays,schoolCalendar.isSaturdayAtSchool());
+                calendarStart.setTime(holiday.getEndDate());
+                calendarStart.add(Calendar.DATE, 1);
+                startYear = calendarStart.get(Calendar.YEAR);
+                startMonth = calendarStart.get(Calendar.MONTH);
+                startDay = calendarStart.get(Calendar.DAY_OF_MONTH);
+            }
+            calendarEnd.setTime(schoolCalendar.getEndDate());
+            intervalMilliseconds = calendarEnd.getTime().getTime() - calendarStart.getTime().getTime();
+            intervalDays = (int) ((((intervalMilliseconds / 1000) / 60) / 60) / 24) + 1;
+            this.busRideService.createToIntervalDate(idLine,StopBusType.Outward,startYear,startMonth,startDay,intervalDays,schoolCalendar.isSaturdayAtSchool());
+        }
+    }
+
+    public Line createLine(InputDataLine inputDataLine,Long creationTime, Set<SchoolCalendar> schoolCalendars){
         Line temp=new Line();
         temp.setCreationTime(creationTime);
         temp.setEmailAdmin(inputDataLine.getEmailAdmin());
@@ -96,13 +149,13 @@ public class LoaderLine {
         temp=this.lineService.create(temp);
         LOG.info("Create Line " + temp.getName());
         updateUserState(inputDataLine.getEmailAdmin(),temp.getId());
-        this.busRideService.createToIntervalDate(temp.getId(),StopBusType.Return,startYear,startMonth,startDay,intervalDays);
-        this.busRideService.createToIntervalDate(temp.getId(),StopBusType.Outward,startYear,startMonth,startDay,intervalDays);
+
+        createBusRideOfLine(temp.getId(), schoolCalendars);
         LOG.info("Created BusRides for Line <"+temp.getName()+">");
         return temp;
     }
 
-    public void updateLines(){
+    /*public void updateLines(){
         Set<Line> lines=this.lineService.findAll();
         File folder = new File(folderLines);
         if (folder.exists()) {
@@ -127,10 +180,10 @@ public class LoaderLine {
         } else {
             LOG.warn("Folder " + folderLines + " not exists");
         }
-
-    }
+    }*/
 
     public void updateLinesAsStream(){
+        Set<SchoolCalendar> schoolCalendars = loadSchoolCalendars();
         Set<Line> lines=this.lineService.findAll();
 
         InputStream is=getClass().getClassLoader().getResourceAsStream("Lines/Lines.json");
@@ -149,8 +202,8 @@ public class LoaderLine {
                 InputDataLine finalInputDataLine = inputDataLine;
                 Optional<Line> line = lines.stream()
                         .filter(x->x.getName().equals(finalInputDataLine.getName())).findAny();
-
                 //TODO update Line
+                //TODO se vengono modificate delle linee bisogno andare ad eliminare le relative corse future!?
                 if(line.isPresent()){
                     /*if(!line.get().getCreationTime().equals(file.lastModified())) {//Update
                         this.lineService.deleteById(line.get().getId());
@@ -158,14 +211,12 @@ public class LoaderLine {
                         createLine(inputDataLine, file.lastModified());
                     }*/
                 }else{//Create
-                    createLine(inputDataLine, (new Date()).getTime());
+                    createLine(inputDataLine, (new Date()).getTime(), schoolCalendars);
                 }
 
             });
         } catch (IOException e) {
             LOG.error("updateLinesAsStream",e);
         }
-
-
     }
 }
