@@ -28,10 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.xml.crypto.Data;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -100,7 +97,8 @@ public class BusRideController {
 
         return reservationService.findAllByIdBusRideAndIdStopBus(idBusRide,idStopBus).stream()
                 .map(x->new ReservationGET(x,childService,stopBusService,lineService))
-                .collect(Collectors.toSet());
+                .sorted(Comparator.comparing(x -> x.getChild().getFirstname()))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @GetMapping(value = "/{idBusRide}/reservations",
@@ -117,7 +115,8 @@ public class BusRideController {
 
         return reservationService.findAllByIdBusRide(idBusRide).stream()
                 .map(x->new ReservationGET(x,childService,stopBusService,lineService))
-                .collect(Collectors.toSet());
+                .sorted(Comparator.comparing(x -> x.getChild().getFirstname()))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @GetMapping(value = "/{idStopBus}/{startDate}",
