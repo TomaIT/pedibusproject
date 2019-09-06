@@ -126,6 +126,7 @@ public class LoaderLine {
                 intervalMilliseconds = calendarEnd.getTime().getTime() - calendarStart.getTime().getTime();
                 intervalDays = (int) ((((intervalMilliseconds / 1000) / 60) / 60) / 24) + 1;
                 this.busRideService.createToIntervalDate(idLine,StopBusType.Outward,startYear,startMonth,startDay,intervalDays,schoolCalendar.isSaturdayAtSchool());
+                this.busRideService.createToIntervalDate(idLine,StopBusType.Return,startYear,startMonth,startDay,intervalDays,schoolCalendar.isSaturdayAtSchool());
                 calendarStart.setTime(holiday.getEndDate());
                 calendarStart.add(Calendar.DATE, 1);
                 startYear = calendarStart.get(Calendar.YEAR);
@@ -136,6 +137,7 @@ public class LoaderLine {
             intervalMilliseconds = calendarEnd.getTime().getTime() - calendarStart.getTime().getTime();
             intervalDays = (int) ((((intervalMilliseconds / 1000) / 60) / 60) / 24) + 1;
             this.busRideService.createToIntervalDate(idLine,StopBusType.Outward,startYear,startMonth,startDay,intervalDays,schoolCalendar.isSaturdayAtSchool());
+            this.busRideService.createToIntervalDate(idLine,StopBusType.Return,startYear,startMonth,startDay,intervalDays,schoolCalendar.isSaturdayAtSchool());
         }
     }
 
