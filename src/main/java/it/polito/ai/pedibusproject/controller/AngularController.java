@@ -36,4 +36,5 @@ public class AngularController {
     @GetMapping("/stateBusRide/{idLine}/{stopBusType}/{data}") public String z(){ return "index"; }
     @GetMapping("/home") public String w(){ return "index"; }
     @GetMapping("/") public String y(){ return "index"; }
+    @GetMapping("/createLine") public String k(){ return "index"; }
 }
