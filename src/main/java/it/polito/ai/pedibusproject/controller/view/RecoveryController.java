@@ -58,7 +58,7 @@ public class RecoveryController {
 
         this.userService.updatePassword(recoveryUserView.getEmail(),recoveryUserView.getPassword());
         this.recoveryTokenService.deleteByUuid(uuid);
-        return "redirect:http://localhost:8080/login";
+        return "index";
 
     }
 }

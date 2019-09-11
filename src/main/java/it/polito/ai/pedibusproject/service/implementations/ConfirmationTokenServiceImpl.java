@@ -27,8 +27,10 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     private EmailSender emailSender;
     @Value("${uuid.confirmtoken.validitytime.seconds}")
     private long expiredTimeout;
-    @Value("${pedibus.uri}")
-    private String uriContext;
+    @Value("${server.port}")
+    private int serverPort;
+    @Value("${server.address}")
+    private String serverAddress;
 
     @Autowired
     public ConfirmationTokenServiceImpl(ConfirmationTokenRepository confirmationTokenRepository,
@@ -50,7 +52,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
             //Non funziona se la richiesta non arriva da un Context Uri
             //(quindi da http)
             //Risoluzione (improvable)
-            if(link.toCharArray()[0]=='/'){ link=this.uriContext+link; }
+            if(link.toCharArray()[0]=='/'){ link=this.serverAddress+":"+this.serverPort+link; }
 
         }catch (Exception e){
             LOG.error("Creation Link Confirm Registration",e);

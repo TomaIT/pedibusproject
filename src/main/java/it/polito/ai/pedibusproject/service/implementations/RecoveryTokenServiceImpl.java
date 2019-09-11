@@ -31,8 +31,10 @@ public class RecoveryTokenServiceImpl implements RecoveryTokenService {
     private UserService userService;
     @Value("${uuid.recoverytoken.validitytime.seconds}")
     private long expiredTimeout;
-    @Value("${pedibus.uri}")
-    private String uriContext;
+    @Value("${server.port}")
+    private int serverPort;
+    @Value("${server.address}")
+    private String serverAddress;
 
     @Autowired
     public RecoveryTokenServiceImpl(RecoveryTokenRepository recoveryTokenRepository,
@@ -55,7 +57,7 @@ public class RecoveryTokenServiceImpl implements RecoveryTokenService {
             //Non funziona se la richiesta non arriva da un Context Uri
             //(quindi da http)
             //Risoluzione (improvable)
-            if(link.toCharArray()[0]=='/'){ link=this.uriContext+link; }
+            if(link.toCharArray()[0]=='/'){ link=this.serverAddress+":"+this.serverPort+link; }
 
         }catch (Exception e){
             LOG.error("Creation Link Recovery Registration",e);

@@ -60,7 +60,7 @@ public class ConfirmRegistrationController {
                 confirmUserView.getFirstname(),confirmUserView.getSurname(),confirmUserView.getBirth(),
                 confirmUserView.getStreet(),confirmUserView.getPhoneNumber());
 
-        return "redirect:http://localhost:8080/login";
+        return "index";
 
     }
 }
