@@ -33,7 +33,7 @@ public class RecoveryTokenServiceImpl implements RecoveryTokenService {
     private long expiredTimeout;
     @Value("${server.port}")
     private int serverPort;
-    @Value("${server.address}")
+    @Value("${myserver.address}")
     private String serverAddress;
 
     @Autowired

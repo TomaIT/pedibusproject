@@ -29,7 +29,7 @@ public class ConfirmationTokenServiceImpl implements ConfirmationTokenService {
     private long expiredTimeout;
     @Value("${server.port}")
     private int serverPort;
-    @Value("${server.address}")
+    @Value("${myserver.address}")
     private String serverAddress;
 
     @Autowired
