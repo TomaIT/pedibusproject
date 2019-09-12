@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
     public User create(String username, Set<Role> roles) {
         User user = new User();
 
-        user.setUsername(username);
+        user.setUsername(username.toLowerCase());
         user.setRoles(roles);
 
         try {
@@ -81,17 +81,17 @@ public class UserServiceImpl implements UserService {
         update.set("street", street);
         update.set("phoneNumber", phoneNumber);
         update.set("isEnabled", true);
-        UpdateResult updateResult=myUpdateFunctionFirst(email,update);
+        UpdateResult updateResult=myUpdateFunctionFirst(email.toLowerCase(),update);
         if(updateResult.getMatchedCount()==0)
             throw new NotFoundException("User <confirmRegistration>");
         this.confirmationTokenService.deleteByUuid(uuid);
-        return this.userRepository.findById(email)
+        return this.userRepository.findById(email.toLowerCase())
                 .orElseThrow(()->new NotFoundException("User <confirmRegistration>"));
     }
 
     @Override
     public User loadUserByUsername(String username) {
-        return this.userRepository.findById(username)
+        return this.userRepository.findById(username.toLowerCase())
                 .orElseThrow(()->new NotFoundException("User"));
     }
 
@@ -116,10 +116,10 @@ public class UserServiceImpl implements UserService {
         update.set("birth", birth);
         update.set("street", street);
         update.set("phoneNumber", phoneNumber);
-        UpdateResult updateResult=myUpdateFunctionFirst(email,update);
+        UpdateResult updateResult=myUpdateFunctionFirst(email.toLowerCase(),update);
         if(updateResult.getMatchedCount()==0)
             throw new NotFoundException("User <update>");
-        return this.userRepository.findById(email)
+        return this.userRepository.findById(email.toLowerCase())
                 .orElseThrow(()->new NotFoundException("User <update>"));
     }
 
@@ -128,10 +128,10 @@ public class UserServiceImpl implements UserService {
         //if(role.equals(Role.ROLE_ADMIN)) throw new BadRequestException("User <addRole> does not handle role "+role);
         Update update = new Update();
         update.addToSet("roles",role);
-        UpdateResult updateResult=myUpdateFunctionFirst(id,update);
+        UpdateResult updateResult=myUpdateFunctionFirst(id.toLowerCase(),update);
         if(updateResult.getMatchedCount()==0)
             throw new NotFoundException("User <addRole>");
-        return this.userRepository.findById(id)
+        return this.userRepository.findById(id.toLowerCase())
                 .orElseThrow(()->new NotFoundException("User <addRole>"));
     }
 
@@ -139,10 +139,10 @@ public class UserServiceImpl implements UserService {
     public User removeRole(String id, Role role) {
         Update update = new Update();
         update.pull("roles",role);
-        UpdateResult updateResult=myUpdateFunctionFirst(id,update);
+        UpdateResult updateResult=myUpdateFunctionFirst(id.toLowerCase(),update);
         if(updateResult.getMatchedCount()==0)
             throw new NotFoundException("User <removeRole>");
-        return this.userRepository.findById(id)
+        return this.userRepository.findById(id.toLowerCase())
                 .orElseThrow(()->new NotFoundException("User <removeRole>"));
     }
 
@@ -150,26 +150,26 @@ public class UserServiceImpl implements UserService {
     public void enableUser(String username) {
         Update update = new Update();
         update.set("isEnabled", true);
-        UpdateResult updateResult=myUpdateFunctionFirst(username,update);
+        UpdateResult updateResult=myUpdateFunctionFirst(username.toLowerCase(),update);
         if(updateResult.getMatchedCount()==0)
             throw new NotFoundException("User");
     }
 
     @Override
     public void deleteById(String username) {
-        userRepository.deleteById(username);
+        userRepository.deleteById(username.toLowerCase());
     }
 
     @Override
     public boolean existById(String username) {
-        return userRepository.existsById(username);
+        return userRepository.existsById(username.toLowerCase());
     }
 
     @Override
     public void updatePassword(String username, String password) {
         Update update = new Update();
         update.set("password", passwordEncoder.encode(password));
-        UpdateResult updateResult=myUpdateFunctionFirst(username,update);
+        UpdateResult updateResult=myUpdateFunctionFirst(username.toLowerCase(),update);
         if(updateResult.getMatchedCount()==0)
             throw new NotFoundException("User");
     }
@@ -184,7 +184,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isAdminOfLine(String username, String idLine) {
-        User user = loadUserByUsername(username);
+        User user = loadUserByUsername(username.toLowerCase());
         return user.getIdLines().contains(idLine);
     }
 
@@ -195,10 +195,10 @@ public class UserServiceImpl implements UserService {
         Update update = new Update();
         update.addToSet("idLines",idLine);
         update.addToSet("roles",Role.ROLE_ADMIN);
-        UpdateResult updateResult=myUpdateFunctionFirst(username,update);
+        UpdateResult updateResult=myUpdateFunctionFirst(username.toLowerCase(),update);
         if(updateResult.getMatchedCount()==0)
             throw new NotFoundException("User <addLine>");
-        return this.userRepository.findById(username)
+        return this.userRepository.findById(username.toLowerCase())
                 .orElseThrow(()->new NotFoundException("User <addLine>"));
     }
 
@@ -206,10 +206,10 @@ public class UserServiceImpl implements UserService {
     public User removeLine(String username, String idLine) {
         Update update = new Update();
         update.pull("idLines",idLine);
-        UpdateResult updateResult=myUpdateFunctionFirst(username,update);
+        UpdateResult updateResult=myUpdateFunctionFirst(username.toLowerCase(),update);
         if(updateResult.getMatchedCount()==0)
             throw new NotFoundException("User <removeLine>");
-        return this.userRepository.findById(username)
+        return this.userRepository.findById(username.toLowerCase())
                 .orElseThrow(()->new NotFoundException("User <removeLine>"));
     }
 
@@ -217,10 +217,10 @@ public class UserServiceImpl implements UserService {
     public User disableById(String idUser) {
         Update update = new Update();
         update.set("isAccountNonLocked",false);
-        UpdateResult updateResult=myUpdateFunctionFirst(idUser,update);
+        UpdateResult updateResult=myUpdateFunctionFirst(idUser.toLowerCase(),update);
         if(updateResult.getMatchedCount()==0)
             throw new NotFoundException("User <disableById>");
-        return this.userRepository.findById(idUser)
+        return this.userRepository.findById(idUser.toLowerCase())
                 .orElseThrow(()->new NotFoundException("User <disableById>"));
     }
 
@@ -228,16 +228,16 @@ public class UserServiceImpl implements UserService {
     public User undisableById(String idUser) {
         Update update = new Update();
         update.set("isAccountNonLocked",true);
-        UpdateResult updateResult=myUpdateFunctionFirst(idUser,update);
+        UpdateResult updateResult=myUpdateFunctionFirst(idUser.toLowerCase(),update);
         if(updateResult.getMatchedCount()==0)
             throw new NotFoundException("User <undisableById>");
-        return this.userRepository.findById(idUser)
+        return this.userRepository.findById(idUser.toLowerCase())
                 .orElseThrow(()->new NotFoundException("User <undisableById>"));
     }
 
     @Override
     public Page<User> findAllByUsernameStartsWith(String username,int page,int size) {
         return userRepository.findAllByUsernameStartsWithOrderByUsername(
-                username,PageRequest.of(page,size));
+                username.toLowerCase(),PageRequest.of(page,size));
     }
 }
