@@ -101,7 +101,6 @@ public class BusRideServiceImpl implements BusRideService {
         Line line = this.lineService.findById(idLine);
         TreeSet<StopBus> stopBuses = this.lineService.findByIdAndStopBusType(idLine, stopBusType);
         for (int i = 0; i<intervalDays;i++){
-            //TODO holiday ?? https://publicholidays.it/school-holidays/piedmont/
             if (!(c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) && !(!saturdayAtSchool && c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
                 TreeSet<StopBus> tempStopBuses = new TreeSet<>(stopBuses);
                 BusRide temp = mySave(new BusRide(line.getId(), stopBusType,

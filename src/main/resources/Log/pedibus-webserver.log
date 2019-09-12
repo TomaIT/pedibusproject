@@ -95,3 +95,8 @@
 2019-09-12 16:03:12.964  WARN 4782 --- [http-nio-8080-exec-5] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.NotFoundException: 404 NOT_FOUND "Not Found: BusRide <findBy'id'>"]
 2019-09-12 16:03:15.519  WARN 4782 --- [http-nio-8080-exec-9] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.NotFoundException: 404 NOT_FOUND "Not Found: BusRide <findBy'id'>"]
 2019-09-12 16:03:15.580  WARN 4782 --- [http-nio-8080-exec-5] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [it.polito.ai.pedibusproject.exceptions.NotFoundException: 404 NOT_FOUND "Not Found: BusRide <findBy'id'>"]
+2019-09-12 16:22:39.925  INFO 4782 --- [Thread-17] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'threadPoolTaskExecutor'
+2019-09-12 16:22:39.932  INFO 4782 --- [Thread-17] org.mongodb.driver.connection            : Closed connection [connectionId{localValue:3, serverValue:3}] to localhost:27017 because the pool has been closed.
+2019-09-12 16:22:39.933  INFO 4782 --- [Thread-17] org.mongodb.driver.connection            : Closed connection [connectionId{localValue:2, serverValue:2}] to localhost:27017 because the pool has been closed.
+2019-09-12 16:22:39.933  INFO 4782 --- [Thread-17] org.mongodb.driver.connection            : Closed connection [connectionId{localValue:5, serverValue:5}] to localhost:27017 because the pool has been closed.
+2019-09-12 16:22:39.934  INFO 4782 --- [Thread-17] org.mongodb.driver.connection            : Closed connection [connectionId{localValue:4, serverValue:4}] to localhost:27017 because the pool has been closed.
