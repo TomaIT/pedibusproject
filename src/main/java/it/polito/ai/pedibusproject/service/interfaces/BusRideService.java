@@ -28,7 +28,7 @@ public interface BusRideService {
 
     TreeSet<BusRide> findAll();
 
-    TreeSet<BusRide> findAllByStopBusesContainsAndStartTimeAfter(String idStopBus, Date startTime);
+    TreeSet<BusRide> findAllByStopBusesContainsAndStartTimeAfter(String idStopBus, Date startTime, Integer N);
 
     //Cancella busride prenotazioni e availability associate,
     //creando un messaggio di comunicazione per tutte le prenotazioni e availability annullate

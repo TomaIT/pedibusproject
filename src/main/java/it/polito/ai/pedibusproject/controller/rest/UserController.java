@@ -7,6 +7,7 @@ import it.polito.ai.pedibusproject.controller.model.PageMy;
 import it.polito.ai.pedibusproject.controller.model.get.*;
 import it.polito.ai.pedibusproject.controller.model.post.UserPOST;
 import it.polito.ai.pedibusproject.controller.model.put.UserPUT;
+import it.polito.ai.pedibusproject.database.model.Availability;
 import it.polito.ai.pedibusproject.database.model.Line;
 import it.polito.ai.pedibusproject.database.model.Role;
 import it.polito.ai.pedibusproject.database.model.User;
@@ -330,10 +331,19 @@ public class UserController {
         if(roles.contains(Role.ROLE_SYS_ADMIN)||roles.contains(Role.ROLE_ADMIN)||
                 (roles.contains(Role.ROLE_ESCORT)&&idUser.equals(jwtTokenProvider.getUsername(jwtToken)))) {
             Date finalStartDate = startDate;
-            return this.availabilityService.findAllByIdUser(idUser).stream()
+
+            //long start=System.currentTimeMillis();
+            Set<Availability> a=this.availabilityService.findAllByIdUser(idUser);
+            //System.out.println(System.currentTimeMillis()-start+" ciao");
+
+            //start=System.currentTimeMillis();
+            TreeSet<AvailabilityGET> b=a.parallelStream()
                     .map(x -> new AvailabilityGET(x, busRideService, lineService,reservationService))
                     .filter(x -> x.getStartDateOfBusRide().getTime() >= finalStartDate.getTime())
                     .collect(Collectors.toCollection(TreeSet::new));
+            //System.out.println(System.currentTimeMillis()-start+" pino");
+
+            return b;
         }
         throw new ForbiddenException();
     }

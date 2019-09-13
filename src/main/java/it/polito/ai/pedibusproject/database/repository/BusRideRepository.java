@@ -15,6 +15,7 @@ public interface BusRideRepository extends MongoRepository<BusRide,String> {
     Set<BusRide> findAllByIdLine(String idLine);
 
     Set<BusRide> findAllByStopBusesContainsAndStartTimeAfter(StopBus stopBus, Date startTime);
+    Set<BusRide> findFirst5ByStopBusesContainsAndStartTimeAfterOrderByStartTime(StopBus stopBus, Date startTime);
 
     Set<BusRide> findAllByStopBusTypeAndYearAndMonthAndDay(StopBusType stopBusType, Integer year,Integer month,Integer day);
 }

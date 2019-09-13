@@ -35,8 +35,8 @@ public class AvailabilityGET implements Comparable<AvailabilityGET> {
         this.stopBusName=temp.getStopBuses().stream()
                 .filter(x->x.getId().equals(idStopBus)).findFirst()
                 .orElseThrow(()->new InternalServerErrorException("StopBus not present in BusRide")).getName();
-        this.lineNameOfBusRide=lineService.findById(temp.getIdLine()).getName();
         this.busRide=new BusRideGET(temp,reservationService,lineService);
+        this.lineNameOfBusRide=this.busRide.getLineName();
     }
 
     @Override

@@ -25,6 +25,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class BusRideServiceImpl implements BusRideService {
@@ -188,9 +189,14 @@ public class BusRideServiceImpl implements BusRideService {
     }
 
     @Override
-    public TreeSet<BusRide> findAllByStopBusesContainsAndStartTimeAfter(String idStopBus, Date startTime) {
+    public TreeSet<BusRide> findAllByStopBusesContainsAndStartTimeAfter(String idStopBus, Date startTime,Integer N) {
         StopBus temp=this.stopBusRepository.findById(idStopBus)
                 .orElseThrow(()->new NotFoundException("StopBus <findAllBusRidesByStopBusesContainsAndStartTimeAfter>"));
+        if(N<=5){
+            return this.busRideRepository
+                    .findFirst5ByStopBusesContainsAndStartTimeAfterOrderByStartTime(temp,startTime).stream().limit(N)
+                    .collect(Collectors.toCollection(TreeSet::new));
+        }
         return new TreeSet<>(this.busRideRepository
                 .findAllByStopBusesContainsAndStartTimeAfter(temp,startTime));
     }

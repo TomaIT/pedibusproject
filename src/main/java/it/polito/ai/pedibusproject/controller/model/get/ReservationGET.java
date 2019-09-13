@@ -29,6 +29,7 @@ public class ReservationGET {
         this.getIn=reservation.getGetIn();
         this.getOut=reservation.getGetOut();
         this.absent=reservation.getAbsent();
+
         this.child=new ChildGET(childService.findById(idChild),stopBusService,lineService);
     }
 }

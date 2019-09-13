@@ -202,12 +202,12 @@ public class ChildController {
         if(roles.contains(Role.ROLE_ADMIN)||
                 roles.contains(Role.ROLE_SYS_ADMIN)
         )
-            return this.reservationService.findAllByIdChild(idChild).stream()
+            return this.reservationService.findAllByIdChild(idChild).parallelStream()
                     .map(x->new ReservationGET(x,childService,stopBusService,lineService)).collect(Collectors.toSet());
         String username=jwtTokenProvider.getUsername(jwtToken);
         if(roles.contains(Role.ROLE_PARENT)&&
                 childService.findByIdUser(username).stream().map(Child::getId).anyMatch(x->x.equals(idChild)))
-            return this.reservationService.findAllByIdChild(idChild).stream()
+            return this.reservationService.findAllByIdChild(idChild).parallelStream()
                     .map(x->new ReservationGET(x,childService,stopBusService,lineService)).collect(Collectors.toSet());
         throw new ForbiddenException();
     }

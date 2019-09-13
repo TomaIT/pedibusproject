@@ -1,6 +1,7 @@
 package it.polito.ai.pedibusproject.controller.model.get;
 
 import it.polito.ai.pedibusproject.database.model.BusRide;
+import it.polito.ai.pedibusproject.database.model.Line;
 import it.polito.ai.pedibusproject.database.model.Reservation;
 import it.polito.ai.pedibusproject.database.model.StopBusType;
 import it.polito.ai.pedibusproject.service.interfaces.LineService;
@@ -33,8 +34,9 @@ public class BusRideGET implements Comparable<BusRideGET> {
     private String idLastStopBus;
 
     public BusRideGET(BusRide busRide, ReservationService reservationService, LineService lineService){
+        Line temp=lineService.findById(busRide.getIdLine());
         this.id=busRide.getId();
-        this.lineName=lineService.findById(busRide.getIdLine()).getName();
+        this.lineName=temp.getName();
         this.idLine=busRide.getIdLine();
         this.stopBusType=busRide.getStopBusType();
         this.year=busRide.getYear();
@@ -45,7 +47,7 @@ public class BusRideGET implements Comparable<BusRideGET> {
         this.idReservations=reservationService.findAllByIdBusRide(busRide.getId()).stream().map(Reservation::getId).collect(Collectors.toSet());
         this.timestampLastStopBus=busRide.getTimestampLastStopBus();
         this.idLastStopBus=busRide.getIdLastStopBus();
-        busRide.getStopBuses().forEach(x->this.stopBuses.add(new StopBusGET(x,lineService)));
+        busRide.getStopBuses().forEach(x->this.stopBuses.add(new StopBusGET(x,temp)));
     }
 
     @Override

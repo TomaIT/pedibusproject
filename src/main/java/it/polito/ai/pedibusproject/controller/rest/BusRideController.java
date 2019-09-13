@@ -127,17 +127,22 @@ public class BusRideController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public Set<BusRideGET> getBusRidesFromStartDate(
+    public TreeSet<BusRideGET> getBusRidesFromStartDate(
             @RequestHeader (name="Authorization") String jwtToken,
             @PathVariable("idStopBus")String idStopBus,
             @PathVariable("startDate")Date startDate,
             @RequestParam (name = "N", defaultValue = "5", required = false) Integer N) {
 
-        TreeSet<BusRide> temp=busRideService.findAllByStopBusesContainsAndStartTimeAfter(idStopBus,startDate);
+        //long start=System.currentTimeMillis();
+        TreeSet<BusRide> temp=busRideService.findAllByStopBusesContainsAndStartTimeAfter(idStopBus,startDate,N);
+        //System.out.println(System.currentTimeMillis()-start+" ciao");
 
-        while (temp.size()>N) temp.pollLast();
-        return temp.stream().map(x -> new BusRideGET(x, reservationService, lineService))
+        //start=System.currentTimeMillis();
+        TreeSet<BusRideGET> b=temp.parallelStream().map(x -> new BusRideGET(x, reservationService, lineService))
                 .collect(Collectors.toCollection(TreeSet::new));
+        //System.out.println(System.currentTimeMillis()-start+" ciao2");
+
+        return b;
     }
 
     public static ResponseEntity<Resource> getResponseEntityForDownload(

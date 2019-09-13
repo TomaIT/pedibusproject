@@ -2,6 +2,7 @@ package it.polito.ai.pedibusproject.controller.model.get;
 
 import it.polito.ai.pedibusproject.database.model.Child;
 import it.polito.ai.pedibusproject.database.model.Gender;
+import it.polito.ai.pedibusproject.database.model.Line;
 import it.polito.ai.pedibusproject.database.model.StopBus;
 import it.polito.ai.pedibusproject.service.interfaces.LineService;
 import it.polito.ai.pedibusproject.service.interfaces.StopBusService;

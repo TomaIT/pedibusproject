@@ -27,6 +27,16 @@ public class StopBusGET implements Comparable<StopBusGET>  {
         this.lineName=temp.getName();
         this.idLine=temp.getId();
     }
+    public StopBusGET(StopBus stopBus, Line line){
+        this.id=stopBus.getId();
+        this.stopBusType=stopBus.getStopBusType();
+        this.name=stopBus.getName();
+        this.hours=stopBus.getHours();
+        this.location=stopBus.getLocation();
+        Line temp=line;
+        this.lineName=temp.getName();
+        this.idLine=temp.getId();
+    }
 
     @Override
     public int compareTo(StopBusGET o) {
