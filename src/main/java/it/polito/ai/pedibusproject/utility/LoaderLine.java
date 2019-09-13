@@ -204,8 +204,9 @@ public class LoaderLine {
                 InputDataLine finalInputDataLine = inputDataLine;
                 Optional<Line> line = lines.stream()
                         .filter(x->x.getName().equals(finalInputDataLine.getName())).findAny();
-                //TODO update Line
-                //TODO se vengono modificate delle linee bisogno andare ad eliminare le relative corse future!?
+                //Se vengono modificate delle linee bisogno andare ad eliminare le relative corse future!?
+                //Come gestire l'aggiornamento delle linee ??
+                //Al momento non è possibile. l'unica possibilità è crearne una nuova.
                 if(line.isPresent()){
                     /*if(!line.get().getCreationTime().equals(file.lastModified())) {//Update
                         this.lineService.deleteById(line.get().getId());
